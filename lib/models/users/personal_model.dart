@@ -1,3 +1,5 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+
 class PersonalModel {
   String? firstName;
   String? lastName;
@@ -68,7 +70,7 @@ class PersonalModel {
 }
 
 class PayrollCalculationsRequest {
-  int? salary;
+  double? salary;
   SalaryType? percentOrFixed;
 
   PayrollCalculationsRequest({this.salary, this.percentOrFixed});
@@ -86,4 +88,22 @@ class PayrollCalculationsRequest {
   }
 }
 
-enum SalaryType { percent, fixed }
+enum SalaryType {
+  percent(LocaleKeys.forms_percent),
+  fixed(LocaleKeys.forms_fixed);
+
+  const SalaryType(this.displayName);
+
+  final String displayName;
+
+  factory SalaryType.fromString(String value) {
+    return SalaryType.values.firstWhere(
+      (e) => e.name.toUpperCase() == value,
+      orElse: () => percent,
+    );
+  }
+}
+
+extension SalaryTypeExtension on SalaryType {
+  String get name => toString().split('.').last;
+}

@@ -11,6 +11,43 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AppointmentDetail]
+class AppointmentDetailRoute extends PageRouteInfo<AppointmentDetailRouteArgs> {
+  AppointmentDetailRoute({
+    Key? key,
+    required int id,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AppointmentDetailRoute.name,
+         args: AppointmentDetailRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
+
+  static const String name = 'AppointmentDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AppointmentDetailRouteArgs>();
+      return AppointmentDetail(key: args.key, id: args.id);
+    },
+  );
+}
+
+class AppointmentDetailRouteArgs {
+  const AppointmentDetailRouteArgs({this.key, required this.id});
+
+  final Key? key;
+
+  final int id;
+
+  @override
+  String toString() {
+    return 'AppointmentDetailRouteArgs{key: $key, id: $id}';
+  }
+}
+
+/// generated route for
 /// [CalendarPage]
 class CalendarRoute extends PageRouteInfo<void> {
   const CalendarRoute({List<PageRouteInfo>? children})
@@ -24,6 +61,45 @@ class CalendarRoute extends PageRouteInfo<void> {
       return const CalendarPage();
     },
   );
+}
+
+/// generated route for
+/// [CreatePersonalView]
+class CreatePersonalRoute extends PageRouteInfo<CreatePersonalRouteArgs> {
+  CreatePersonalRoute({
+    Key? key,
+    UserModel? user,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CreatePersonalRoute.name,
+         args: CreatePersonalRouteArgs(key: key, user: user),
+         initialChildren: children,
+       );
+
+  static const String name = 'CreatePersonalRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CreatePersonalRouteArgs>(
+        orElse: () => const CreatePersonalRouteArgs(),
+      );
+      return CreatePersonalView(key: args.key, user: args.user);
+    },
+  );
+}
+
+class CreatePersonalRouteArgs {
+  const CreatePersonalRouteArgs({this.key, this.user});
+
+  final Key? key;
+
+  final UserModel? user;
+
+  @override
+  String toString() {
+    return 'CreatePersonalRouteArgs{key: $key, user: $user}';
+  }
 }
 
 /// generated route for
@@ -107,6 +183,43 @@ class PatientRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PersonalDetailPage]
+class PersonalDetailRoute extends PageRouteInfo<PersonalDetailRouteArgs> {
+  PersonalDetailRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PersonalDetailRoute.name,
+         args: PersonalDetailRouteArgs(key: key, userId: userId),
+         initialChildren: children,
+       );
+
+  static const String name = 'PersonalDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PersonalDetailRouteArgs>();
+      return PersonalDetailPage(key: args.key, userId: args.userId);
+    },
+  );
+}
+
+class PersonalDetailRouteArgs {
+  const PersonalDetailRouteArgs({this.key, required this.userId});
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'PersonalDetailRouteArgs{key: $key, userId: $userId}';
+  }
+}
+
+/// generated route for
 /// [PersonalPage]
 class PersonalRoute extends PageRouteInfo<void> {
   const PersonalRoute({List<PageRouteInfo>? children})
@@ -118,6 +231,59 @@ class PersonalRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const PersonalPage();
+    },
+  );
+}
+
+/// generated route for
+/// [PersonalPatientsPage]
+class PersonalPatientsRoute extends PageRouteInfo<PersonalPatientsRouteArgs> {
+  PersonalPatientsRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PersonalPatientsRoute.name,
+         args: PersonalPatientsRouteArgs(key: key, userId: userId),
+         initialChildren: children,
+       );
+
+  static const String name = 'PersonalPatientsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PersonalPatientsRouteArgs>();
+      return PersonalPatientsPage(key: args.key, userId: args.userId);
+    },
+  );
+}
+
+class PersonalPatientsRouteArgs {
+  const PersonalPatientsRouteArgs({this.key, required this.userId});
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'PersonalPatientsRouteArgs{key: $key, userId: $userId}';
+  }
+}
+
+/// generated route for
+/// [PersonalRouterRoute]
+class PersonalNavigationRoute extends PageRouteInfo<void> {
+  const PersonalNavigationRoute({List<PageRouteInfo>? children})
+    : super(PersonalNavigationRoute.name, initialChildren: children);
+
+  static const String name = 'PersonalNavigationRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const PersonalRouterRoute();
     },
   );
 }

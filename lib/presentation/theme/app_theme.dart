@@ -26,7 +26,7 @@ class AppTheme {
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: ColorConstants.white,
-      surfaceTintColor: AppColors.secondary,
+      surfaceTintColor: AppColors.primary,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: ColorConstants.white,
@@ -43,6 +43,10 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: ColorConstants.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );
 }

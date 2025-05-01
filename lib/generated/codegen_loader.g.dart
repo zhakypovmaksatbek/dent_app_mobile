@@ -57,7 +57,18 @@ class CodegenLoader extends AssetLoader{
     "service_price": "Цена услуги",
     "service_description": "Описание услуги",
     "diagnosis_name": "Название диагноза",
-    "diagnosis_info": "Информация о диагнозах"
+    "diagnosis_info": "Информация о диагнозах",
+    "salary": "Зарплата",
+    "salary_type": "Тип зарплаты",
+    "general_options": "Общие опции",
+    "gender": "Пол",
+    "specialties": "Специальности",
+    "specialty": "Специальность",
+    "edit_specialties": "Редактировать специальности",
+    "working_schedule": "Рабочий график",
+    "previous_week": "Предыдущая неделя",
+    "next_week": "Следующая неделя",
+    "day_off": "Выходной"
   },
   "buttons": {
     "login": "Войти",
@@ -82,7 +93,10 @@ class CodegenLoader extends AssetLoader{
     "add_new_service": "Добавить новую услугу",
     "edit_service": "Редактировать услугу",
     "add_new_diagnosis": "Добавить новый диагноз",
-    "edit_diagnosis": "Редактировать диагноз"
+    "edit_diagnosis": "Редактировать диагноз",
+    "create_personal": "Создать персонал",
+    "update_personal": "Обновить персонал",
+    "retry": "Повторить"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -122,7 +136,25 @@ class CodegenLoader extends AssetLoader{
     "payment": "Оплата",
     "debt": "Долг",
     "select_date": "Выберите дату",
-    "created_on": "Создано"
+    "created_on": "Создано",
+    "fixed": "Фиксированная",
+    "percent": "Процентная",
+    "personal_info": "Личная информация",
+    "contact_info": "Контактная информация",
+    "role": "Роль",
+    "salary_type": "Тип зарплаты",
+    "salary": "Зарплата",
+    "is_phone_visible": "Видимость телефона",
+    "security_info": "Безопасность",
+    "email_is_required": "Email обязателен",
+    "enter_valid_email": "Введите корректный email",
+    "make_phone_number_visible": "Сделать номер телефона видимым",
+    "alternative_phone": "Альтернативный номер телефона",
+    "role_salary": "Роль & зарплата",
+    "password_is_required_for_new_users": "Пароль обязателен для новых пользователей",
+    "password_must_be_at_least_6_characters": "Пароль должен быть не менее 6 символов",
+    "salary_is_required": "Зарплата обязательна",
+    "add_specialty": "Добавить специальность"
   },
   "routes": {
     "dashboard": "Главная",
@@ -146,7 +178,11 @@ class CodegenLoader extends AssetLoader{
     "clinic_settings": "Настройки клиники",
     "navigation": "Навигация",
     "account": "Аккаунт",
-    "diagnosis": "Диагнозы"
+    "diagnosis": "Диагнозы",
+    "personal_detail": "Информация о персонале",
+    "patient_detail": "Информация о пациенте",
+    "appointment_detail": "Информация о записи",
+    "visits": "Визиты"
   },
   "patients": {
     "add_patient": "Добавить пациента",
@@ -165,7 +201,15 @@ class CodegenLoader extends AssetLoader{
     "no_data_found": "Данные не найдены",
     "no_types_available": "Типы услуг не найдены",
     "no_search_results": "Ничего не найдено для {query}",
-    "no_diagnosis_found": "Диагнозы не найдены"
+    "no_diagnosis_found": "Диагнозы не найдены",
+    "no_specialties_found": "Специальности не найдены",
+    "delete_specialty_confirmation": "Вы уверены, что хотите удалить специальность {name}?",
+    "no_more_specialties_available": "Нет доступных специальностей для добавления",
+    "no_specialties_assigned": "Специальности не назначены",
+    "no_schedule_available": "Рабочий график не найден",
+    "service_saved_successfully": "Услуга успешно сохранена",
+    "service_updated_successfully": "Услуга успешно обновлена",
+    "service_deleted_successfully": "Услуга успешно удалена"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -242,7 +286,9 @@ class CodegenLoader extends AssetLoader{
   "alerts": {
     "confirm_delete_service": "Вы уверены, что хотите удалить услугу {name}?",
     "operation_successful": "Операция успешно завершена",
-    "confirm_delete_diagnosis": "Вы уверены, что хотите удалить диагноз '{name}'?"
+    "confirm_delete_diagnosis": "Вы уверены, что хотите удалить диагноз '{name}'?",
+    "confirm_delete_specialty": "Вы уверены, что хотите удалить специальность '{name}'?",
+    "delete_specialty": "Удалить специальность"
   },
   "validation": {
     "select_service_type": "Выберите тип услуги",
@@ -252,6 +298,75 @@ class CodegenLoader extends AssetLoader{
     "enter_valid_service_price": "Введите корректную цену услуги",
     "price_cannot_be_negative": "Цена не может быть отрицательной",
     "enter_diagnosis_name": "Пожалуйста, введите название диагноза"
+  },
+  "roles": {
+    "admin": "Администратор",
+    "doctor": "Врач",
+    "developer": "Разработчик",
+    "mortal": "Морталь",
+    "investor": "Инвестор",
+    "manager": "Менеджер"
+  },
+  "record_type": {
+    "treatment": "Лечение",
+    "consultation": "Консультация",
+    "diagnostics": "Диагностика",
+    "inspection": "Осмотр",
+    "implantation": "Имплантация",
+    "orthopedics": "Ортопедия",
+    "orthodontics": "Ортодонтия",
+    "periodontology": "Пародонтология",
+    "surgery": "Хирургия",
+    "first_doctor_appointment": "Первичный визит врача"
+  },
+  "week": {
+    "monday": "Понедельник",
+    "tuesday": "Вторник",
+    "wednesday": "Среда",
+    "thursday": "Четверг",
+    "friday": "Пятница",
+    "saturday": "Суббота",
+    "sunday": "Воскресенье"
+  },
+  "month": {
+    "january": "Январь",
+    "february": "Февраль",
+    "march": "Март",
+    "april": "Апрель",
+    "may": "Май",
+    "june": "Июнь",
+    "july": "Июль",
+    "august": "Август",
+    "september": "Сентябрь",
+    "october": "Октябрь",
+    "november": "Ноябрь",
+    "december": "Декабрь"
+  },
+  "appointment_status": {
+    "not_confirmed": "Не подтвержден",
+    "confirmed": "Подтвержден",
+    "come_in": "Пришел",
+    "finish": "Завершен",
+    "not_come": "Не пришел",
+    "canceled": "Отменен",
+    "online": "Онлайн"
+  },
+  "appointment": {
+    "status_label": "Статус",
+    "update_medical_details": "Обновить медицинские данные",
+    "complaints": "Жалобы",
+    "diagnosis": "Диагноз",
+    "medical_history": "Медицинская история",
+    "x_ray_description": "Описание рентгеновского снимка",
+    "enter_complaints": "Введите жалобы",
+    "enter_diagnosis": "Введите диагноз",
+    "enter_medical_history": "Введите медицинскую историю",
+    "enter_x_ray_description": "Введите описание рентгеновского снимка",
+    "patient": "Пациент",
+    "medical_details": "Медицинские данные",
+    "edit_medical_details": "Редактировать медицинские данные",
+    "delete_appointment": "Удалить запись",
+    "delete_appointment_content": "Вы уверены, что хотите удалить запись {name}?"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": _ru};

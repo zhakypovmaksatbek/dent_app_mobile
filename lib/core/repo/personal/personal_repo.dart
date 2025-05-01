@@ -1,5 +1,5 @@
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
-import 'package:dent_app_mobile/models/users/doctor_model.dart';
+import 'package:dent_app_mobile/models/users/personal_model.dart';
 import 'package:dent_app_mobile/models/users/user_detail_model.dart';
 import 'package:dent_app_mobile/models/users/user_model.dart';
 
@@ -9,7 +9,7 @@ abstract class IPersonalRepo {
   Future<UserDataModel> getManagerList(int page);
   Future<UserDetailModel> getPersonalDetailById(int id);
   Future<void> createPersonal(PersonalModel doctor);
-  Future<UserModel> updatePersonal(PersonalModel doctor);
+  Future<void> updatePersonal(int id, PersonalModel doctor);
   Future<void> deletePersonal(int id);
 }
 
@@ -57,8 +57,7 @@ class PersonalRepo extends IPersonalRepo {
   }
 
   @override
-  Future<UserModel> updatePersonal(PersonalModel doctor) {
-    // TODO: implement updatePersonal
-    throw UnimplementedError();
+  Future<void> updatePersonal(int id, PersonalModel doctor) async {
+    await dio.put('api/users/$id', data: doctor.toJson());
   }
 }

@@ -69,7 +69,7 @@ class UserDetailModel {
 }
 
 class PayrollCalculationsResponse {
-  int? salary;
+  double? salary;
   String? percentOrFixed;
 
   PayrollCalculationsResponse({this.salary, this.percentOrFixed});

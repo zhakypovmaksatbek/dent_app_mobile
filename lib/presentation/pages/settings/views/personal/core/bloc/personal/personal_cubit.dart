@@ -12,14 +12,14 @@ class PersonalCubit extends Cubit<PersonalState> {
   PersonalCubit() : super(PersonalInitial());
   final personalRepo = PersonalRepo();
 
-  void getPersonalList(int page, {String? search}) async {
+  void getPersonalList(int page, {String? search, bool? isRefresh}) async {
     emit(PersonalLoading());
     try {
       final personalData = await personalRepo.getPersonalList(
         page,
         search: search,
       );
-      emit(PersonalLoaded(personalData));
+      emit(PersonalLoaded(personalData, isRefresh ?? false));
     } on DioException catch (e) {
       emit(
         PersonalError(

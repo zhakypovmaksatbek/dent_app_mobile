@@ -11,6 +11,12 @@ import 'package:dent_app_mobile/presentation/pages/report/core/bloc/payment/paym
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/report/report_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/cubit/diagnosis_configuration_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/diagnosis/diagnosis_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_action/personal_action_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_patient/personal_patient_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_specialty/personal_specialty_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_work_schedule/personal_work_schedule_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/get_service/get_service_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/get_service_item/get_service_item_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service/service_cubit.dart';
@@ -73,5 +79,11 @@ class Initializer {
     BlocProvider(create: (context) => GetServiceCubit()),
     BlocProvider(create: (context) => DiagnosisCubit()),
     BlocProvider(create: (context) => DiagnosisConfigurationCubit()),
+    BlocProvider(create: (context) => PersonalActionCubit()),
+    BlocProvider(create: (context) => PersonalCubit()),
+    BlocProvider(create: (context) => PersonalPatientCubit()),
+    BlocProvider(create: (context) => PersonalSpecialtyCubit()),
+    BlocProvider(create: (context) => PersonalWorkScheduleCubit()),
+    BlocProvider(create: (context) => AppointmentCubit()),
   ];
 }

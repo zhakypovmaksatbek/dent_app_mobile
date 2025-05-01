@@ -1,9 +1,12 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,114 +85,117 @@ class PatientCard extends StatelessWidget {
     return DateFormat('dd.MM.yyyy').format(dateTime);
   }
 
+  static final AppRouter router = getIt<AppRouter>();
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: ColorConstants.primary.withValues(alpha: .08),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          leading: CircleAvatar(
-            backgroundColor: ColorConstants.primary,
-            child: Text(
-              patient.fullName?[0] ?? '?',
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-          visualDensity: VisualDensity.compact,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-          collapsedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-          ),
-          childrenPadding: EdgeInsets.zero,
-          title: AppText(
-            title: patient.fullName ?? 'Unknown',
-            textType: TextType.subtitle,
-          ),
-
-          tilePadding: EdgeInsets.only(left: 8),
-          subtitle: AppText(
-            title: patient.phoneNumber ?? 'No phone',
-            textType: TextType.body,
-          ),
-          trailing: PopupMenuButton<String>(
-            onSelected: (value) {
-              switch (value) {
-                case 'edit':
-                  _showEditPatientDialog(patient, context);
-                  break;
-                case 'delete':
-                  _showDeleteConfirmationDialog(patient, context);
-                  break;
-              }
-            },
-            itemBuilder:
-                (context) => [
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: Row(
-                      children: [
-                        const Icon(Icons.edit, size: 20),
-                        const SizedBox(width: 8),
-                        AppText(
-                          title: LocaleKeys.buttons_edit.tr(),
-                          textType: TextType.body,
-                        ),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        const Icon(Icons.delete, size: 20, color: Colors.red),
-                        const SizedBox(width: 8),
-                        AppText(
-                          title: LocaleKeys.buttons_delete.tr(),
-                          textType: TextType.body,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-          ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoRow(
-                    LocaleKeys.forms_email.tr(),
-                    patient.email ?? 'N/A',
-                  ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    LocaleKeys.forms_birthday.tr(),
-                    dateFormat(patient.birthDate ?? ''),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    LocaleKeys.forms_debt.tr(),
-                    patient.debt?.toString() ?? 'N/A',
-                  ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    LocaleKeys.forms_deposit.tr(),
-                    patient.deposit?.toString() ?? 'N/A',
-                  ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    LocaleKeys.forms_payment.tr(),
-                    patient.payment?.toString() ?? 'N/A',
-                  ),
-                ],
+    return InkWell(
+      onTap: () => router.push(AppointmentDetailRoute(id: patient.id ?? 0)),
+      child: CustomCardDecoration(
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            leading: CircleAvatar(
+              backgroundColor: ColorConstants.primary,
+              child: Text(
+                patient.fullName?[0] ?? '?',
+                style: const TextStyle(color: Colors.white),
               ),
             ),
-          ],
+            visualDensity: VisualDensity.compact,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+            collapsedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+            childrenPadding: EdgeInsets.zero,
+            title: AppText(
+              title: patient.fullName ?? 'Unknown',
+              textType: TextType.subtitle,
+            ),
+
+            tilePadding: EdgeInsets.only(left: 8),
+            subtitle: AppText(
+              title: patient.phoneNumber ?? 'No phone',
+              textType: TextType.body,
+            ),
+            trailing: PopupMenuButton<String>(
+              onSelected: (value) {
+                switch (value) {
+                  case 'edit':
+                    _showEditPatientDialog(patient, context);
+                    break;
+                  case 'delete':
+                    _showDeleteConfirmationDialog(patient, context);
+                    break;
+                }
+              },
+              itemBuilder:
+                  (context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.edit, size: 20),
+                          const SizedBox(width: 8),
+                          AppText(
+                            title: LocaleKeys.buttons_edit.tr(),
+                            textType: TextType.body,
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.delete, size: 20, color: Colors.red),
+                          const SizedBox(width: 8),
+                          AppText(
+                            title: LocaleKeys.buttons_delete.tr(),
+                            textType: TextType.body,
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildInfoRow(
+                      LocaleKeys.forms_email.tr(),
+                      patient.email ?? 'N/A',
+                    ),
+                    const SizedBox(height: 8),
+                    _buildInfoRow(
+                      LocaleKeys.forms_birthday.tr(),
+                      dateFormat(patient.birthDate ?? ''),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildInfoRow(
+                      LocaleKeys.forms_debt.tr(),
+                      patient.debt?.toString() ?? 'N/A',
+                    ),
+                    const SizedBox(height: 8),
+                    _buildInfoRow(
+                      LocaleKeys.forms_deposit.tr(),
+                      patient.deposit?.toString() ?? 'N/A',
+                    ),
+                    const SizedBox(height: 8),
+                    _buildInfoRow(
+                      LocaleKeys.forms_payment.tr(),
+                      patient.payment?.toString() ?? 'N/A',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

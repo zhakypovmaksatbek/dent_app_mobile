@@ -10,7 +10,8 @@ class UserModel {
   String? fullName;
   String? email;
   String? phoneNumber;
-  int? salary;
+  String? phoneNumber2;
+  double? salary;
   String? percentOrFixed;
   bool? isVisibilityPhoneNumber;
 
@@ -19,6 +20,7 @@ class UserModel {
     this.fullName,
     this.email,
     this.phoneNumber,
+    this.phoneNumber2,
     this.salary,
     this.percentOrFixed,
     this.isVisibilityPhoneNumber,
@@ -29,7 +31,8 @@ class UserModel {
     fullName = json['fullName'];
     email = json['email'];
     phoneNumber = json['phoneNumber'];
-    salary = json['salary'];
+    phoneNumber2 = json['phoneNumber2'];
+    salary = json['salary']?.toDouble();
     percentOrFixed = json['percentOrFixed'];
     isVisibilityPhoneNumber = json['isVisibilityPhoneNumber'];
   }
@@ -40,6 +43,7 @@ class UserModel {
     data['fullName'] = fullName;
     data['email'] = email;
     data['phoneNumber'] = phoneNumber;
+    data['phoneNumber2'] = phoneNumber2;
     data['salary'] = salary;
     data['percentOrFixed'] = percentOrFixed;
     data['isVisibilityPhoneNumber'] = isVisibilityPhoneNumber;

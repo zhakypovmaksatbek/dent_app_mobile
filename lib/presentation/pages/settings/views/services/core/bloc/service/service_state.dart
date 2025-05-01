@@ -4,10 +4,8 @@ abstract class ServiceState {}
 
 class ServiceInitial extends ServiceState {}
 
-// Servis getirme ile ilgili state'ler
 class ServiceLoading extends ServiceState {}
 
-// Servis işlemleri ile ilgili state'ler (save, update, delete)
 class ServiceActionLoading extends ServiceState {}
 
 class ServiceActionSuccess extends ServiceState {

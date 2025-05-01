@@ -13,8 +13,9 @@ final class PersonalLoading extends PersonalState {}
 
 final class PersonalLoaded extends PersonalState {
   final UserDataModel personalData;
+  final bool isRefresh;
 
-  const PersonalLoaded(this.personalData);
+  const PersonalLoaded(this.personalData, this.isRefresh);
 
   @override
   List<Object> get props => [personalData];
