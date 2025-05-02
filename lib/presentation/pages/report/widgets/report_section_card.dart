@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:flutter/material.dart';
 
 class ReportSectionCard extends StatelessWidget {
@@ -15,10 +16,7 @@ class ReportSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: cardColor,
+    return CustomCardDecoration(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

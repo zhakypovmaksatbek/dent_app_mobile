@@ -258,11 +258,16 @@ class _PatientPageState extends State<PatientPage> {
   }
 
   Widget _buildPatientList(List<PatientModel> patients) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        final patient = patients[index];
-        return PatientCard(patient: patient);
-      }, childCount: patients.length),
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverList.separated(
+        itemBuilder: (context, index) {
+          final patient = patients[index];
+          return PatientCard(patient: patient);
+        },
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        itemCount: patients.length,
+      ),
     );
   }
 }

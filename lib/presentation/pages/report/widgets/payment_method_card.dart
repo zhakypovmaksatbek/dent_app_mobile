@@ -1,6 +1,7 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/report/report_model.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -11,9 +12,7 @@ class PaymentMethodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return CustomCardDecoration(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

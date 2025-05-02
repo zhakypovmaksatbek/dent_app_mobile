@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:dent_app_mobile/core/utils/format_utils.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
@@ -42,13 +43,14 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
     _personalDetailCubit = PersonalDetailCubit();
     _personalPatientCubit = PersonalPatientCubit();
     _personalSpecialtyCubit = PersonalSpecialtyCubit();
-    _personalPatientCubit.getVisits(userId: widget.userId, page: 1);
-    _personalSpecialtyCubit.getSpecialties(userId: widget.userId);
+
     _loadUserData();
   }
 
-  void _loadUserData() {
-    _personalDetailCubit.getUserDetail(widget.userId);
+  void _loadUserData() async {
+    await _personalDetailCubit.getUserDetail(widget.userId);
+    await _personalPatientCubit.getVisits(userId: widget.userId, page: 1);
+    await _personalSpecialtyCubit.getSpecialties(userId: widget.userId);
   }
 
   final AppRouter router = getIt<AppRouter>();
@@ -176,10 +178,9 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
                     ),
                   ),
                   TextButton(
-                    onPressed:
-                        () => _personalSpecialtyCubit.getSpecialties(
-                          userId: userId,
-                        ),
+                    onPressed: () {
+                      _personalSpecialtyCubit.getSpecialties(userId: userId);
+                    },
                     child: Text(LocaleKeys.buttons_retry.tr()),
                   ),
                 ],
@@ -203,12 +204,13 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
                       if (_userCanEditSpecialties())
                         IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed:
-                              () => _showEditSpecialtiesDialog(
-                                userId,
-                                userSpecialist,
-                                anotherSpecialist,
-                              ),
+                          onPressed: () {
+                            _showEditSpecialtiesDialog(
+                              userId,
+                              userSpecialist,
+                              anotherSpecialist,
+                            );
+                          },
                           tooltip: LocaleKeys.general_edit_specialties.tr(),
                         ),
                     ],
@@ -548,11 +550,7 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            _buildInfoRow(
-              icon: Icons.badge,
-              label: 'ID',
-              value: user.id?.toString() ?? '-',
-            ),
+
             if (user.patronymic != null && user.patronymic!.isNotEmpty)
               _buildInfoRow(
                 icon: Icons.person,
@@ -591,7 +589,7 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
             _buildInfoRow(
               icon: Icons.phone,
               label: LocaleKeys.forms_phone.tr(),
-              value: user.phoneNumber ?? '-',
+              value: FormatUtils.formatPhoneNumber(user.phoneNumber ?? ''),
               showVisibilityStatus: true,
               isVisible: user.isVisibilityPhoneNumber ?? false,
             ),

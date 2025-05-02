@@ -6,6 +6,7 @@ import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.d
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/phone_number_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,6 @@ class PatientCard extends StatelessWidget {
   const PatientCard({super.key, required this.patient});
 
   void _showEditPatientDialog(PatientModel patient, BuildContext context) {
-    // TODO: Implement edit patient dialog
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => CreatePatientPage(isEdit: true, patient: patient),
@@ -115,10 +115,7 @@ class PatientCard extends StatelessWidget {
             ),
 
             tilePadding: EdgeInsets.only(left: 8),
-            subtitle: AppText(
-              title: patient.phoneNumber ?? 'No phone',
-              textType: TextType.body,
-            ),
+            subtitle: PhoneNumberText(phoneNumber: patient.phoneNumber ?? ''),
             trailing: PopupMenuButton<String>(
               onSelected: (value) {
                 switch (value) {
