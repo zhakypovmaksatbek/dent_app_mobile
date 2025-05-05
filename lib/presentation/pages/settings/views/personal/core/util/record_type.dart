@@ -1,20 +1,24 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 
 enum RecordType {
-  treatment(LocaleKeys.record_type_treatment),
-  consultation(LocaleKeys.record_type_consultation),
-  diagnostics(LocaleKeys.record_type_diagnostics),
-  inspection(LocaleKeys.record_type_inspection),
-  implantation(LocaleKeys.record_type_implantation),
-  orthopedics(LocaleKeys.record_type_orthopedics),
-  orthodontics(LocaleKeys.record_type_orthodontics),
-  periodontology(LocaleKeys.record_type_periodontology),
-  surgery(LocaleKeys.record_type_surgery),
-  firstDoctorAppointment(LocaleKeys.record_type_first_doctor_appointment);
+  treatment(LocaleKeys.record_type_treatment, 'TREATMENT'),
+  consultation(LocaleKeys.record_type_consultation, 'CONSULTATION'),
+  diagnostics(LocaleKeys.record_type_diagnostics, 'DIAGNOSTICS'),
+  inspection(LocaleKeys.record_type_inspection, 'INSPECTION'),
+  implantation(LocaleKeys.record_type_implantation, 'IMPLANTATION'),
+  orthopedics(LocaleKeys.record_type_orthopedics, 'ORTHOPEDICS'),
+  orthodontics(LocaleKeys.record_type_orthodontics, 'ORTHODONTICS'),
+  periodontology(LocaleKeys.record_type_periodontology, 'PERIODONTICS'),
+  surgery(LocaleKeys.record_type_surgery, 'SURGERY'),
+  firstDoctorAppointment(
+    LocaleKeys.record_type_first_doctor_appointment,
+    'FIRST_DOCTOR_APPOINTMENT',
+  );
 
   final String displayName;
+  final String key;
 
-  const RecordType(this.displayName);
+  const RecordType(this.displayName, this.key);
 
   // from string
   static RecordType fromString(String value) {

@@ -1,7 +1,11 @@
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
+import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
+import 'package:dent_app_mobile/models/appointment/room_model.dart';
+import 'package:dent_app_mobile/models/appointment/time_model.dart';
+import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 
 abstract class IAppointmentRepo {
   Future<List<AppointmentModel>> getAppointments();
@@ -13,6 +17,18 @@ abstract class IAppointmentRepo {
     AppointmentCommentModel appointment,
   );
   Future<void> deleteAppointment(int id);
+  Future<List<CalendarAppointmentModel>> getCalendarAppointments({
+    required DateTime startDate,
+    required DateTime endDate,
+    List<int>? userIds,
+  });
+  Future<List<CalendarAppointmentModel>> getCalendarAppointmentsForDoctor({
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+  Future<List<PatientShortModel>> getPatientShortList(String query);
+  Future<List<TimeModel>> getTimeList(int userId, DateTime date, int minute);
+  Future<List<RoomModel>> getRoomList();
 }
 
 class AppointmentRepo extends IAppointmentRepo {
@@ -20,7 +36,10 @@ class AppointmentRepo extends IAppointmentRepo {
   @override
   Future<List<AppointmentModel>> getAppointments() async {
     final response = await dio.get('api/appointments');
-    return response.data.map((e) => AppointmentModel.fromJson(e)).toList();
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => AppointmentModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -53,5 +72,96 @@ class AppointmentRepo extends IAppointmentRepo {
     AppointmentCommentModel appointment,
   ) async {
     await dio.put('api/appointments/$id/comments', data: appointment.toJson());
+  }
+
+  @override
+  Future<List<CalendarAppointmentModel>> getCalendarAppointments({
+    required DateTime startDate,
+    required DateTime endDate,
+    List<int>? userIds,
+  }) async {
+    final queryParameters = <String, dynamic>{};
+
+    queryParameters['startDay'] = formatDate(startDate);
+    queryParameters['endDay'] = formatDate(endDate);
+    if (userIds != null) {
+      queryParameters['userIds'] = userIds;
+    }
+    final response = await dio.get(
+      'api/calendars',
+      queryParameters: queryParameters,
+    );
+
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map(
+          (e) => CalendarAppointmentModel.fromJson(e as Map<String, dynamic>),
+        )
+        .toList();
+  }
+
+  String formatDate(DateTime date) {
+    return date.toIso8601String().split('T')[0];
+  }
+
+  @override
+  Future<List<PatientShortModel>> getPatientShortList(String query) async {
+    final response = await dio.get(
+      'api/calendars/patients',
+      queryParameters: {'search': query},
+    );
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => PatientShortModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<CalendarAppointmentModel>> getCalendarAppointmentsForDoctor({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final queryParameters = <String, dynamic>{};
+    queryParameters['startDate'] = formatDate(startDate);
+    queryParameters['endDate'] = formatDate(endDate);
+    final response = await dio.get(
+      'api/calendars/doctor',
+      queryParameters: queryParameters,
+    );
+
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map(
+          (e) => CalendarAppointmentModel.fromJson(e as Map<String, dynamic>),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<TimeModel>> getTimeList(
+    int userId,
+    DateTime date,
+    int minute,
+  ) async {
+    final response = await dio.get(
+      'api/day-schedules/freeTime/$userId/mobile',
+      queryParameters: {
+        'dataOfAppointment': formatDate(date),
+        'minute': minute,
+      },
+    );
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => TimeModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<RoomModel>> getRoomList() async {
+    final response = await dio.get('api/rooms');
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

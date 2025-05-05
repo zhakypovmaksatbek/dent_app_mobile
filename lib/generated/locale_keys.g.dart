@@ -83,6 +83,8 @@ abstract class  LocaleKeys {
   static const buttons_create_personal = 'buttons.create_personal';
   static const buttons_update_personal = 'buttons.update_personal';
   static const buttons_retry = 'buttons.retry';
+  static const buttons_add_appointment = 'buttons.add_appointment';
+  static const buttons_call_patient = 'buttons.call_patient';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -190,6 +192,10 @@ abstract class  LocaleKeys {
   static const notifications_service_saved_successfully = 'notifications.service_saved_successfully';
   static const notifications_service_updated_successfully = 'notifications.service_updated_successfully';
   static const notifications_service_deleted_successfully = 'notifications.service_deleted_successfully';
+  static const notifications_appointment_updated_successfully = 'notifications.appointment_updated_successfully';
+  static const notifications_appointment_deleted_successfully = 'notifications.appointment_deleted_successfully';
+  static const notifications_could_not_load_appointment_details = 'notifications.could_not_load_appointment_details';
+  static const notifications_appointment_cannot_be_in_the_past = 'notifications.appointment_cannot_be_in_the_past';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';
@@ -337,6 +343,16 @@ abstract class  LocaleKeys {
   static const appointment_edit_medical_details = 'appointment.edit_medical_details';
   static const appointment_delete_appointment = 'appointment.delete_appointment';
   static const appointment_delete_appointment_content = 'appointment.delete_appointment_content';
+  static const appointment_tomorrow = 'appointment.tomorrow';
+  static const appointment_appointments_for_date = 'appointment.appointments_for_date';
+  static const appointment_no_appointments_for_date = 'appointment.no_appointments_for_date';
+  static const appointment_time = 'appointment.time';
+  static const appointment_room = 'appointment.room';
+  static const appointment_notes = 'appointment.notes';
+  static const appointment_appointment_type_label = 'appointment.appointment_type_label';
+  static const appointment_new_appointment = 'appointment.new_appointment';
+  static const appointment_start_time = 'appointment.start_time';
+  static const appointment_end_time = 'appointment.end_time';
   static const appointment = 'appointment';
 
 }

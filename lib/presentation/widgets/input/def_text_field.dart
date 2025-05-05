@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class DefTextField extends StatelessWidget {
   const DefTextField({
     super.key,
-    required this.hintText,
+    this.hintText,
     this.controller,
     this.obscureText = false,
     this.validator,
@@ -13,8 +13,11 @@ class DefTextField extends StatelessWidget {
     this.textInputAction,
     this.keyboardAppearance,
     this.onEditingComplete,
+    this.onChanged,
+    this.labelText,
+    this.decoration,
   });
-  final String hintText;
+  final String? hintText;
   final TextEditingController? controller;
   final bool obscureText;
   final String? Function(String?)? validator;
@@ -23,6 +26,9 @@ class DefTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Brightness? keyboardAppearance;
   final VoidCallback? onEditingComplete;
+  final Function(String)? onChanged;
+  final String? labelText;
+  final InputDecoration? decoration;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -34,7 +40,14 @@ class DefTextField extends StatelessWidget {
       keyboardAppearance: keyboardAppearance,
       textInputAction: textInputAction,
       onEditingComplete: onEditingComplete,
-      decoration: InputDecoration(hintText: hintText, border: InputBorder.none),
+      onChanged: onChanged,
+      decoration:
+          decoration ??
+          InputDecoration(
+            hintText: hintText,
+            labelText: labelText,
+            border: InputBorder.none,
+          ),
     );
   }
 }

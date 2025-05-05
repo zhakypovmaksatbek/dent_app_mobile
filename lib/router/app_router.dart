@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/models/users/user_model.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/screen/login_page.dart';
-import 'package:dent_app_mobile/presentation/pages/calendar/calendar_page.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/views/calendar_page.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:dent_app_mobile/presentation/pages/main/main_page.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/patient_page.dart';

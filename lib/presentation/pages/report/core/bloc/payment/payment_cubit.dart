@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:dent_app_mobile/core/repo/report/report_repo.dart';
+import 'package:dent_app_mobile/core/utils/format_utils.dart';
 import 'package:dent_app_mobile/models/report/payment_report_model.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 part 'payment_state.dart';
@@ -26,8 +28,8 @@ class PaymentCubit extends Cubit<PaymentState> {
       );
 
       emit(PaymentLoaded(paymentReport: paymentReport));
-    } catch (e) {
-      emit(PaymentError(message: e.toString()));
+    } on DioException catch (e) {
+      emit(PaymentError(message: FormatUtils.formatErrorMessage(e)));
     }
   }
 }

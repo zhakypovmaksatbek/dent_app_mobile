@@ -1,6 +1,11 @@
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/search_patient/search_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/core/heartbeats/heartbeats_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc.dart';
@@ -85,5 +90,10 @@ class Initializer {
     BlocProvider(create: (context) => PersonalSpecialtyCubit()),
     BlocProvider(create: (context) => PersonalWorkScheduleCubit()),
     BlocProvider(create: (context) => AppointmentCubit()),
+    BlocProvider(create: (context) => AppointmentActionCubit()),
+    BlocProvider(create: (context) => CalendarAppointmentsCubit()),
+    BlocProvider(create: (context) => SearchPatientCubit()),
+    BlocProvider(create: (context) => FreeTimeCubit()),
+    BlocProvider(create: (context) => RoomCubit()),
   ];
 }

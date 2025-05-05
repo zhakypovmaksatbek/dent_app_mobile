@@ -48,5 +48,12 @@ class AppTheme {
       color: ColorConstants.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: ColorConstants.white,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: ColorConstants.white,
+      elevation: 0,
+    ),
   );
 }

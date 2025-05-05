@@ -96,7 +96,9 @@ class CodegenLoader extends AssetLoader{
     "edit_diagnosis": "Редактировать диагноз",
     "create_personal": "Создать персонал",
     "update_personal": "Обновить персонал",
-    "retry": "Повторить"
+    "retry": "Повторить",
+    "add_appointment": "Добавить запись",
+    "call_patient": "Позвонить"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -209,7 +211,11 @@ class CodegenLoader extends AssetLoader{
     "no_schedule_available": "Рабочий график не найден",
     "service_saved_successfully": "Услуга успешно сохранена",
     "service_updated_successfully": "Услуга успешно обновлена",
-    "service_deleted_successfully": "Услуга успешно удалена"
+    "service_deleted_successfully": "Услуга успешно удалена",
+    "appointment_updated_successfully": "Запись успешно обновлена",
+    "appointment_deleted_successfully": "Запись успешно удалена",
+    "could_not_load_appointment_details": "Не удалось загрузить информацию о записи",
+    "appointment_cannot_be_in_the_past": "Запись не может быть в прошлом"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -366,7 +372,17 @@ class CodegenLoader extends AssetLoader{
     "medical_details": "Медицинские данные",
     "edit_medical_details": "Редактировать медицинские данные",
     "delete_appointment": "Удалить запись",
-    "delete_appointment_content": "Вы уверены, что хотите удалить запись {name}?"
+    "delete_appointment_content": "Вы уверены, что хотите удалить запись {name}?",
+    "tomorrow": "Завтра",
+    "appointments_for_date": "Записи на {date}",
+    "no_appointments_for_date": "Нет записей на {date}",
+    "time": "Время",
+    "room": "Кабинет",
+    "notes": "Заметки",
+    "appointment_type_label": "Тип записи",
+    "new_appointment": "Новая запись",
+    "start_time": "Время начала",
+    "end_time": "Время окончания"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": _ru};

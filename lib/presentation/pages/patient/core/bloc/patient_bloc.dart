@@ -1,9 +1,8 @@
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
-import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/core/utils/format_utils.dart';
 import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,16 +44,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
         ),
       );
     } on DioException catch (e) {
-      if (e.response?.data is Map<String, dynamic>) {
-        final errorData = e.response?.data as Map<String, dynamic>;
-        emit(
-          PatientError(
-            errorData['message'] ?? LocaleKeys.errors_something_went_wrong.tr(),
-          ),
-        );
-      } else {
-        emit(PatientError(LocaleKeys.errors_something_went_wrong.tr()));
-      }
+      emit(PatientError(FormatUtils.formatErrorMessage(e)));
     }
   }
 
@@ -67,18 +57,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       final patients = await _patientRepo.searchPatients(event.query);
       emit(PatientSearched(patients));
     } on DioException catch (e) {
-      if (e.response?.data is Map<String, dynamic>) {
-        final errorData = e.response?.data as Map<String, dynamic>;
-        emit(
-          PatientError(
-            errorData['message'] ?? LocaleKeys.errors_something_went_wrong.tr(),
-          ),
-        );
-      } else {
-        emit(PatientError(LocaleKeys.errors_something_went_wrong.tr()));
-      }
-    } catch (e) {
-      emit(PatientError(e.toString()));
+      emit(PatientError(FormatUtils.formatErrorMessage(e)));
     }
   }
 
@@ -93,16 +72,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       // Refresh the list after updating
       add(GetPatients(page: 1, size: _pageSize, isRefresh: true));
     } on DioException catch (e) {
-      if (e.response?.data is Map<String, dynamic>) {
-        final errorData = e.response?.data as Map<String, dynamic>;
-        emit(
-          PatientError(
-            errorData['message'] ?? LocaleKeys.errors_something_went_wrong.tr(),
-          ),
-        );
-      } else {
-        emit(PatientError(LocaleKeys.errors_something_went_wrong.tr()));
-      }
+      emit(PatientError(FormatUtils.formatErrorMessage(e)));
     }
   }
 
@@ -117,16 +87,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       // Refresh the list after deleting
       add(GetPatients(page: 1, size: _pageSize, isRefresh: true));
     } on DioException catch (e) {
-      if (e.response?.data is Map<String, dynamic>) {
-        final errorData = e.response?.data as Map<String, dynamic>;
-        emit(
-          PatientError(
-            errorData['message'] ?? LocaleKeys.errors_something_went_wrong.tr(),
-          ),
-        );
-      } else {
-        emit(PatientError(LocaleKeys.errors_something_went_wrong.tr()));
-      }
+      emit(PatientError(FormatUtils.formatErrorMessage(e)));
     }
   }
 
@@ -141,16 +102,7 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       // Currently it just loads the patient but doesn't emit a specific state
       emit(PatientInitial());
     } on DioException catch (e) {
-      if (e.response?.data is Map<String, dynamic>) {
-        final errorData = e.response?.data as Map<String, dynamic>;
-        emit(
-          PatientError(
-            errorData['message'] ?? LocaleKeys.errors_something_went_wrong.tr(),
-          ),
-        );
-      } else {
-        emit(PatientError(LocaleKeys.errors_something_went_wrong.tr()));
-      }
+      emit(PatientError(FormatUtils.formatErrorMessage(e)));
     }
   }
 }
