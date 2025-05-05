@@ -1,253 +1,346 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/heartbeats/heart_beats_model.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flip_card/controllers/flip_card_controllers.dart';
-import 'package:flutter_flip_card/flipcard/flip_card.dart';
-import 'package:flutter_flip_card/modal/flip_side.dart';
 
-class InfoCard extends StatefulWidget {
-  const InfoCard({
+class StatCard extends StatelessWidget {
+  const StatCard({
     super.key,
-    required this.serviceMade,
     required this.title,
+    required this.value,
     required this.subtitle,
-    this.icon = Icons.star,
-    this.frontColor = ColorConstants.primary,
-    this.backColor = ColorConstants.grey,
-    this.iconColor = Colors.white,
-    this.textColor = Colors.black,
-    this.isInfographic = false,
-    this.isWorkingHours = false,
+    required this.trend,
+    required this.trendPercentage,
+    this.trendText,
+    this.icon,
+    this.color = Colors.blue,
+    this.showMiniChart = true,
+    this.miniChartData = const [],
+    this.onTap,
   });
 
-  final ServiceMade serviceMade;
   final String title;
+  final String value;
   final String subtitle;
-  final IconData icon;
-  final Color frontColor;
-  final Color backColor;
-  final Color iconColor;
-  final Color textColor;
-  final bool isInfographic;
-  final bool isWorkingHours;
-
-  @override
-  State<InfoCard> createState() => _InfoCardState();
-}
-
-class _InfoCardState extends State<InfoCard> {
-  late final FlipCardController _flipController;
-
-  @override
-  void initState() {
-    super.initState();
-    _flipController = FlipCardController();
-  }
-
-  Color get _differenceColor =>
-      widget.serviceMade.exceeds == true ? Colors.green : Colors.red;
-
-  IconData get _differenceIcon =>
-      widget.serviceMade.exceeds == true
-          ? Icons.arrow_upward
-          : Icons.arrow_downward;
-
-  Widget _buildAnimatedTitle(String text) {
-    return AnimatedTextKit(
-      animatedTexts: [
-        TypewriterAnimatedText(
-          text,
-          textStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: widget.textColor,
-            letterSpacing: 0.5,
-            height: 1.2,
-            shadows: [
-              Shadow(
-                color: Colors.black.withValues(alpha: .1),
-                offset: const Offset(0, 1),
-                blurRadius: 2,
-              ),
-            ],
-          ),
-          speed: const Duration(milliseconds: 50),
-        ),
-      ],
-      totalRepeatCount: 1,
-      pause: const Duration(milliseconds: 50),
-      displayFullTextOnTap: true,
-      stopPauseOnTap: true,
-    );
-  }
-
-  Widget _buildAnimatedSubtitle(String text) {
-    return AnimatedTextKit(
-      animatedTexts: [
-        TypewriterAnimatedText(
-          text,
-          textStyle: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: widget.textColor.withValues(alpha: .8),
-            letterSpacing: 0.3,
-            height: 1.4,
-          ),
-          speed: const Duration(milliseconds: 50),
-        ),
-      ],
-      totalRepeatCount: 1,
-      pause: const Duration(milliseconds: 50),
-      displayFullTextOnTap: true,
-      stopPauseOnTap: true,
-    );
-  }
-
-  Widget _buildValueRow() {
-    return Row(
-      children: [
-        AnimatedTextKit(
-          key: Key(widget.serviceMade.current.toString()),
-          animatedTexts: [
-            WavyAnimatedText(
-              widget.serviceMade.current.toString(),
-              textStyle: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'sans-serif',
-                color: widget.textColor,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withValues(alpha: .2),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-          ],
-          isRepeatingAnimation: false,
-        ),
-        const SizedBox(width: 8),
-        if (widget.isInfographic)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: _differenceColor.withValues(alpha: .1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(_differenceIcon, color: _differenceColor, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                  !widget.isInfographic
-                      ? ""
-                      : convertToNumber(
-                        widget.serviceMade.current!,
-                        widget.serviceMade.difference!,
-                      ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: _differenceColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  String convertToNumber(String newCurrent, String newDifference) {
-    final int current = int.parse(newCurrent);
-    final int difference = int.parse(newDifference);
-    return (current - difference).toString();
-  }
-
-  Widget _buildIconContainer() {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        color: widget.iconColor.withValues(alpha: .2),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Icon(widget.icon, color: widget.iconColor, size: 24),
-    );
-  }
-
-  Widget _buildCardContent(Color backgroundColor) {
-    return Card(
-      color: backgroundColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 8,
-      shadowColor: Colors.black.withValues(alpha: .2),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [backgroundColor, backgroundColor.withValues(alpha: .8)],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildAnimatedTitle(widget.title),
-                        const SizedBox(height: 12),
-                        _buildValueRow(),
-                      ],
-                    ),
-                  ),
-                  _buildIconContainer(),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: _buildAnimatedSubtitle(widget.subtitle),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  final TrendDirection trend;
+  final double trendPercentage;
+  final String? trendText;
+  final IconData? icon;
+  final Color color;
+  final bool showMiniChart;
+  final List<double> miniChartData;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return FlipCard(
-      controller: _flipController,
-      rotateSide: RotateSide.right,
-      onTapFlipping: true,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final subTextColor = isDark ? Colors.white70 : Colors.black54;
 
-      frontWidget: _buildCardContent(widget.frontColor),
-      backWidget: _buildCardContent(widget.backColor),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: CustomCardDecoration(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header row with title and icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: subTextColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Main value and trend
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            value,
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              height: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          _buildTrendIndicator(context),
+                        ],
+                      ),
+                    ],
+                  ),
+                  if (icon != null)
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: .1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(icon, color: color, size: 26),
+                    ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // Subtitle text
+              Text(
+                subtitle,
+                style: TextStyle(color: subTextColor, fontSize: 13),
+              ),
+
+              if (showMiniChart && miniChartData.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                SizedBox(height: 40, child: _buildMiniChart()),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  Widget _buildTrendIndicator(BuildContext context) {
+    // TrendDirection.neutral ise gösterme
+    if (trend == TrendDirection.neutral) {
+      return const SizedBox.shrink();
+    }
+
+    final isPositive = trend == TrendDirection.up;
+    final color = isPositive ? Colors.green : Colors.redAccent;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+          color: color,
+          size: 14,
+        ),
+        const SizedBox(width: 2),
+        Text(
+          trendText ?? '${trendPercentage.toStringAsFixed(1)}%',
+          style: TextStyle(
+            color: color,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMiniChart() {
+    final isPositive = trend == TrendDirection.up;
+
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(show: false),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            spots: _generateSpots(),
+            isCurved: true,
+            color: isPositive ? Colors.green : Colors.redAccent,
+            barWidth: 2,
+            isStrokeCapRound: true,
+            dotData: FlDotData(show: false),
+            belowBarData: BarAreaData(
+              show: true,
+              color:
+                  isPositive
+                      ? Colors.green.withOpacity(0.1)
+                      : Colors.redAccent.withOpacity(0.1),
+            ),
+          ),
+        ],
+        lineTouchData: LineTouchData(enabled: false),
+        minX: 0,
+        maxX: miniChartData.length.toDouble() - 1,
+        minY: _getMinValue() * 0.9,
+        maxY: _getMaxValue() * 1.1,
+      ),
+    );
+  }
+
+  List<FlSpot> _generateSpots() {
+    return List.generate(
+      miniChartData.length,
+      (index) => FlSpot(index.toDouble(), miniChartData[index]),
+    );
+  }
+
+  double _getMinValue() {
+    if (miniChartData.isEmpty) return 0;
+    return miniChartData.reduce((a, b) => a < b ? a : b);
+  }
+
+  double _getMaxValue() {
+    if (miniChartData.isEmpty) return 0;
+    return miniChartData.reduce((a, b) => a > b ? a : b);
+  }
+}
+
+enum TrendDirection { up, down, neutral }
+
+class InfoCard extends StatelessWidget {
+  const InfoCard({
+    super.key,
+    required this.frontServiceMade,
+    required this.frontTitle,
+    required this.frontSubtitle,
+    this.frontIcon = Icons.star,
+    this.frontColor = ColorConstants.primary,
+    this.frontIconColor = Colors.white,
+    this.frontTextColor = Colors.black,
+    this.frontIsInfographic = false,
+    this.frontIsWorkingHours = false,
+    required this.backServiceMade,
+    required this.backTitle,
+    required this.backSubtitle,
+    this.backColor = ColorConstants.grey,
+    this.backIcon = Icons.star,
+    this.backIconColor = Colors.white,
+    this.backTextColor = Colors.black,
+    this.backIsInfographic = false,
+    this.backIsWorkingHours = false,
+  });
+
+  // Front side properties
+  final ServiceMade frontServiceMade;
+  final String frontTitle;
+  final String frontSubtitle;
+  final IconData frontIcon;
+  final Color frontColor;
+  final Color frontIconColor;
+  final Color frontTextColor;
+  final bool frontIsInfographic;
+  final bool frontIsWorkingHours;
+
+  // Back side properties
+  final ServiceMade backServiceMade;
+  final String backTitle;
+  final String backSubtitle;
+  final Color backColor;
+  final IconData backIcon;
+  final Color backIconColor;
+  final Color backTextColor;
+  final bool backIsInfographic;
+  final bool backIsWorkingHours;
+
+  @override
+  Widget build(BuildContext context) {
+    // Front card
+    final frontTrend =
+        frontServiceMade.exceeds == true
+            ? TrendDirection.up
+            : TrendDirection.down;
+    final frontPercentage = _calculatePercentage(frontServiceMade);
+
+    // Back card
+    final backTrend =
+        backServiceMade.exceeds == true
+            ? TrendDirection.up
+            : TrendDirection.down;
+    final backPercentage = _calculatePercentage(backServiceMade);
+
+    // Random chart data based on current values for demonstration
+    final frontChartData = _generateDemoData(frontServiceMade, frontTrend);
+    final backChartData = _generateDemoData(backServiceMade, backTrend);
+
+    return PageView(
+      children: [
+        StatCard(
+          title: frontTitle,
+          value: frontServiceMade.current?.toString() ?? "0",
+          subtitle: frontSubtitle,
+          trend: frontTrend,
+          trendPercentage: frontPercentage,
+          icon: frontIcon,
+          color: frontColor,
+          miniChartData: frontChartData,
+          showMiniChart: frontIsInfographic,
+        ),
+        StatCard(
+          title: backTitle,
+          value: backServiceMade.current?.toString() ?? "0",
+          subtitle: backSubtitle,
+          trend: backTrend,
+          trendPercentage: backPercentage,
+          icon: backIcon,
+          color: backColor,
+          miniChartData: backChartData,
+          showMiniChart: backIsInfographic,
+        ),
+      ],
+    );
+  }
+
+  double _calculatePercentage(ServiceMade serviceMade) {
+    if (serviceMade.current == null || serviceMade.difference == null) {
+      return 0.0;
+    }
+
+    try {
+      final current = int.parse(serviceMade.current!);
+      final difference = int.parse(serviceMade.difference!);
+
+      if (current == 0) return 0.0;
+
+      final previous = current - difference;
+      if (previous == 0) return 100.0; // Avoid division by zero
+
+      return (difference / previous) * 100;
+    } catch (e) {
+      return 0.0;
+    }
+  }
+
+  List<double> _generateDemoData(
+    ServiceMade serviceMade,
+    TrendDirection trend,
+  ) {
+    try {
+      final baseValue = double.parse(serviceMade.current ?? "0");
+      final data = <double>[];
+
+      // Generate 7 data points for chart
+      for (int i = 0; i < 7; i++) {
+        if (trend == TrendDirection.up) {
+          data.add(baseValue * (0.7 + 0.05 * i));
+        } else {
+          data.add(baseValue * (1.3 - 0.05 * i));
+        }
+      }
+
+      return data;
+    } catch (e) {
+      return List.generate(7, (index) => 100.0 + index * 10);
+    }
   }
 }
 
