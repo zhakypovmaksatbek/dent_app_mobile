@@ -2,9 +2,9 @@ class DocumentModel {
   int? id;
   String? supplier;
   String? description;
-  int? totalPrice;
-  int? payed;
-  int? debt;
+  double? totalPrice;
+  double? payed;
+  double? debt;
   String? dateOfCreated;
   String? paymentStatus;
 
@@ -23,9 +23,9 @@ class DocumentModel {
     id = json['id'];
     supplier = json['supplier'];
     description = json['description'];
-    totalPrice = json['totalPrice'];
-    payed = json['payed'];
-    debt = json['debt'];
+    totalPrice = json['totalPrice']?.toDouble();
+    payed = json['payed']?.toDouble();
+    debt = json['debt']?.toDouble();
     dateOfCreated = json['dateOfCreated'];
     paymentStatus = json['paymentStatus'];
   }

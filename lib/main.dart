@@ -26,6 +26,8 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/get_service_item/get_service_item_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service/service_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service_type/service_type_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/document/document_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
 import 'package:dent_app_mobile/presentation/theme/app_theme.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -95,5 +97,7 @@ class Initializer {
     BlocProvider(create: (context) => SearchPatientCubit()),
     BlocProvider(create: (context) => FreeTimeCubit()),
     BlocProvider(create: (context) => RoomCubit()),
+    BlocProvider(create: (context) => ProductCubit()),
+    BlocProvider(create: (context) => DocumentCubit()),
   ];
 }
