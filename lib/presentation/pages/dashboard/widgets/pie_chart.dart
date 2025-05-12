@@ -1,8 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/heartbeats/heart_beats_model.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -44,18 +42,9 @@ class _ServicesPieChartState extends State<ServicesPieChart> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
+    return SizedBox(
       height: 400, // Adjust based on your needs
-      padding: const EdgeInsets.all(16),
       child: SfCircularChart(
-        title: ChartTitle(
-          text: LocaleKeys.general_services_statistics.tr(),
-          textStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
         legend: Legend(
           isVisible: true,
           position: LegendPosition.bottom,

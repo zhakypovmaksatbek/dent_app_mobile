@@ -1,5 +1,6 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/widgets/animated_digit.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -56,19 +57,19 @@ class AppointmentSummaryWidget extends StatelessWidget {
           context,
           LocaleKeys.routes_appointments.tr(),
           LocaleKeys.date_range_today.tr(),
-          todayCount.toString(),
+          todayCount,
         ),
         _buildInfoCard(
           context,
           LocaleKeys.routes_appointments.tr(),
           LocaleKeys.appointment_tomorrow.tr(),
-          tomorrowCount.toString(),
+          tomorrowCount,
         ),
         _buildInfoCard(
           context,
           LocaleKeys.routes_appointments.tr(),
           LocaleKeys.date_range_this_week.tr(),
-          weekCount.toString(),
+          weekCount,
         ),
       ],
     );
@@ -78,7 +79,7 @@ class AppointmentSummaryWidget extends StatelessWidget {
     BuildContext context,
     String title,
     String subtitle,
-    String count,
+    int count,
   ) {
     return Expanded(
       child: CustomCardDecoration(
@@ -104,14 +105,22 @@ class AppointmentSummaryWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                count,
-                style: TextStyle(
+              AnimatedDigit(
+                digit: count,
+                textStyle: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).primaryColor,
                 ),
               ),
+              // Text(
+              //   count,
+              //   style: TextStyle(
+              //     fontSize: 20,
+              //     fontWeight: FontWeight.bold,
+              //     color: Theme.of(context).primaryColor,
+              //   ),
+              // ),
             ],
           ),
         ),

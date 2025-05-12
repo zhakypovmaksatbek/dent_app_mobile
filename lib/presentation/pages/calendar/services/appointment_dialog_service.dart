@@ -1,4 +1,5 @@
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
@@ -6,6 +7,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_vie
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/edit_appointment_dialog_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -128,9 +130,21 @@ class AppointmentDialogService {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Add call functionality
-                        Navigator.pop(context);
+                      onPressed: () async {
+                        try {
+                          // Add call functionality
+                          Navigator.pop(context);
+                          await LauncherRepo().call(
+                            appointmentModel.patientPhoneNumber ?? '',
+                          );
+                        } catch (e) {
+                          if (context.mounted) {
+                            AppSnackBar.showErrorSnackBar(
+                              context,
+                              e.toString(),
+                            );
+                          }
+                        }
                       },
                       icon: const Icon(Icons.phone),
                       label: AppText(

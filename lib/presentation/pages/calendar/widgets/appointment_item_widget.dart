@@ -1,8 +1,12 @@
+import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
+import 'package:dent_app_mobile/presentation/constants/asset_constants.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
+import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
+import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -78,12 +82,22 @@ class AppointmentItemWidget extends StatelessWidget {
               constraints: const BoxConstraints(),
               onPressed: () => onEdit(context, appointment),
             ),
-
-            IconButton(
-              icon: const Icon(Icons.delete, size: 16, color: Colors.red),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              onPressed: () => onDelete(context, appointment),
+            GestureDetector(
+              onTap: () {
+                try {
+                  LauncherRepo().whatsapp(
+                    appointment.patientPhoneNumber ?? '',
+                    userName: patientName,
+                  );
+                } catch (e) {
+                  AppSnackBar.showErrorSnackBar(context, e.toString());
+                }
+              },
+              child: CustomAssetImage(
+                path: AssetConstants.whatsapp.svg,
+                isSvg: true,
+                height: 20,
+              ),
             ),
           ],
         ),

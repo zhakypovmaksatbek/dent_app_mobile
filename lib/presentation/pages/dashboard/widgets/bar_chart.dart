@@ -51,19 +51,10 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
     final sortedData = [...widget.data]
       ..sort((a, b) => (b.value ?? 0).compareTo(a.value ?? 0));
 
-    return Container(
+    return SizedBox(
       height: 400,
-      padding: const EdgeInsets.all(16),
+      // padding: const EdgeInsets.all(16),
       child: SfCartesianChart(
-        title: ChartTitle(
-          text: LocaleKeys.general_services_statistics.tr(),
-          textStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
-          ),
-          alignment: ChartAlignment.center,
-        ),
         legend: Legend(
           isVisible: false,
           position: LegendPosition.bottom,
@@ -85,10 +76,6 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
           labelIntersectAction: AxisLabelIntersectAction.rotate45,
           maximumLabels: 10, // Maksimum gösterilecek label sayısı
           axisLine: const AxisLine(width: 1),
-          title: AxisTitle(
-            text: LocaleKeys.routes_services.tr(), // "Услуги" (Hizmetler)
-            textStyle: const TextStyle(fontSize: 14),
-          ),
         ),
         primaryYAxis: NumericAxis(
           labelStyle: TextStyle(

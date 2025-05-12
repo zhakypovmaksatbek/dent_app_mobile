@@ -1,15 +1,18 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/warehouse/document_model.dart';
 import 'package:dent_app_mobile/models/warehouse/product_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/document/document_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/widgets/document_form_dialog.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/widgets/document_item_card.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/widgets/product_form_dialog.dart';
 import 'package:dent_app_mobile/presentation/widgets/app_loader.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -110,12 +113,16 @@ class _WarehousePageState extends State<WarehousePage>
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Delete Product'),
-            content: Text('Are you sure you want to delete "${product.name}"?'),
+            title: Text(LocaleKeys.buttons_delete.tr()),
+            content: Text(
+              LocaleKeys.alerts_delete_product_confirmation.tr(
+                namedArgs: {'name': product.name ?? '-'},
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: Text(LocaleKeys.buttons_cancel.tr()),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -128,7 +135,7 @@ class _WarehousePageState extends State<WarehousePage>
                   }
                   Navigator.pop(context);
                 },
-                child: const Text('Delete'),
+                child: Text(LocaleKeys.buttons_delete.tr()),
               ),
             ],
           ),
@@ -154,19 +161,25 @@ class _WarehousePageState extends State<WarehousePage>
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Warehouse'),
+          title: Text(LocaleKeys.routes_warehouse.tr()),
           actions: [
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _loadData,
-              tooltip: 'Refresh',
+              tooltip: LocaleKeys.buttons_refresh.tr(),
             ),
           ],
           bottom: TabBar(
             controller: _tabController,
-            tabs: const [
-              Tab(text: 'Products', icon: Icon(Icons.inventory)),
-              Tab(text: 'Documents', icon: Icon(Icons.description)),
+            tabs: [
+              Tab(
+                text: LocaleKeys.general_products.tr(),
+                icon: Icon(Icons.inventory),
+              ),
+              Tab(
+                text: LocaleKeys.general_documents.tr(),
+                icon: Icon(Icons.description),
+              ),
             ],
           ),
         ),
@@ -182,21 +195,21 @@ class _WarehousePageState extends State<WarehousePage>
                 if (state is ProductCreated) {
                   AppSnackBar.showSuccessSnackBar(
                     context,
-                    'Product created successfully',
+                    LocaleKeys.notifications_product_created_successfully.tr(),
                   );
                 }
 
                 if (state is ProductUpdated) {
                   AppSnackBar.showSuccessSnackBar(
                     context,
-                    'Product updated successfully',
+                    LocaleKeys.notifications_product_updated_successfully.tr(),
                   );
                 }
 
                 if (state is ProductDeleted) {
                   AppSnackBar.showSuccessSnackBar(
                     context,
-                    'Product deleted successfully',
+                    LocaleKeys.notifications_product_deleted_successfully.tr(),
                   );
                 }
               },
@@ -212,21 +225,21 @@ class _WarehousePageState extends State<WarehousePage>
                 if (state is DocumentCreated) {
                   AppSnackBar.showSuccessSnackBar(
                     context,
-                    'Document created successfully',
+                    LocaleKeys.notifications_document_created_successfully.tr(),
                   );
                 }
 
                 if (state is DocumentUpdated) {
                   AppSnackBar.showSuccessSnackBar(
                     context,
-                    'Document updated successfully',
+                    LocaleKeys.notifications_document_updated_successfully.tr(),
                   );
                 }
 
                 if (state is DocumentDeleted) {
                   AppSnackBar.showSuccessSnackBar(
                     context,
-                    'Document deleted successfully',
+                    LocaleKeys.notifications_document_deleted_successfully.tr(),
                   );
                 }
               },
@@ -258,7 +271,10 @@ class _WarehousePageState extends State<WarehousePage>
               _tabController.index == 0
                   ? () => _showAddEditProductDialog()
                   : () => _showCreateDocumentDialog(),
-          tooltip: _tabController.index == 0 ? 'Add Product' : 'Add Document',
+          tooltip:
+              _tabController.index == 0
+                  ? LocaleKeys.buttons_add_product.tr()
+                  : LocaleKeys.buttons_add_document.tr(),
           child: const Icon(Icons.add),
         );
       },
@@ -274,7 +290,7 @@ class _WarehousePageState extends State<WarehousePage>
           child: TextField(
             controller: _productSearchController,
             decoration: InputDecoration(
-              hintText: 'Ürün ara...',
+              hintText: LocaleKeys.buttons_product_search.tr(),
               prefixIcon: const Icon(Icons.search),
               suffixIcon:
                   _productSearchController.text.isNotEmpty
@@ -319,8 +335,9 @@ class _WarehousePageState extends State<WarehousePage>
                             ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
-                                  'Arama kriterine uygun ürün bulunamadı',
+                                Text(
+                                  LocaleKeys.notifications_not_found_products
+                                      .tr(),
                                 ),
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
@@ -329,19 +346,26 @@ class _WarehousePageState extends State<WarehousePage>
                                     _productCubit.getProducts();
                                   },
                                   icon: const Icon(Icons.clear),
-                                  label: const Text('Aramayı Temizle'),
+                                  label: Text(
+                                    LocaleKeys.buttons_clear_search.tr(),
+                                  ),
                                 ),
                               ],
                             )
                             : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text('No products available'),
+                                Text(
+                                  LocaleKeys.notifications_product_no_available
+                                      .tr(),
+                                ),
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
                                   onPressed: () => _showAddEditProductDialog(),
                                   icon: const Icon(Icons.add),
-                                  label: const Text('Add Product'),
+                                  label: Text(
+                                    LocaleKeys.buttons_add_product.tr(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -367,8 +391,8 @@ class _WarehousePageState extends State<WarehousePage>
                       children: [
                         Column(
                           children: [
-                            const Text(
-                              'Total Products',
+                            Text(
+                              LocaleKeys.general_total_products.tr(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -379,8 +403,8 @@ class _WarehousePageState extends State<WarehousePage>
                         ),
                         Column(
                           children: [
-                            const Text(
-                              'Total Items',
+                            Text(
+                              LocaleKeys.general_total_items.tr(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -397,8 +421,8 @@ class _WarehousePageState extends State<WarehousePage>
                         ),
                         Column(
                           children: [
-                            const Text(
-                              'Total Value',
+                            Text(
+                              LocaleKeys.general_total_value.tr(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -436,9 +460,15 @@ class _WarehousePageState extends State<WarehousePage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 4),
-                              Text('Price: ${product.price ?? 0}'),
-                              Text('Quantity: ${product.quantity ?? 0}'),
-                              Text('Total: ${product.totalPrice ?? 0}'),
+                              Text(
+                                '${LocaleKeys.general_price.tr()}: ${product.price ?? 0}',
+                              ),
+                              Text(
+                                '${LocaleKeys.general_quantity.tr()}: ${product.quantity ?? 0}',
+                              ),
+                              Text(
+                                '${LocaleKeys.general_total_amount.tr()}: ${product.totalPrice ?? 0}',
+                              ),
                             ],
                           ),
                           trailing: PopupMenuButton<String>(
@@ -453,23 +483,23 @@ class _WarehousePageState extends State<WarehousePage>
                             },
                             itemBuilder:
                                 (context) => [
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'edit',
                                     child: Row(
                                       children: [
                                         Icon(Icons.edit, color: Colors.blue),
                                         SizedBox(width: 8),
-                                        Text('Edit'),
+                                        Text(LocaleKeys.buttons_edit.tr()),
                                       ],
                                     ),
                                   ),
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'delete',
                                     child: Row(
                                       children: [
                                         Icon(Icons.delete, color: Colors.red),
                                         SizedBox(width: 8),
-                                        Text('Delete'),
+                                        Text(LocaleKeys.buttons_delete.tr()),
                                       ],
                                     ),
                                   ),
@@ -493,11 +523,11 @@ class _WarehousePageState extends State<WarehousePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('No products loaded'),
+                    Text(LocaleKeys.notifications_product_no_available.tr()),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => _productCubit.getProducts(),
-                      child: const Text('Load Products'),
+                      child: Text(LocaleKeys.buttons_load_products.tr()),
                     ),
                   ],
                 ),
@@ -518,7 +548,7 @@ class _WarehousePageState extends State<WarehousePage>
           child: TextField(
             controller: _documentSearchController,
             decoration: InputDecoration(
-              hintText: 'Belge veya tedarikçi ara...',
+              hintText: LocaleKeys.buttons_document_search.tr(),
               prefixIcon: const Icon(Icons.search),
               suffixIcon:
                   _documentSearchController.text.isNotEmpty
@@ -563,8 +593,9 @@ class _WarehousePageState extends State<WarehousePage>
                             ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
-                                  'Arama kriterine uygun belge bulunamadı',
+                                Text(
+                                  LocaleKeys.notifications_document_no_available
+                                      .tr(),
                                 ),
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
@@ -573,19 +604,26 @@ class _WarehousePageState extends State<WarehousePage>
                                     _documentCubit.getDocuments();
                                   },
                                   icon: const Icon(Icons.clear),
-                                  label: const Text('Aramayı Temizle'),
+                                  label: Text(
+                                    LocaleKeys.buttons_clear_search.tr(),
+                                  ),
                                 ),
                               ],
                             )
                             : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text('No documents available'),
+                                Text(
+                                  LocaleKeys.notifications_document_no_available
+                                      .tr(),
+                                ),
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
                                   onPressed: _showCreateDocumentDialog,
                                   icon: const Icon(Icons.add),
-                                  label: const Text('Add Document'),
+                                  label: Text(
+                                    LocaleKeys.buttons_add_document.tr(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -611,8 +649,8 @@ class _WarehousePageState extends State<WarehousePage>
                       children: [
                         Column(
                           children: [
-                            const Text(
-                              'Total Documents',
+                            Text(
+                              LocaleKeys.general_total_documents.tr(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -623,8 +661,8 @@ class _WarehousePageState extends State<WarehousePage>
                         ),
                         Column(
                           children: [
-                            const Text(
-                              'Total Value',
+                            Text(
+                              LocaleKeys.general_total_value.tr(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -655,46 +693,9 @@ class _WarehousePageState extends State<WarehousePage>
                         (context, index) => const SizedBox(height: 16),
                     itemBuilder: (context, index) {
                       final document = documents[index];
-                      return CustomCardDecoration(
-                        child: ListTile(
-                          title: Text(document.supplier ?? 'Unknown Supplier'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(
-                                'Description: ${document.description ?? 'N/A'}',
-                              ),
-                              Text('Total Price: ${document.totalPrice ?? 0}'),
-                              Text('Date: ${document.dateOfCreated ?? 'N/A'}'),
-                              Text(
-                                'Status: ${document.paymentStatus ?? 'N/A'}',
-                              ),
-                            ],
-                          ),
-                          trailing: PopupMenuButton<String>(
-                            icon: const Icon(Icons.more_vert),
-                            padding: EdgeInsets.zero,
-                            onSelected: (value) {
-                              if (value == 'delete') {
-                                _confirmDeleteDocument(document);
-                              }
-                            },
-                            itemBuilder:
-                                (context) => [
-                                  const PopupMenuItem(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.delete, color: Colors.red),
-                                        SizedBox(width: 8),
-                                        Text('Delete'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                          ),
-                        ),
+                      return DocumentItemCard(
+                        document: document,
+                        onDelete: () => _confirmDeleteDocument(document),
                       );
                     },
                   ),
@@ -712,11 +713,11 @@ class _WarehousePageState extends State<WarehousePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('No documents loaded'),
+                    Text(LocaleKeys.notifications_document_no_available.tr()),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => _documentCubit.getDocuments(),
-                      child: const Text('Load Documents'),
+                      child: Text(LocaleKeys.buttons_load_documents.tr()),
                     ),
                   ],
                 ),
@@ -733,14 +734,16 @@ class _WarehousePageState extends State<WarehousePage>
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Delete Document'),
+            title: Text(LocaleKeys.alerts_delete_document.tr()),
             content: Text(
-              'Are you sure you want to delete document from ${document.supplier}?',
+              LocaleKeys.notifications_delete_document_confirmation.tr(
+                namedArgs: {'name': document.supplier ?? '-'},
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: Text(LocaleKeys.buttons_cancel.tr()),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -753,7 +756,7 @@ class _WarehousePageState extends State<WarehousePage>
                   }
                   Navigator.pop(context);
                 },
-                child: const Text('Delete'),
+                child: Text(LocaleKeys.buttons_delete.tr()),
               ),
             ],
           ),

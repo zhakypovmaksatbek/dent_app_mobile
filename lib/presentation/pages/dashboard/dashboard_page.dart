@@ -309,7 +309,7 @@ class _DashboardPageState extends State<DashboardPage> {
         shadowColor: Colors.black.withValues(alpha: .2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(4.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -327,11 +327,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    "Aylık İstatistikler",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      LocaleKeys.general_monthly_statistics.tr(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -357,7 +359,7 @@ class _DashboardPageState extends State<DashboardPage> {
         shadowColor: Colors.black.withValues(alpha: .2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(4.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -375,11 +377,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    "Hizmet Dağılımı",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      LocaleKeys.general_services_statistics.tr(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -405,7 +409,7 @@ class _DashboardPageState extends State<DashboardPage> {
         shadowColor: Colors.black.withValues(alpha: .2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(4.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -420,11 +424,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: const Icon(Icons.bar_chart, color: Colors.purple),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    "Kullanıcılara Göre Hizmetler",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      LocaleKeys.general_services_statistics.tr(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

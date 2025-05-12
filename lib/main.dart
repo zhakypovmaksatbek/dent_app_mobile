@@ -3,12 +3,15 @@ import 'package:dent_app_mobile/presentation/localization/app_localization.dart'
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/search_patient/search_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/core/heartbeats/heartbeats_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_appointments/patient_appointments_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/debtor/debtor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/deposit/deposit_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/discount/discount_cubit.dart';
@@ -99,5 +102,8 @@ class Initializer {
     BlocProvider(create: (context) => RoomCubit()),
     BlocProvider(create: (context) => ProductCubit()),
     BlocProvider(create: (context) => DocumentCubit()),
+    BlocProvider(create: (context) => DoctorCubit()),
+    BlocProvider(create: (context) => PatientAppointmentsCubit()),
+    BlocProvider(create: (context) => PatientToothCubit()),
   ];
 }

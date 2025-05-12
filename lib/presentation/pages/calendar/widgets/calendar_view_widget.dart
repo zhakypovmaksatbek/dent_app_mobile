@@ -19,10 +19,12 @@ class CalendarViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SizedBox(
       height: height,
       child: SfCalendar(
         view: CalendarView.month,
+
         controller: controller,
         dataSource: dataSource,
         showNavigationArrow: false,
@@ -38,12 +40,13 @@ class CalendarViewWidget extends StatelessWidget {
           showAgenda: false,
           navigationDirection: MonthNavigationDirection.vertical,
         ),
-        headerStyle: const CalendarHeaderStyle(
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        headerStyle: CalendarHeaderStyle(
+          textStyle: theme.textTheme.titleMedium,
           textAlign: TextAlign.center,
+          backgroundColor: theme.scaffoldBackgroundColor,
         ),
         selectionDecoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+          border: Border.all(color: theme.primaryColor, width: 2),
           borderRadius: BorderRadius.circular(4),
         ),
 

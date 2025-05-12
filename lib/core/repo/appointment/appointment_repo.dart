@@ -3,9 +3,12 @@ import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dar
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
+import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
+import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
+import 'package:dent_app_mobile/models/patient/visit_model.dart';
 
 abstract class IAppointmentRepo {
   Future<List<AppointmentModel>> getAppointments();
@@ -29,6 +32,12 @@ abstract class IAppointmentRepo {
   Future<List<PatientShortModel>> getPatientShortList(String query);
   Future<List<TimeModel>> getTimeList(int userId, DateTime date, int minute);
   Future<List<RoomModel>> getRoomList();
+  Future<List<DoctorModel>> getDoctorList();
+  Future<VisitDataModel> getPatientAppointments({
+    required int patientId,
+    required int page,
+  });
+  Future<List<ToothModel>> getToothList(int patientId);
 }
 
 class AppointmentRepo extends IAppointmentRepo {
@@ -162,6 +171,36 @@ class AppointmentRepo extends IAppointmentRepo {
     List<dynamic> data = response.data as List<dynamic>;
     return data
         .map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<DoctorModel>> getDoctorList() async {
+    final response = await dio.get('api/calendars/users');
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => DoctorModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<VisitDataModel> getPatientAppointments({
+    required int patientId,
+    required int page,
+  }) async {
+    final response = await dio.get(
+      'api/appointments/patient/$patientId',
+      queryParameters: {'page': page},
+    );
+    return VisitDataModel.fromJson(response.data);
+  }
+
+  @override
+  Future<List<ToothModel>> getToothList(int patientId) async {
+    final response = await dio.get('api/teeth/mains/$patientId');
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => ToothModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 }

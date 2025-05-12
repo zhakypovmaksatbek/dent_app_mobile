@@ -33,7 +33,7 @@ class _MainPageState extends State<MainPage> {
             useLegacyColorScheme: false,
             items: [
               NavigationItemModel(
-                icon: Icon(Icons.dashboard),
+                icon: Icon(Icons.analytics_outlined),
                 label: LocaleKeys.routes_dashboard.tr(),
               ),
               NavigationItemModel(

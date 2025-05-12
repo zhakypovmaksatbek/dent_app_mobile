@@ -48,19 +48,10 @@ class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
+    return SizedBox(
       height: 400,
-      padding: const EdgeInsets.all(16),
+      // padding: const EdgeInsets.all(8),
       child: SfCartesianChart(
-        title: ChartTitle(
-          text: LocaleKeys.general_monthly_statistics.tr(),
-          textStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
-          ),
-          alignment: ChartAlignment.center,
-        ),
         legend: Legend(
           isVisible: false,
           position: LegendPosition.bottom,

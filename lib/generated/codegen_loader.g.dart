@@ -68,7 +68,17 @@ class CodegenLoader extends AssetLoader{
     "working_schedule": "Рабочий график",
     "previous_week": "Предыдущая неделя",
     "next_week": "Следующая неделя",
-    "day_off": "Выходной"
+    "day_off": "Выходной",
+    "price": "Цена",
+    "products": "Продукты",
+    "description": "Описание",
+    "document_description": "Описание документа",
+    "documents": "Документы",
+    "total_products": "Всего продуктов",
+    "total_documents": "Всего документов",
+    "total_items": "Всего",
+    "total_value": "Всего стоимость",
+    "total_amount": "Всего сумма"
   },
   "buttons": {
     "login": "Войти",
@@ -98,7 +108,16 @@ class CodegenLoader extends AssetLoader{
     "update_personal": "Обновить персонал",
     "retry": "Повторить",
     "add_appointment": "Добавить запись",
-    "call_patient": "Позвонить"
+    "call_patient": "Позвонить",
+    "update": "Обновить",
+    "load_products": "Загрузить продукты",
+    "add_product": "Добавить продукт",
+    "add_document": "Добавить документ",
+    "product_search": "Поиск продукта",
+    "document_search": "Поиск документа",
+    "clear_search": "Очистить поиск",
+    "load_documents": "Загрузить документы",
+    "select_doctor": "Выберите врача"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -156,7 +175,11 @@ class CodegenLoader extends AssetLoader{
     "password_is_required_for_new_users": "Пароль обязателен для новых пользователей",
     "password_must_be_at_least_6_characters": "Пароль должен быть не менее 6 символов",
     "salary_is_required": "Зарплата обязательна",
-    "add_specialty": "Добавить специальность"
+    "add_specialty": "Добавить специальность",
+    "supplier_name": "Название поставщика",
+    "supplier": "Поставщик",
+    "create_document": "Создать документ",
+    "edit_document": "Редактировать документ"
   },
   "routes": {
     "dashboard": "Главная",
@@ -215,7 +238,17 @@ class CodegenLoader extends AssetLoader{
     "appointment_updated_successfully": "Запись успешно обновлена",
     "appointment_deleted_successfully": "Запись успешно удалена",
     "could_not_load_appointment_details": "Не удалось загрузить информацию о записи",
-    "appointment_cannot_be_in_the_past": "Запись не может быть в прошлом"
+    "appointment_cannot_be_in_the_past": "Запись не может быть в прошлом",
+    "not_found_products": "Продукты не найдены",
+    "product_created_successfully": "Продукт успешно создан",
+    "product_updated_successfully": "Продукт успешно обновлен",
+    "product_deleted_successfully": "Продукт успешно удален",
+    "document_created_successfully": "Документ успешно создан",
+    "document_updated_successfully": "Документ успешно обновлен",
+    "document_deleted_successfully": "Документ успешно удален",
+    "product_no_available": "Продукт не доступен",
+    "document_no_available": "Документ не доступен",
+    "delete_document_confirmation": "Вы уверены, что хотите удалить документ {name}?"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -272,7 +305,8 @@ class CodegenLoader extends AssetLoader{
     "payment_date": "Дата оплаты",
     "no_payment_records_found": "Нет записей по оплатам",
     "no_discount_records_found": "Нет записей по скидкам",
-    "total": "Всего"
+    "total": "Всего",
+    "date": "Дата"
   },
   "date_range": {
     "today": "Сегодня",
@@ -294,7 +328,9 @@ class CodegenLoader extends AssetLoader{
     "operation_successful": "Операция успешно завершена",
     "confirm_delete_diagnosis": "Вы уверены, что хотите удалить диагноз '{name}'?",
     "confirm_delete_specialty": "Вы уверены, что хотите удалить специальность '{name}'?",
-    "delete_specialty": "Удалить специальность"
+    "delete_specialty": "Удалить специальность",
+    "delete_document": "Удалить документ",
+    "delete_product_confirmation": "Вы уверены, что хотите удалить продукт {name}?"
   },
   "validation": {
     "select_service_type": "Выберите тип услуги",
@@ -303,7 +339,10 @@ class CodegenLoader extends AssetLoader{
     "enter_service_description": "Введите описание услуги",
     "enter_valid_service_price": "Введите корректную цену услуги",
     "price_cannot_be_negative": "Цена не может быть отрицательной",
-    "enter_diagnosis_name": "Пожалуйста, введите название диагноза"
+    "enter_diagnosis_name": "Пожалуйста, введите название диагноза",
+    "unknown_product": "Неизвестный продукт",
+    "enter_supplier_name": "Пожалуйста, введите название поставщика",
+    "please_add_product": "Пожалуйста, добавьте продукт"
   },
   "roles": {
     "admin": "Администратор",

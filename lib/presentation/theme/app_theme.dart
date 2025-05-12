@@ -26,7 +26,7 @@ class AppTheme {
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: ColorConstants.white,
-      surfaceTintColor: AppColors.primary,
+      surfaceTintColor: AppColors.white,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: ColorConstants.white,

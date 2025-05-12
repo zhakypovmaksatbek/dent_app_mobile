@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/view/teeth_page.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/appointment_comment_dialog.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/appointment_details_tab.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/delete_appointment_dialog.dart';
@@ -111,12 +112,7 @@ class _AppointmentDetailState extends State<AppointmentDetail>
             appointment: state.appointment,
             onShowCommentDialog: _showCommentDialog,
           ),
-          PlaceholderTab(
-            icon: Icons.tour,
-            title: 'Teeth diagram coming soon',
-            description:
-                'This section will display an interactive teeth diagram\nshowing the condition of each tooth',
-          ),
+          TeethPage(patientId: widget.id),
           PlaceholderTab(
             icon: Icons.image,
             title: 'X-Ray images coming soon',

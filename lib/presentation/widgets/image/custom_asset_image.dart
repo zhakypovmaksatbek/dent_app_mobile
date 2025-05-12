@@ -24,23 +24,28 @@ class CustomAssetImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ClipRRect(
-        borderRadius: borderRadius ?? BorderRadius.circular(0),
-        child: isSvg!
-            ? SvgPicture.asset(path,
-                colorFilter: svgColor != null
-                    ? ColorFilter.mode(
-                        theme.iconTheme.color!,
-                        BlendMode.srcIn,
-                      )
-                    : null,
+      borderRadius: borderRadius ?? BorderRadius.circular(0),
+      child:
+          isSvg!
+              ? SvgPicture.asset(
+                path,
+                colorFilter:
+                    svgColor != null
+                        ? ColorFilter.mode(
+                          theme.iconTheme.color!,
+                          BlendMode.srcIn,
+                        )
+                        : null,
                 fit: fit ?? BoxFit.contain,
                 height: height,
-                width: width)
-            : Image.asset(
+                width: width,
+              )
+              : Image.asset(
                 path,
                 fit: fit ?? BoxFit.contain,
                 height: height,
                 width: width,
-              ));
+              ),
+    );
   }
 }

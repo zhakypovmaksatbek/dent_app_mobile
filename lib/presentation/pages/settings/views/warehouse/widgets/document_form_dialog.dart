@@ -1,7 +1,9 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/warehouse/create_document_model.dart';
 import 'package:dent_app_mobile/models/warehouse/product_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
 import 'package:dent_app_mobile/presentation/widgets/app_loader.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -143,7 +145,7 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
 
     if (_items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lütfen en az bir ürün ekleyiniz')),
+        SnackBar(content: Text(LocaleKeys.validation_please_add_product.tr())),
       );
       return;
     }
@@ -180,7 +182,9 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _isEditing ? 'Belge Düzenle' : 'Yeni Belge Oluştur',
+                      _isEditing
+                          ? LocaleKeys.forms_edit_document.tr()
+                          : LocaleKeys.forms_create_document.tr(),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     IconButton(
@@ -197,15 +201,15 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                 // Supplier field
                 TextFormField(
                   controller: _supplierController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tedarikçi',
-                    hintText: 'Tedarikçi adını giriniz',
+                  decoration: InputDecoration(
+                    labelText: LocaleKeys.forms_supplier.tr(),
+                    hintText: LocaleKeys.validation_enter_supplier_name.tr(),
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.business),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Lütfen bir tedarikçi adı giriniz';
+                      return LocaleKeys.validation_enter_supplier_name.tr();
                     }
                     return null;
                   },
@@ -216,9 +220,9 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                 // Description field
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Açıklama',
-                    hintText: 'Belge açıklamasını giriniz',
+                  decoration: InputDecoration(
+                    labelText: LocaleKeys.general_description.tr(),
+                    hintText: LocaleKeys.general_document_description.tr(),
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.description),
                   ),
@@ -228,9 +232,12 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                 const SizedBox(height: 24),
 
                 // Items section
-                const Text(
-                  'Ürünler',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  LocaleKeys.general_products.tr(),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
 
@@ -250,10 +257,10 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                       _availableProducts = state.products;
 
                       if (_availableProducts.isEmpty) {
-                        return const Padding(
+                        return Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Text(
-                            'Kullanılabilir ürün yok. Lütfen önce ürün ekleyiniz.',
+                            LocaleKeys.notifications_not_found_products.tr(),
                             textAlign: TextAlign.center,
                           ),
                         );
@@ -268,7 +275,7 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<int>(
                             isExpanded: true,
-                            hint: const Text('Ürün ekle'),
+                            hint: Text(LocaleKeys.buttons_add_product.tr()),
                             items:
                                 _availableProducts.map((product) {
                                   return DropdownMenuItem<int>(
@@ -296,11 +303,11 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                       return Center(
                         child: Column(
                           children: [
-                            Text('Hata: ${state.message}'),
+                            Text(LocaleKeys.errors_something_went_wrong.tr()),
                             const SizedBox(height: 8),
                             ElevatedButton(
                               onPressed: _loadProducts,
-                              child: const Text('Tekrar Dene'),
+                              child: Text(LocaleKeys.buttons_retry.tr()),
                             ),
                           ],
                         ),
@@ -309,7 +316,7 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
 
                     return ElevatedButton(
                       onPressed: _loadProducts,
-                      child: const Text('Ürünleri Yükle'),
+                      child: Text(LocaleKeys.buttons_load_products.tr()),
                     );
                   },
                 ),
@@ -345,8 +352,12 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Text('Birim Fiyat: ${item.price}'),
-                                    Text('Toplam: $itemTotal'),
+                                    Text(
+                                      '${LocaleKeys.general_price.tr()}: ${item.price}',
+                                    ),
+                                    Text(
+                                      '${LocaleKeys.report_total_amount.tr()}: $itemTotal',
+                                    ),
                                   ],
                                 ),
                               ),
@@ -403,9 +414,13 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                   ),
                   const SizedBox(height: 16),
                 ] else ...[
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: Text('Henüz ürün eklenmedi')),
+                    child: Center(
+                      child: Text(
+                        LocaleKeys.notifications_not_found_products.tr(),
+                      ),
+                    ),
                   ),
                 ],
 
@@ -420,9 +435,9 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Toplam Tutar:',
-                        style: TextStyle(
+                      Text(
+                        LocaleKeys.report_total_amount.tr(),
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -445,7 +460,7 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('İPTAL'),
+                      child: Text(LocaleKeys.buttons_cancel.tr()),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
@@ -456,7 +471,11 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
                           vertical: 12,
                         ),
                       ),
-                      child: Text(_isEditing ? 'GÜNCELLE' : 'KAYDET'),
+                      child: Text(
+                        _isEditing
+                            ? LocaleKeys.buttons_update.tr()
+                            : LocaleKeys.buttons_save.tr(),
+                      ),
                     ),
                   ],
                 ),
@@ -469,13 +488,14 @@ class _DocumentFormDialogState extends State<DocumentFormDialog> {
   }
 
   String _getProductName(int? productId) {
-    if (productId == null) return 'Bilinmeyen Ürün';
+    if (productId == null) return LocaleKeys.validation_unknown_product.tr();
 
     final product = _availableProducts.firstWhere(
       (p) => p.id == productId,
-      orElse: () => ProductModel(name: 'Bilinmeyen Ürün'),
+      orElse:
+          () => ProductModel(name: LocaleKeys.validation_unknown_product.tr()),
     );
 
-    return product.name ?? 'Bilinmeyen Ürün';
+    return product.name ?? LocaleKeys.validation_unknown_product.tr();
   }
 }

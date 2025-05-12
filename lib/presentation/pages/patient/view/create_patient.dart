@@ -3,7 +3,7 @@ import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/form_text_field.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/patient_card.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';

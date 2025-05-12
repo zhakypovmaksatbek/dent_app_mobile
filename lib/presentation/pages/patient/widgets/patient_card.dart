@@ -1,7 +1,7 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
