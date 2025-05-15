@@ -62,7 +62,33 @@
     "total_documents":"Всего документов",
     "total_items":"Всего",
     "total_value":"Всего стоимость",
-    "total_amount":"Всего сумма"
+    "total_amount":"Всего сумма",
+    "right":"Правая",
+    "left":"Левая",
+    "location":"Расположение:",
+    "no_diagnosis":"Нет диагноза",
+    "left_side":"Левое",
+    "right_side":"Правое",
+    "upper_side":"Верхнее",
+    "lower_side":"Нижнее",
+    "tooth_size":"Размер:",
+    "tooth_shape":"Форма:",
+    "tooth":"Зуб",
+    "full":"Полный",
+    "jaw":"Челюсть",
+    "age_group":"Возрастная группа",
+    "side":"Сторона",
+    "child":"Ребенок",
+    "adult":"Взрослый",
+    "top":"Верх",
+    "bottom":"Ниж",
+    "center_left":"Центр Лево",
+    "center_right":"Центр Право",
+    "center":"Центр",
+    "inner_tooth_details":"Внутренние зубы:",
+    "main":"Основной"
+    
+
 
 
   },
