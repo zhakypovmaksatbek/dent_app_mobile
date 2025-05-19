@@ -16,6 +16,8 @@ class DefTextField extends StatelessWidget {
     this.onChanged,
     this.labelText,
     this.decoration,
+    this.maxLines,
+    this.minLines,
   });
   final String? hintText;
   final TextEditingController? controller;
@@ -29,6 +31,8 @@ class DefTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? labelText;
   final InputDecoration? decoration;
+  final int? maxLines;
+  final int? minLines;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -41,6 +45,8 @@ class DefTextField extends StatelessWidget {
       textInputAction: textInputAction,
       onEditingComplete: onEditingComplete,
       onChanged: onChanged,
+      maxLines: maxLines,
+      minLines: minLines,
       decoration:
           decoration ??
           InputDecoration(

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/users/user_model.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/screen/login_page.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/views/calendar_page.dart';
@@ -16,6 +17,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/views
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/views/services_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/views/warehouse_page.dart';
 import 'package:dent_app_mobile/presentation/pages/splash/splash_page.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/view/treatment_page.dart';
 import 'package:flutter/material.dart';
 
 part "app_router.gr.dart";
@@ -48,6 +50,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: PersonalDetailRoute.page, path: "/personalDetail"),
     AutoRoute(page: PersonalPatientsRoute.page, path: "/personalPatients"),
     AutoRoute(page: AppointmentDetailRoute.page, path: "/appointmentDetail"),
+    AutoRoute(page: TreatmentRoute.page, path: "/treatment"),
   ];
 }
 

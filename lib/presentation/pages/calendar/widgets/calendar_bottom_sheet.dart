@@ -279,7 +279,8 @@ class CalendarBottomSheet extends StatelessWidget {
           child: AppointmentItemWidget(
             appointment: appointment,
             onEdit: AppointmentDialogService().showEditAppointmentDialog,
-            onDelete: (context, appt) => onDeleteAppointment(appt),
+            onDelete:
+                (context, appointment) => onDeleteAppointment(appointment),
             onTap: AppointmentDialogService().showAppointmentDetails,
           ),
         );

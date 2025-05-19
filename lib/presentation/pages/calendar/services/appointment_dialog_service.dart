@@ -1,14 +1,18 @@
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/edit_appointment_dialog_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -111,7 +115,9 @@ class AppointmentDialogService {
               ),
               _buildDetailRow(
                 LocaleKeys.appointment_appointment_type_label.tr(),
-                appointmentModel.recordType ?? 'N/A',
+                RecordType.fromString(
+                  appointmentModel.recordType ?? '',
+                ).displayName.tr(),
               ),
               _buildDetailRow(
                 LocaleKeys.appointment_room.tr(),
@@ -124,6 +130,14 @@ class AppointmentDialogService {
                   appointmentModel.description!,
                 ),
               const SizedBox(height: 16),
+              DefElevatedButton(
+                title: LocaleKeys.buttons_start_treatment.tr(),
+                onPressed: () {
+                  router.popAndPush(
+                    TreatmentRoute(calendarAppointment: appointmentModel),
+                  );
+                },
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 spacing: 12,

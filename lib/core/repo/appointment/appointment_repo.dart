@@ -6,9 +6,13 @@ import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart
 import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
+import 'package:dent_app_mobile/models/diagnosis/condition_model.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
+import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 
 abstract class IAppointmentRepo {
   Future<List<AppointmentModel>> getAppointments();
@@ -38,6 +42,8 @@ abstract class IAppointmentRepo {
     required int page,
   });
   Future<List<ToothModel>> getToothList(int patientId);
+  Future<PatternModel> getPatternList(PatternType type, {String? search});
+  Future<List<ConditionModel>> getConditionList(ConditionType type);
 }
 
 class AppointmentRepo extends IAppointmentRepo {
@@ -201,6 +207,27 @@ class AppointmentRepo extends IAppointmentRepo {
     List<dynamic> data = response.data as List<dynamic>;
     return data
         .map((e) => ToothModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<PatternModel> getPatternList(
+    PatternType type, {
+    String? search,
+  }) async {
+    final response = await dio.get(
+      'api/patterns',
+      queryParameters: {'patternType': type.value, 'search': search},
+    );
+    return PatternModel.fromStringList(response.data);
+  }
+
+  @override
+  Future<List<ConditionModel>> getConditionList(ConditionType type) async {
+    final response = await dio.get('api/conditions/${type.name}');
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => ConditionModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 }

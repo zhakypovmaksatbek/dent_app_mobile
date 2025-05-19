@@ -141,7 +141,8 @@ class CodegenLoader extends AssetLoader{
     "document_search": "Поиск документа",
     "clear_search": "Очистить поиск",
     "load_documents": "Загрузить документы",
-    "select_doctor": "Выберите врача"
+    "select_doctor": "Выберите врача",
+    "start_treatment": "Начать лечение"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -330,7 +331,13 @@ class CodegenLoader extends AssetLoader{
     "no_payment_records_found": "Нет записей по оплатам",
     "no_discount_records_found": "Нет записей по скидкам",
     "total": "Всего",
-    "date": "Дата"
+    "date": "Дата",
+    "date_visit": "Дата визита",
+    "time_visit": "Время визита",
+    "treatment_doctor": "Лечащий врач",
+    "description_comment": "Описание и комментарий",
+    "transferred_and_related_complaints": "Перенесенные и сопутствующие заболевания",
+    "laboratory_and_radiological_data": "Данные лабораторных и рентгеновских исследований"
   },
   "date_range": {
     "today": "Сегодня",

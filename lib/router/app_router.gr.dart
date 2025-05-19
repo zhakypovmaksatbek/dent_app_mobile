@@ -353,6 +353,51 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TreatmentPage]
+class TreatmentRoute extends PageRouteInfo<TreatmentRouteArgs> {
+  TreatmentRoute({
+    Key? key,
+    CalendarAppointmentModel? calendarAppointment,
+    List<PageRouteInfo>? children,
+  }) : super(
+         TreatmentRoute.name,
+         args: TreatmentRouteArgs(
+           key: key,
+           calendarAppointment: calendarAppointment,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'TreatmentRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<TreatmentRouteArgs>(
+        orElse: () => const TreatmentRouteArgs(),
+      );
+      return TreatmentPage(
+        key: args.key,
+        calendarAppointment: args.calendarAppointment,
+      );
+    },
+  );
+}
+
+class TreatmentRouteArgs {
+  const TreatmentRouteArgs({this.key, this.calendarAppointment});
+
+  final Key? key;
+
+  final CalendarAppointmentModel? calendarAppointment;
+
+  @override
+  String toString() {
+    return 'TreatmentRouteArgs{key: $key, calendarAppointment: $calendarAppointment}';
+  }
+}
+
+/// generated route for
 /// [WarehousePage]
 class WarehouseRoute extends PageRouteInfo<void> {
   const WarehouseRoute({List<PageRouteInfo>? children})

@@ -5,12 +5,27 @@ class DefElevatedButton extends StatelessWidget {
     super.key,
     required this.title,
     required this.onPressed,
+    this.minWidth,
+    this.minHeight,
+    this.maxWidth,
+    this.maxHeight,
   });
   final String title;
   final VoidCallback onPressed;
+  final double? minWidth;
+  final double? minHeight;
+  final double? maxWidth;
+  final double? maxHeight;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: onPressed, child: Text(title));
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        maximumSize: Size(maxWidth ?? double.infinity, maxHeight ?? 45),
+        minimumSize: Size(minWidth ?? double.infinity, minHeight ?? 45),
+      ),
+      onPressed: onPressed,
+      child: Text(title),
+    );
   }
 }

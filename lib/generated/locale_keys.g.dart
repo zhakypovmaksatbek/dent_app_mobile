@@ -128,6 +128,7 @@ abstract class  LocaleKeys {
   static const buttons_clear_search = 'buttons.clear_search';
   static const buttons_load_documents = 'buttons.load_documents';
   static const buttons_select_doctor = 'buttons.select_doctor';
+  static const buttons_start_treatment = 'buttons.start_treatment';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -310,6 +311,12 @@ abstract class  LocaleKeys {
   static const report_no_discount_records_found = 'report.no_discount_records_found';
   static const report_total = 'report.total';
   static const report_date = 'report.date';
+  static const report_date_visit = 'report.date_visit';
+  static const report_time_visit = 'report.time_visit';
+  static const report_treatment_doctor = 'report.treatment_doctor';
+  static const report_description_comment = 'report.description_comment';
+  static const report_transferred_and_related_complaints = 'report.transferred_and_related_complaints';
+  static const report_laboratory_and_radiological_data = 'report.laboratory_and_radiological_data';
   static const report = 'report';
   static const date_range_today = 'date_range.today';
   static const date_range_yesterday = 'date_range.yesterday';

@@ -31,6 +31,8 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service_type/service_type_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/document/document_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/theme/app_theme.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -47,8 +49,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-  final router = getIt<AppRouter>();
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
@@ -62,6 +63,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+final router = getIt<AppRouter>();
 
 final getIt = GetIt.instance;
 void setupLocator() {
@@ -105,5 +108,7 @@ class Initializer {
     BlocProvider(create: (context) => DoctorCubit()),
     BlocProvider(create: (context) => PatientAppointmentsCubit()),
     BlocProvider(create: (context) => PatientToothCubit()),
+    BlocProvider(create: (context) => PatternCubit()),
+    BlocProvider(create: (context) => ConditionCubit()),
   ];
 }
