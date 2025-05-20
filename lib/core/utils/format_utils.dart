@@ -3,13 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class FormatUtils {
-  /// Formats a phone number into a readable format
-  ///
-  /// Example formats:
-  /// - 996204904599 -> +996 (204) 904-599
-  /// - 905554443322 -> +90 (555) 444-3322
-  ///
-  /// You can customize the format by providing separator parameters
+ 
   static String formatPhoneNumber(
     String phoneNumber, {
     String countryCodeSeparator = ' ',

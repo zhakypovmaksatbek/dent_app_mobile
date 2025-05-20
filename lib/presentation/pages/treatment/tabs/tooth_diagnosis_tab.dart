@@ -24,10 +24,11 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
           Center(
             child: TeethSelector(
               showPrimary: true,
-              multiSelect: true,
+              multiSelect: false,
               selectedColor: theme.colorScheme.primary,
               rightString: LocaleKeys.general_right.tr(),
               leftString: LocaleKeys.general_left.tr(),
+
               onChange: (selected) {
                 showCupertinoModalBottomSheet(
                   context: context,
@@ -35,7 +36,11 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                     return Material(
                       child: SizedBox(
                         height: 300,
-                        child: Column(children: [Text('Tooth Diagnosis')]),
+                        child: Column(
+                          children: [
+                            Text('Tooth Diagnosis ${selected.length}'),
+                          ],
+                        ),
                       ),
                     );
                   },

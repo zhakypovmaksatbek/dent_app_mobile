@@ -242,6 +242,7 @@ class _InputFields extends StatelessWidget {
                 controller: passwordController,
                 hintText: LocaleKeys.forms_enter_password.tr(),
                 obscureText: true,
+                maxLines: 1,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
                 validator: (value) {
@@ -286,11 +287,8 @@ class _LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeInUp(
       duration: const Duration(milliseconds: 1600),
-      child: MaterialButton(
+      child: ElevatedButton(
         onPressed: onLogin,
-        height: 50,
-        color: Colors.blue[900],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         child: Center(
           child: AppText(
             title: LocaleKeys.buttons_login.tr(),
