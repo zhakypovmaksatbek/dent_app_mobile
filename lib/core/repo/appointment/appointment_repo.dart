@@ -13,6 +13,8 @@ import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 abstract class IAppointmentRepo {
   Future<List<AppointmentModel>> getAppointments();
@@ -44,6 +46,11 @@ abstract class IAppointmentRepo {
   Future<List<ToothModel>> getToothList(int patientId);
   Future<PatternModel> getPatternList(PatternType type, {String? search});
   Future<List<ConditionModel>> getConditionList(ConditionType type);
+  Future<List<RoomModel>> getRoomListByDate({
+    required DateTime date,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+  });
 }
 
 class AppointmentRepo extends IAppointmentRepo {
@@ -228,6 +235,42 @@ class AppointmentRepo extends IAppointmentRepo {
     List<dynamic> data = response.data as List<dynamic>;
     return data
         .map((e) => ConditionModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<RoomModel>> getRoomListByDate({
+    required DateTime date,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+  }) async {
+    final dateFormatter = DateFormat('yyyy-MM-dd');
+
+    // Format the date
+    final formattedDate = dateFormatter.format(date);
+
+    // Format the times
+    final formattedStartTime =
+        '${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}:00';
+    final formattedEndTime =
+        '${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}:00';
+
+    final response = await dio.get(
+      'api/rooms/select',
+      queryParameters: {
+        'date': formattedDate,
+        'startTime': formattedStartTime,
+        'endTime': formattedEndTime,
+      },
+    );
+
+    if (response.data == null) {
+      return [];
+    }
+
+    final List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 }

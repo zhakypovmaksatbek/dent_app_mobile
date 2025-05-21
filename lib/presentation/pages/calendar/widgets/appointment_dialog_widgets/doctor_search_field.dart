@@ -72,12 +72,8 @@ class DoctorSearchField extends StatelessWidget {
               hint: LocaleKeys.report_doctor.tr(),
               suggestions: suggestionItems,
               onSearchTextChanged: (query) {
-                if (query.length >= 2) {
-                  context.read<PersonalCubit>().getPersonalList(
-                    1,
-                    search: query,
-                  );
-                }
+                // Make request regardless of query length
+                context.read<PersonalCubit>().getPersonalList(1, search: query);
               },
               onSuggestionTap: (suggestion) {
                 if (suggestion.item != null) {

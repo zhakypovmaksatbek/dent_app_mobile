@@ -423,6 +423,8 @@ abstract class  LocaleKeys {
   static const appointment_new_appointment = 'appointment.new_appointment';
   static const appointment_start_time = 'appointment.start_time';
   static const appointment_end_time = 'appointment.end_time';
+  static const appointment_select_room = 'appointment.select_room';
+  static const appointment_no_rooms_available = 'appointment.no_rooms_available';
   static const appointment = 'appointment';
 
 }

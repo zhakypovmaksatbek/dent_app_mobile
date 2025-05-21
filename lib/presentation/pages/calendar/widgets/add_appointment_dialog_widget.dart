@@ -56,9 +56,9 @@ class _AddAppointmentDialogWidgetState
   String? description;
   int? patientId;
   int? doctorId;
-  RecordType? recordType = RecordType.consultation;
-  AppointmentStatus? appointmentStatus = AppointmentStatus.confirmed;
-  int? roomId = 1;
+  RecordType? recordType = RecordType.treatment;
+  AppointmentStatus? appointmentStatus = AppointmentStatus.notConfirmed;
+  int? roomId;
   int minute = 30;
 
   final List<int> _minuteOptions = [30, 40, 50, 60];
@@ -80,13 +80,12 @@ class _AddAppointmentDialogWidgetState
     _personalCubit = PersonalCubit();
     _appointmentActionCubit = AppointmentActionCubit();
     _roomCubit = RoomCubit();
-
-    // Load rooms when the widget initializes
-    _loadRooms();
+    _personalCubit.getPersonalList(1);
+    _searchPatientCubit.searchPatients(" ");
   }
 
   void _loadRooms() {
-    _roomCubit.getRoomList();
+    _roomCubit.getRoomListByDate(selectedDate, startTime, endTime);
   }
 
   void _loadFreeTimeSlots() {
@@ -133,9 +132,7 @@ class _AddAppointmentDialogWidgetState
               // Set default room to first room in the list if available
               if (_rooms.isNotEmpty &&
                   (roomId == null ||
-                      !_rooms.any((room) => room.id == roomId))) {
-                roomId = _rooms.first.id;
-              }
+                      !_rooms.any((room) => room.id == roomId))) {}
             });
           }
         },
@@ -152,28 +149,21 @@ class _AddAppointmentDialogWidgetState
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
                 children: [
                   const SizedBox(height: 16),
                   _buildHeader(),
                   const Divider(),
                   _buildDoctorSection(),
-                  const SizedBox(height: 16),
-                  _buildDurationSection(),
-                  const SizedBox(height: 16),
                   _buildPatientSection(),
-                  const SizedBox(height: 16),
-                  _buildDateSection(),
-                  const SizedBox(height: 16),
-                  _buildTimeSection(),
-                  const SizedBox(height: 16),
                   _buildTypeSection(),
-                  const SizedBox(height: 16),
                   _buildStatusSection(),
-                  const SizedBox(height: 16),
+                  _buildDurationSection(),
+                  _buildDateSection(),
+                  _buildTimeSection(),
                   _buildRoomSection(),
-                  const SizedBox(height: 16),
                   _buildNotesSection(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
                   _buildSaveButton(),
                   // Add an extra SizedBox to ensure there's room when the keyboard appears
                   SizedBox(
@@ -260,7 +250,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "2",
+          number: "5",
           title: LocaleKeys.appointment_time.tr(),
           isActive: doctorId != null,
         ),
@@ -286,7 +276,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "3",
+          number: "2",
           title: LocaleKeys.appointment_patient.tr(),
           isActive: doctorId != null,
         ),
@@ -350,7 +340,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "4",
+          number: "6",
           title: LocaleKeys.forms_select_date.tr(),
           isActive: doctorId != null,
         ),
@@ -407,7 +397,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "5",
+          number: "7",
           title: LocaleKeys.appointment_time.tr(),
           isActive: doctorId != null,
         ),
@@ -421,6 +411,7 @@ class _AddAppointmentDialogWidgetState
                   _selectedTimeSlot = timeSlot;
                   startTime = startTimeOfDay;
                   endTime = endTimeOfDay;
+                  _loadRooms();
                 });
               },
               onRefresh: _loadFreeTimeSlots,
@@ -434,7 +425,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "6",
+          number: "3",
           title: LocaleKeys.appointment_appointment_type_label.tr(),
           isActive: doctorId != null && patientId != null,
         ),
@@ -470,7 +461,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "7",
+          number: "4",
           title: LocaleKeys.appointment_status_label.tr(),
           isActive: doctorId != null && patientId != null,
         ),
@@ -514,14 +505,13 @@ class _AddAppointmentDialogWidgetState
               decoration: InputDecoration(
                 labelText: LocaleKeys.appointment_room.tr(),
                 prefixIcon: const Icon(Icons.meeting_room),
+                hintText: LocaleKeys.appointment_no_rooms_available.tr(),
                 border: const OutlineInputBorder(),
                 enabled: doctorId != null && patientId != null,
               ),
               value: roomId,
-              items: const [
-                DropdownMenuItem(value: 1, child: Text('Room 1')),
-                DropdownMenuItem(value: 2, child: Text('Room 2')),
-              ],
+              items: const [],
+
               onChanged:
                   doctorId != null && patientId != null
                       ? (value) => setState(() => roomId = value)
@@ -531,6 +521,7 @@ class _AddAppointmentDialogWidgetState
               decoration: InputDecoration(
                 labelText: LocaleKeys.appointment_room.tr(),
                 prefixIcon: const Icon(Icons.meeting_room),
+                hintText: LocaleKeys.appointment_select_room.tr(),
                 border: const OutlineInputBorder(),
                 enabled: doctorId != null && patientId != null,
               ),

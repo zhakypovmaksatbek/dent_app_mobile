@@ -452,7 +452,9 @@ class CodegenLoader extends AssetLoader{
     "appointment_type_label": "Тип записи",
     "new_appointment": "Новая запись",
     "start_time": "Время начала",
-    "end_time": "Время окончания"
+    "end_time": "Время окончания",
+    "select_room": "Выберите кабинет",
+    "no_rooms_available": "Нет доступных кабинетов"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": _ru};

@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/core/utils/format_utils.dart';
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'room_state.dart';
@@ -16,6 +17,24 @@ class RoomCubit extends Cubit<RoomState> {
     emit(RoomLoading());
     try {
       final rooms = await appointmentRepo.getRoomList();
+      emit(RoomLoaded(rooms: rooms));
+    } on DioException catch (e) {
+      emit(RoomFailure(message: FormatUtils.formatErrorMessage(e)));
+    }
+  }
+
+  Future<void> getRoomListByDate(
+    DateTime date,
+    TimeOfDay startTime,
+    TimeOfDay endTime,
+  ) async {
+    emit(RoomLoading());
+    try {
+      final rooms = await appointmentRepo.getRoomListByDate(
+        date: date,
+        startTime: startTime,
+        endTime: endTime,
+      );
       emit(RoomLoaded(rooms: rooms));
     } on DioException catch (e) {
       emit(RoomFailure(message: FormatUtils.formatErrorMessage(e)));
