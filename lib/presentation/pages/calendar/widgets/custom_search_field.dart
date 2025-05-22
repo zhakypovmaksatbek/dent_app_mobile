@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class CustomSearchField<T> extends StatefulWidget {
@@ -34,6 +36,8 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
   final LayerLink _layerLink = LayerLink();
   bool _showSuggestions = false;
   OverlayEntry? _overlayEntry;
+  Timer? _debounceTimer;
+  static const Duration _debounceDuration = Duration(milliseconds: 500);
 
   @override
   void initState() {
@@ -45,6 +49,7 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
   void dispose() {
     widget.focusNode.removeListener(_onFocusChange);
     _removeOverlay();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -54,6 +59,22 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
     } else {
       _removeOverlay();
     }
+  }
+
+  void _onSearchTextChanged(String value) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(_debounceDuration, () {
+      if (widget.onSearchTextChanged != null) {
+        widget.onSearchTextChanged!(value);
+      }
+      if (value.isNotEmpty) {
+        _showSuggestions = true;
+        _updateOverlay();
+      } else {
+        _showSuggestions = false;
+        _removeOverlay();
+      }
+    });
   }
 
   void _showOverlay() {
@@ -78,54 +99,72 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
                 color: Colors.white,
                 child: Container(
                   constraints: const BoxConstraints(maxHeight: 200),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: widget.suggestions.length,
-                    itemBuilder: (context, index) {
-                      final suggestion = widget.suggestions[index];
-                      return InkWell(
-                        onTap: () {
-                          widget.controller.text = suggestion.text;
-                          if (widget.onSuggestionTap != null) {
-                            widget.onSuggestionTap!(suggestion);
-                          }
-                          _removeOverlay();
-                          widget.focusNode.unfocus();
-                        },
-                        child:
-                            suggestion.child ??
-                            ListTile(dense: true, title: Text(suggestion.text)),
-                      );
-                    },
-                  ),
+                  child:
+                      widget.suggestions.isEmpty
+                          ? const SizedBox.shrink()
+                          : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: widget.suggestions.length,
+                            itemBuilder: (context, index) {
+                              if (index >= widget.suggestions.length) {
+                                return const SizedBox.shrink();
+                              }
+                              final suggestion = widget.suggestions[index];
+                              return InkWell(
+                                onTap: () {
+                                  widget.controller.text = suggestion.text;
+                                  if (widget.onSuggestionTap != null) {
+                                    widget.onSuggestionTap!(suggestion);
+                                  }
+                                  _removeOverlay();
+                                  widget.focusNode.unfocus();
+                                },
+                                child:
+                                    suggestion.child ??
+                                    ListTile(
+                                      dense: true,
+                                      title: Text(suggestion.text),
+                                    ),
+                              );
+                            },
+                          ),
                 ),
               ),
             ),
           ),
     );
 
-    Overlay.of(context).insert(_overlayEntry!);
-    _showSuggestions = true;
+    try {
+      Overlay.of(context).insert(_overlayEntry!);
+      _showSuggestions = true;
+    } catch (e) {
+      debugPrint('Error showing overlay: $e');
+      _removeOverlay();
+    }
   }
 
   void _removeOverlay() {
     if (_overlayEntry != null) {
-      _overlayEntry!.remove();
+      try {
+        _overlayEntry!.remove();
+      } catch (e) {
+        debugPrint('Error removing overlay: $e');
+      }
       _overlayEntry = null;
       _showSuggestions = false;
     }
   }
 
   void _updateOverlay() {
-    if (_showSuggestions) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        if (_showSuggestions) {
           _removeOverlay();
           _showOverlay();
         }
-      });
-    }
+      }
+    });
   }
 
   @override
@@ -149,12 +188,7 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
               hintText: widget.hint,
               border: const OutlineInputBorder(),
             ),
-        onChanged: (value) {
-          if (widget.onSearchTextChanged != null) {
-            widget.onSearchTextChanged!(value);
-          }
-          _updateOverlay();
-        },
+        onChanged: _onSearchTextChanged,
         validator: widget.validator,
         readOnly: widget.readOnly,
         enabled: widget.enabled,

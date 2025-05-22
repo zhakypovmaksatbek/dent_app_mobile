@@ -99,7 +99,7 @@ class StatCard extends StatelessWidget {
                         color: color.withValues(alpha: .1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(icon, color: color, size: 26),
+                      child: Icon(icon, color: color, size: 36),
                     ),
                 ],
               ),

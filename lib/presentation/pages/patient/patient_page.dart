@@ -104,6 +104,13 @@ class _PatientPageState extends State<PatientPage> {
             onPressed: _toggleSearch,
           ),
         ],
+        bottom:
+            _isSearching
+                ? PreferredSize(
+                  preferredSize: Size.fromHeight(56),
+                  child: _buildSearchField(),
+                )
+                : null,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -119,7 +126,7 @@ class _PatientPageState extends State<PatientPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           controller: _scrollController,
           slivers: [
-            if (_isSearching) SliverToBoxAdapter(child: _buildSearchField()),
+            // if (_isSearching) SliverToBoxAdapter(child: _buildSearchField()),
             BlocConsumer<PatientBloc, PatientState>(
               listener: (context, state) {
                 if (state is PatientLoading) {

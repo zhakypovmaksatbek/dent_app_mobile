@@ -2,10 +2,12 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/edit_appointment_dialog_widget.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
@@ -15,6 +17,7 @@ import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppointmentDialogService {
   // Show appointment details dialog
@@ -53,6 +56,7 @@ class AppointmentDialogService {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        print(appointmentModel.appointmentStatus);
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -138,6 +142,28 @@ class AppointmentDialogService {
                   );
                 },
               ),
+              if (appointmentModel.appointmentStatus !=
+                  AppointmentStatus.canceled.key.toUpperCase())
+                BlocListener<AppointmentCubit, AppointmentState>(
+                  listener: (context, state) {
+                    if (state is AppointmentLoaded) {
+                      router.maybePop();
+                    }
+                  },
+                  child: DefElevatedButton(
+                    title: LocaleKeys.buttons_cancel.tr(),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    onPressed: () {
+                      context.read<AppointmentCubit>().updateAppointmentComment(
+                        appointmentModel.appointmentId!,
+                        AppointmentCommentModel(
+                          appointmentStatus:
+                              AppointmentStatus.canceled.key.toUpperCase(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 spacing: 12,

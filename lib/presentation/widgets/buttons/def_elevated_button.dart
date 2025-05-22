@@ -9,6 +9,7 @@ class DefElevatedButton extends StatelessWidget {
     this.minHeight,
     this.maxWidth,
     this.maxHeight,
+    this.backgroundColor,
   });
   final String title;
   final VoidCallback onPressed;
@@ -16,6 +17,7 @@ class DefElevatedButton extends StatelessWidget {
   final double? minHeight;
   final double? maxWidth;
   final double? maxHeight;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class DefElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         maximumSize: Size(maxWidth ?? double.infinity, maxHeight ?? 45),
         minimumSize: Size(minWidth ?? double.infinity, minHeight ?? 45),
+        backgroundColor: backgroundColor,
       ),
       onPressed: onPressed,
       child: Text(title),

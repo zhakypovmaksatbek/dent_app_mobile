@@ -20,7 +20,7 @@ class AppTheme {
       error: ColorConstants.red,
     ),
     cardColor: ColorConstants.secondary,
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: ColorConstants.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),

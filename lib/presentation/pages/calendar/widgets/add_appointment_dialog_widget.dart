@@ -11,6 +11,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/search_patient/search_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_dialog_widgets/index.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
@@ -21,6 +22,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddAppointmentDialogWidget extends StatefulWidget {
   final DateTime? initialDate;
@@ -320,12 +322,14 @@ class _AddAppointmentDialogWidgetState
                 _searchPatientCubit.emit(SearchPatientInitial());
               },
               onAddPatient: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "Add patient functionality will be implemented here",
-                    ),
-                  ),
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  builder:
+                      (context) => CreatePatientPage(
+                        isEdit: false,
+
+                        patientName: _patientController.text,
+                      ),
                 );
               },
             );

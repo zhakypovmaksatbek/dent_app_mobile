@@ -14,16 +14,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatePatientPage extends StatefulWidget {
-  const CreatePatientPage({super.key, this.isEdit = false, this.patient});
+  const CreatePatientPage({
+    super.key,
+    this.isEdit = false,
+    this.patient,
+    this.patientName,
+  });
   final bool isEdit;
   final PatientModel? patient;
+  final String? patientName;
   @override
   State<CreatePatientPage> createState() => _CreatePatientPageState();
 }
 
 class _CreatePatientPageState extends State<CreatePatientPage> {
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _secondaryPhoneController =
       TextEditingController();
@@ -35,11 +40,29 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
 
   late final CreatePatientCubit _createPatientCubit;
   String? _birthday;
+  bool _showAdditionalFields = false;
+  Gender _selectedGender = Gender.male;
+  FromWhere _selectedFromWhere = FromWhere.other;
+
   @override
   void initState() {
     super.initState();
     _createPatientCubit = CreatePatientCubit();
-    if (widget.isEdit) {
+
+    // Handle patientName parameter regardless of isEdit
+    if (widget.patientName != null) {
+      final nameParts = widget.patientName!.split(' ');
+      if (nameParts.length >= 2) {
+        _nameController.text = nameParts[0];
+        _surnameController.text = nameParts[1];
+      } else {
+        _nameController.text = widget.patientName!;
+        _surnameController.text = '';
+      }
+    }
+
+    // Handle edit mode
+    if (widget.isEdit && widget.patient != null) {
       if (widget.patient?.fullName != null) {
         final nameParts = widget.patient!.fullName!.split(' ');
         if (nameParts.length >= 2) {
@@ -53,11 +76,10 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
       _phoneController.text = widget.patient!.phoneNumber ?? "";
       _emailController.text = widget.patient!.email ?? "";
       _birthday = widget.patient!.birthDate ?? "";
+      _showAdditionalFields = true; // Show all fields in edit mode
     }
   }
 
-  Gender _selectedGender = Gender.male;
-  FromWhere _selectedFromWhere = FromWhere.other;
   @override
   void dispose() {
     _nameController.dispose();
@@ -76,6 +98,136 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final router = getIt<AppRouter>();
+
+  Widget _buildRequiredFields() {
+    return Column(
+      children: [
+        FormTextField(
+          hintText: LocaleKeys.forms_name.tr(),
+          controller: _nameController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return LocaleKeys.errors_required_field.tr();
+            }
+            return null;
+          },
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: 12),
+        FormTextField(
+          hintText: LocaleKeys.forms_surname.tr(),
+          controller: _surnameController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return LocaleKeys.errors_required_field.tr();
+            }
+            return null;
+          },
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: 12),
+        FormTextField(
+          hintText: LocaleKeys.forms_phone.tr(),
+          controller: _phoneController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return LocaleKeys.errors_required_field.tr();
+            }
+            return null;
+          },
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          keyboardType: TextInputType.phone,
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<Gender>(
+          items:
+              Gender.values
+                  .map(
+                    (e) =>
+                        DropdownMenuItem(value: e, child: Text(e.title.tr())),
+                  )
+                  .toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _selectedGender = value;
+              });
+            }
+          },
+          decoration: InputDecoration(
+            labelText: LocaleKeys.forms_gender.tr(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          value: _selectedGender,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAdditionalFields() {
+    return Column(
+      children: [
+        FormTextField(
+          hintText: LocaleKeys.forms_patronymic.tr(),
+          controller: _patronymicController,
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: 12),
+        FormTextField(
+          hintText: LocaleKeys.forms_secondary_phone_number.tr(),
+          controller: _secondaryPhoneController,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          keyboardType: TextInputType.phone,
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: 12),
+        FormTextField(
+          hintText: LocaleKeys.forms_email.tr(),
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.done,
+        ),
+        const SizedBox(height: 12),
+        BirthdayPickerField(
+          initialValue: _birthday,
+          onChanged: (newDate) {
+            _birthday = newDate;
+          },
+        ),
+        const SizedBox(height: 12),
+        FormTextField(
+          hintText: LocaleKeys.forms_passport_number.tr(),
+          controller: _passportNumberController,
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<FromWhere>(
+          items:
+              FromWhere.values
+                  .map(
+                    (e) =>
+                        DropdownMenuItem(value: e, child: Text(e.title.tr())),
+                  )
+                  .toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _selectedFromWhere = value;
+              });
+            }
+          },
+          decoration: InputDecoration(
+            labelText: LocaleKeys.forms_from_where.tr(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          value: _selectedFromWhere,
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,131 +253,30 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    spacing: 12,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppText(
                         title: LocaleKeys.patients_add_patient.tr(),
                         textType: TextType.body,
                       ),
-                      FormTextField(
-                        hintText: LocaleKeys.forms_name.tr(),
-                        controller: _nameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return LocaleKeys.errors_required_field.tr();
-                          }
-                          return null;
-                        },
-
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      FormTextField(
-                        hintText: LocaleKeys.forms_surname.tr(),
-                        controller: _surnameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return LocaleKeys.errors_required_field.tr();
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      FormTextField(
-                        hintText: LocaleKeys.forms_patronymic.tr(),
-                        controller: _patronymicController,
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      FormTextField(
-                        hintText: LocaleKeys.forms_phone.tr(),
-                        controller: _phoneController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return LocaleKeys.errors_required_field.tr();
-                          }
-                          return null;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        keyboardType: TextInputType.phone,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      FormTextField(
-                        hintText: LocaleKeys.forms_secondary_phone_number.tr(),
-                        controller: _secondaryPhoneController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        keyboardType: TextInputType.phone,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      FormTextField(
-                        hintText: LocaleKeys.forms_email.tr(),
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.done,
-                      ),
-
-                      BirthdayPickerField(
-                        initialValue: _birthday,
-                        onChanged: (newDate) {
-                          _birthday = newDate;
-                        },
-                      ),
-
-                      FormTextField(
-                        hintText: LocaleKeys.forms_passport_number.tr(),
-                        controller: _passportNumberController,
-                      ),
-                      DropdownButtonFormField<Gender>(
-                        items:
-                            Gender.values
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.title.tr()),
-                                  ),
-                                )
-                                .toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            _selectedGender = value;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          labelText: LocaleKeys.forms_gender.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      const SizedBox(height: 16),
+                      _buildRequiredFields(),
+                      const SizedBox(height: 16),
+                      if (!_showAdditionalFields)
+                        Center(
+                          child: TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                _showAdditionalFields = true;
+                              });
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Ek bilgileri göster'),
                           ),
-                        ),
-                        value: _selectedGender,
-                      ),
-                      DropdownButtonFormField<FromWhere>(
-                        items:
-                            FromWhere.values
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.title.tr()),
-                                  ),
-                                )
-                                .toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            _selectedFromWhere = value;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          labelText: LocaleKeys.forms_from_where.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        value: _selectedFromWhere,
-                      ),
+                        )
+                      else
+                        _buildAdditionalFields(),
+                      const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
                         child: DefElevatedButton(

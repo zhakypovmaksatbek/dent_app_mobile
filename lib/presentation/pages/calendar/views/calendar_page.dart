@@ -11,12 +11,15 @@ import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_fixed_section.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 @RoutePage(name: 'CalendarRoute')
@@ -190,11 +193,19 @@ class _CalendarPageState extends State<CalendarPage> {
       value: _doctorCubit,
       child: BlocProvider.value(
         value: _appointmentActionCubit,
-        child: Scaffold(
-          appBar: _buildAppBar(),
-          floatingActionButtonLocation: ExpandableFab.location,
-          floatingActionButton: _buildExpandableFAB(),
-          body: _buildBody(size),
+        child: BlocListener<AppointmentCubit, AppointmentState>(
+          listenWhen: (previous, current) => previous != current,
+          listener: (context, state) {
+            if (state is AppointmentLoaded) {
+              _loadAppointmentsForDateRange();
+            }
+          },
+          child: Scaffold(
+            appBar: _buildAppBar(),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButton: _buildExpandableFAB(),
+            body: _buildBody(size),
+          ),
         ),
       ),
     );
@@ -216,31 +227,27 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // Build the expandable floating action button
   Widget _buildExpandableFAB() {
-    return ExpandableFab(
-      type: ExpandableFabType.up,
-      childrenAnimation: ExpandableFabAnimation.none,
-      distance: 70,
-      overlayStyle: ExpandableFabOverlayStyle(
-        color: Colors.white.withValues(alpha: .9),
-      ),
-      openButtonBuilder: RotateFloatingActionButtonBuilder(
-        child: const Icon(Icons.menu),
-        fabSize: ExpandableFabSize.regular,
-      ),
-      closeButtonBuilder: DefaultFloatingActionButtonBuilder(
-        child: const Icon(Icons.close),
-        fabSize: ExpandableFabSize.small,
-      ),
+    return SpeedDial(
+      icon: Icons.add,
+      spacing: 16,
+      activeIcon: Icons.close,
       children: [
-        FloatingActionButton.small(
-          heroTag: null,
-          child: const Icon(Icons.add),
-          onPressed: () => _createAppointment(context, _selectedDate),
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: LocaleKeys.buttons_add_appointment.tr(),
+          onTap: () {
+            _createAppointment(context, _selectedDate);
+          },
         ),
-        FloatingActionButton.small(
-          heroTag: null,
-          child: const Icon(Icons.search),
-          onPressed: () {},
+        SpeedDialChild(
+          child: Icon(Icons.person_add),
+          label: LocaleKeys.patients_add_patient.tr(),
+          onTap: () {
+            showCupertinoModalBottomSheet(
+              context: context,
+              builder: (context) => const CreatePatientPage(),
+            );
+          },
         ),
       ],
     );
