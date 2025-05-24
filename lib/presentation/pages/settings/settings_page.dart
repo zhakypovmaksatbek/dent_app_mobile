@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/widgets/profile_section.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
@@ -19,12 +20,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final router = getIt<AppRouter>();
 
-  // Mock data - replace with actual user data
-  final String userName = "Dr. John Doe";
-  final String userRole = "Dentist";
-  final String userEmail = "john.doe@example.com";
-  final String userAvatar = ""; // Add URL if available
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildProfileSection(),
+            const ProfileSection(),
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -79,90 +74,6 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 32),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildProfileSection() {
-    return Container(
-      color: AppColors.primary.withValues(alpha: .05),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              // Profile Picture
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: AppColors.primary.withValues(alpha: .2),
-                backgroundImage:
-                    userAvatar.isNotEmpty
-                        ? NetworkImage(userAvatar) as ImageProvider
-                        : null,
-                child:
-                    userAvatar.isEmpty
-                        ? Text(
-                          userName
-                              .split(' ')
-                              .map((e) => e[0])
-                              .take(2)
-                              .join()
-                              .toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
-                          ),
-                        )
-                        : null,
-              ),
-              const SizedBox(width: 20),
-              // User Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userName,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      userRole,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      userEmail,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          // Edit Profile Button
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              icon: const Icon(Icons.edit_outlined),
-              label: Text(LocaleKeys.buttons_edit_profile.tr()),
-              onPressed: () {
-                // Navigate to profile edit page
-              },
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

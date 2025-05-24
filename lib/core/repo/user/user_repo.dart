@@ -2,6 +2,8 @@ import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/models/login/login_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
+import 'package:dent_app_mobile/models/response_model.dart';
+import 'package:dent_app_mobile/models/users/create_schedule_model.dart';
 import 'package:dent_app_mobile/models/users/schedule_model.dart';
 import 'package:dent_app_mobile/models/users/specialty_model.dart';
 
@@ -19,6 +21,10 @@ abstract class UserRepo {
     required int specialtyId,
   });
   Future<ScheduleModel> getDoctorSchedule(int userId, DateTime startWeek);
+  Future<ResponseModel> createDoctorSchedule(
+    int userId,
+    CreateScheduleModel schedule,
+  );
 }
 
 class UserRepoImpl extends UserRepo {
@@ -34,7 +40,9 @@ class UserRepoImpl extends UserRepo {
     final data = LoginResponseModel.fromJson(response.data);
     if (data.jwt != null) {
       await appDataService.setToken(accessToken: data.jwt!);
+      await appDataService.setUserId(userId: data.id ?? 0);
       await appDataService.setIsLogin(true);
+      await appDataService.setClinicId(clinicId: data.clinicId ?? 0);
       await appDataService.setTokenExpiry(
         expiryTime: DateTime.now().add(Duration(days: 3)),
       );
@@ -115,5 +123,17 @@ class UserRepoImpl extends UserRepo {
       queryParameters: {'startWeek': startWeekFormatted},
     );
     return ScheduleModel.fromJson(response.data);
+  }
+
+  @override
+  Future<ResponseModel> createDoctorSchedule(
+    int userId,
+    CreateScheduleModel schedule,
+  ) async {
+    final response = await dioService.dio.post(
+      'api/schedules/$userId',
+      data: schedule.toJson(),
+    );
+    return ResponseModel.fromJson(response.data);
   }
 }

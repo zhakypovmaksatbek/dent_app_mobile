@@ -43,7 +43,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     try {
       await appointmentRepo.updateAppointment(id, appointment);
       final updatedAppointment = await appointmentRepo.getAppointmentById(id);
-      emit(AppointmentLoaded(appointment: updatedAppointment));
+      emit(AppointmentUpdated(appointment: updatedAppointment));
     } on DioException catch (e) {
       emit(AppointmentError(message: _errorMessage(e)));
     }
@@ -55,9 +55,17 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   ) async {
     emit(AppointmentLoading());
     try {
-      await appointmentRepo.updateAppointmentComment(id, comment);
+      final message = await appointmentRepo.updateAppointmentComment(
+        id,
+        comment,
+      );
       final updatedAppointment = await appointmentRepo.getAppointmentById(id);
-      emit(AppointmentLoaded(appointment: updatedAppointment));
+      emit(
+        AppointmentCommentUpdated(
+          appointment: updatedAppointment,
+          message: message,
+        ),
+      );
     } on DioException catch (e) {
       emit(AppointmentError(message: _errorMessage(e)));
     }

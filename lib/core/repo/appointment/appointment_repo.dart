@@ -21,7 +21,7 @@ abstract class IAppointmentRepo {
   Future<AppointmentModel> getAppointmentById(int id);
   Future<void> createAppointment(CreateAppointmentModel appointment);
   Future<void> updateAppointment(int id, CreateAppointmentModel appointment);
-  Future<void> updateAppointmentComment(
+  Future<String> updateAppointmentComment(
     int id,
     AppointmentCommentModel appointment,
   );
@@ -89,11 +89,15 @@ class AppointmentRepo extends IAppointmentRepo {
   }
 
   @override
-  Future<void> updateAppointmentComment(
+  Future<String> updateAppointmentComment(
     int id,
     AppointmentCommentModel appointment,
   ) async {
-    await dio.put('api/appointments/$id/comments', data: appointment.toJson());
+    final response = await dio.put(
+      'api/appointments/$id/comments',
+      data: appointment.toJson(),
+    );
+    return response.data['message'];
   }
 
   @override

@@ -28,7 +28,7 @@ class UserDetailModel {
   });
 
   UserDetailModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id']?.toInt();
     firstName = json['firstName'];
     lastName = json['lastName'];
     patronymic = json['patronymic'];
@@ -75,7 +75,7 @@ class PayrollCalculationsResponse {
   PayrollCalculationsResponse({this.salary, this.percentOrFixed});
 
   PayrollCalculationsResponse.fromJson(Map<String, dynamic> json) {
-    salary = json['salary'];
+    salary = json['salary']?.toDouble();
     percentOrFixed = json['percentOrFixed'];
   }
 

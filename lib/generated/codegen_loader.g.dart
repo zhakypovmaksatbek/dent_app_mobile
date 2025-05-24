@@ -122,7 +122,7 @@ class CodegenLoader extends AssetLoader{
     "logout": "Выйти",
     "refresh": "Обновить",
     "view_all": "Посмотреть все",
-    "edit_profile": "Редактировать профиль",
+    "edit_profile": "Редактировать",
     "more_options": "Больше опций",
     "add_new_service": "Добавить новую услугу",
     "edit_service": "Редактировать услугу",
@@ -142,7 +142,8 @@ class CodegenLoader extends AssetLoader{
     "clear_search": "Очистить поиск",
     "load_documents": "Загрузить документы",
     "select_doctor": "Выберите врача",
-    "start_treatment": "Начать лечение"
+    "start_treatment": "Начать лечение",
+    "create_schedule": "Создать график"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -273,7 +274,8 @@ class CodegenLoader extends AssetLoader{
     "document_deleted_successfully": "Документ успешно удален",
     "product_no_available": "Продукт не доступен",
     "document_no_available": "Документ не доступен",
-    "delete_document_confirmation": "Вы уверены, что хотите удалить документ {name}?"
+    "delete_document_confirmation": "Вы уверены, что хотите удалить документ {name}?",
+    "add_schedule": "Добавить график"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -352,7 +354,20 @@ class CodegenLoader extends AssetLoader{
     "last_year": "Прошлый год",
     "last_30_days": "Последние 30 дней",
     "last_90_days": "Последние 90 дней",
-    "custom_range": "Пользовательский диапазон"
+    "custom_range": "Пользовательский диапазон",
+    "select_start_date": "Выберите дату начала",
+    "select_end_date": "Выберите дату окончания",
+    "select_start_time": "Выберите время начала",
+    "select_end_time": "Выберите время окончания",
+    "weekly_schedule": "Еженедельный график",
+    "set_working_hours": "Установите рабочие часы для каждого дня недели",
+    "please_select_dates": "Пожалуйста, выберите даты начала и окончания для просмотра расписания",
+    "start_time": "Время начала",
+    "end_time": "Время окончания",
+    "schedule_period_configured": "Период расписания настроен",
+    "end_date": "Конец даты",
+    "start_date": "Начало даты",
+    "schedule_period": "Период расписания"
   },
   "alerts": {
     "confirm_delete_service": "Вы уверены, что хотите удалить услугу {name}?",
@@ -373,7 +388,8 @@ class CodegenLoader extends AssetLoader{
     "enter_diagnosis_name": "Пожалуйста, введите название диагноза",
     "unknown_product": "Неизвестный продукт",
     "enter_supplier_name": "Пожалуйста, введите название поставщика",
-    "please_add_product": "Пожалуйста, добавьте продукт"
+    "please_add_product": "Пожалуйста, добавьте продукт",
+    "non_working_day": "Не рабочий день"
   },
   "roles": {
     "admin": "Администратор",

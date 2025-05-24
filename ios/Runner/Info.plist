@@ -55,5 +55,10 @@
 	<string>sms</string>
 	<string>tel</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>DentApp использует микрофон для записи голосовых заметок и распознавания речи для удобства ввода информации.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>DentApp использует распознавание речи для преобразования голосовых заметок в текст, что упрощает ведение записей о пациентах.</string>
+	
 </dict>
 </plist>

@@ -30,5 +30,9 @@ final class AppointmentUpdated extends AppointmentState {
 
 final class AppointmentCommentUpdated extends AppointmentState {
   final AppointmentModel appointment;
-  const AppointmentCommentUpdated({required this.appointment});
+  final String message;
+  const AppointmentCommentUpdated({
+    required this.appointment,
+    required this.message,
+  });
 }

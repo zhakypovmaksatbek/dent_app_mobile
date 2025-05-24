@@ -14,6 +14,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/chart_constants.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/gender.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/week.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/widgets/create_schedule_content.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/widgets/personal_patient_item.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
@@ -134,12 +135,13 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
               return const SizedBox.shrink();
             },
           ),
+          _buildWorkingHoursSection(),
           _buildPersonalInfoSection(user),
+
           _buildContactInfoSection(user),
           if (user.payrollCalculationsResponse != null) ...[
             _buildPayrollInfoSection(user.payrollCalculationsResponse!),
           ],
-          _buildWorkingHoursSection(),
           _buildPerformanceSection(),
 
           const SizedBox(height: 34),
@@ -709,12 +711,6 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
 
     return Row(
       children: [
-        Icon(
-          Icons.calendar_month,
-          color: Theme.of(context).colorScheme.primary,
-          size: 24,
-        ),
-        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -769,6 +765,19 @@ class _PersonalDetailPageState extends State<PersonalDetailPage>
               ),
             ],
           ),
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              isDismissible: true,
+              enableDrag: true,
+              builder: (context) => CreateScheduleContent(id: widget.userId),
+            );
+          },
+          icon: Icon(Icons.edit),
+          tooltip: LocaleKeys.notifications_add_schedule.tr(),
+        ),
       ],
     );
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 enum AppointmentStatus {
   notConfirmed(
     key: 'not_confirmed',
-    color: AppColors.red,
+    color: AppColors.grey,
     label: LocaleKeys.appointment_status_not_confirmed,
   ),
   confirmed(
@@ -30,7 +30,7 @@ enum AppointmentStatus {
   ),
   canceled(
     key: 'canceled',
-    color: AppColors.grey,
+    color: AppColors.red,
     label: LocaleKeys.appointment_status_canceled,
   ),
   online(

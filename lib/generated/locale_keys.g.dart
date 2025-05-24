@@ -129,6 +129,7 @@ abstract class  LocaleKeys {
   static const buttons_load_documents = 'buttons.load_documents';
   static const buttons_select_doctor = 'buttons.select_doctor';
   static const buttons_start_treatment = 'buttons.start_treatment';
+  static const buttons_create_schedule = 'buttons.create_schedule';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -254,6 +255,7 @@ abstract class  LocaleKeys {
   static const notifications_product_no_available = 'notifications.product_no_available';
   static const notifications_document_no_available = 'notifications.document_no_available';
   static const notifications_delete_document_confirmation = 'notifications.delete_document_confirmation';
+  static const notifications_add_schedule = 'notifications.add_schedule';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';
@@ -331,6 +333,19 @@ abstract class  LocaleKeys {
   static const date_range_last_30_days = 'date_range.last_30_days';
   static const date_range_last_90_days = 'date_range.last_90_days';
   static const date_range_custom_range = 'date_range.custom_range';
+  static const date_range_select_start_date = 'date_range.select_start_date';
+  static const date_range_select_end_date = 'date_range.select_end_date';
+  static const date_range_select_start_time = 'date_range.select_start_time';
+  static const date_range_select_end_time = 'date_range.select_end_time';
+  static const date_range_weekly_schedule = 'date_range.weekly_schedule';
+  static const date_range_set_working_hours = 'date_range.set_working_hours';
+  static const date_range_please_select_dates = 'date_range.please_select_dates';
+  static const date_range_start_time = 'date_range.start_time';
+  static const date_range_end_time = 'date_range.end_time';
+  static const date_range_schedule_period_configured = 'date_range.schedule_period_configured';
+  static const date_range_end_date = 'date_range.end_date';
+  static const date_range_start_date = 'date_range.start_date';
+  static const date_range_schedule_period = 'date_range.schedule_period';
   static const date_range = 'date_range';
   static const alerts_confirm_delete_service = 'alerts.confirm_delete_service';
   static const alerts_operation_successful = 'alerts.operation_successful';
@@ -350,6 +365,7 @@ abstract class  LocaleKeys {
   static const validation_unknown_product = 'validation.unknown_product';
   static const validation_enter_supplier_name = 'validation.enter_supplier_name';
   static const validation_please_add_product = 'validation.please_add_product';
+  static const validation_non_working_day = 'validation.non_working_day';
   static const validation = 'validation';
   static const roles_admin = 'roles.admin';
   static const roles_doctor = 'roles.doctor';

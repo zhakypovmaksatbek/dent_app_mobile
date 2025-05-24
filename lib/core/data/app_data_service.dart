@@ -32,11 +32,24 @@ class AppDataService {
     return refreshToken;
   }
 
+  // clinic id
+  Future<void> setClinicId({required int clinicId}) async {
+    final prefs = await preferences();
+    await prefs.setInt(AppConstants.instance.clinicId, clinicId);
+  }
+
+  Future<int?> getClinicId() async {
+    final prefs = await preferences();
+    final clinicId = prefs.getInt(AppConstants.instance.clinicId);
+    return clinicId;
+  }
+
   Future<void> clearTokens() async {
     final prefs = await preferences();
     await prefs.remove(AppConstants.instance.accessToken);
     await prefs.remove(AppConstants.instance.refreshToken);
     await prefs.remove(AppConstants.instance.tokenExpiry);
+    await prefs.remove(AppConstants.instance.userId);
     await setIsLogin(false);
   }
 
@@ -81,5 +94,16 @@ class AppDataService {
     }
 
     return isExpired;
+  }
+
+  Future<int?> getUserId() async {
+    final prefs = await preferences();
+    final userId = prefs.getInt(AppConstants.instance.userId);
+    return userId;
+  }
+
+  Future<void> setUserId({required int userId}) async {
+    final prefs = await preferences();
+    await prefs.setInt(AppConstants.instance.userId, userId);
   }
 }

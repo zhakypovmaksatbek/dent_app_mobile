@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/constants/asset_constants.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
@@ -36,7 +37,7 @@ class AppointmentItemWidget extends StatelessWidget {
     }
 
     // Get patient name, handling null values
-    String patientName = 'Patient';
+    String patientName = LocaleKeys.appointment_patient.tr();
     if (appointment.patientFirsName != null ||
         appointment.patientLastName != null) {
       patientName =

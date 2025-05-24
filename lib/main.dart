@@ -17,9 +17,11 @@ import 'package:dent_app_mobile/presentation/pages/report/core/bloc/deposit/depo
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/discount/discount_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/payment/payment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/report/report_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/core/bloc/user/user_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/cubit/diagnosis_configuration_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/diagnosis/diagnosis_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/create_schedule/create_schedule_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_action/personal_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_patient/personal_patient_cubit.dart';
@@ -110,5 +112,7 @@ class Initializer {
     BlocProvider(create: (context) => PatientToothCubit()),
     BlocProvider(create: (context) => PatternCubit()),
     BlocProvider(create: (context) => ConditionCubit()),
+    BlocProvider(create: (context) => CreateScheduleCubit()),
+    BlocProvider(create: (context) => UserCubit()),
   ];
 }

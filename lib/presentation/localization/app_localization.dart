@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:dent_app_mobile/generated/codegen_loader.g.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 
 final class AppLocalization extends EasyLocalization {
   AppLocalization({super.key, required super.child})
@@ -20,6 +19,10 @@ final class AppLocalization extends EasyLocalization {
     // Locales.ky.locale,
     Locales.ru.locale,
   ];
+
+  static String getCurrentLanguageCode(BuildContext context) {
+    return context.locale.languageCode;
+  }
 }
 
 enum Locales {

@@ -1,10 +1,11 @@
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/models/users/personal_model.dart';
 import 'package:dent_app_mobile/models/users/user_detail_model.dart';
 import 'package:dent_app_mobile/models/users/user_model.dart';
 
 abstract class IPersonalRepo {
-  Future<UserDetailModel> getPersonalDetail(int id);
+  Future<UserDetailModel> getPersonalDetail();
   Future<UserDataModel> getPersonalList(int page, {String? search});
   Future<UserDataModel> getManagerList(int page);
   Future<UserDetailModel> getPersonalDetailById(int id);
@@ -16,7 +17,8 @@ abstract class IPersonalRepo {
 class PersonalRepo extends IPersonalRepo {
   final dio = DioService();
   @override
-  Future<UserDetailModel> getPersonalDetail(int id) async {
+  Future<UserDetailModel> getPersonalDetail() async {
+    final int? id = await AppDataService.instance.getUserId();
     final response = await dio.get('api/users/$id');
     return UserDetailModel.fromJson(response.data);
   }

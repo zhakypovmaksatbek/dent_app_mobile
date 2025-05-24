@@ -14,4 +14,6 @@ final class AppConstants {
   final String isLogin = "isLogin";
   final String tokenExpiry = "tokenExpiry";
   final String refreshToken = "refreshToken";
+  final String userId = "userId";
+  final String clinicId = "clinicId";
 }
