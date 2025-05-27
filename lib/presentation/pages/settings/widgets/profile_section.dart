@@ -1,6 +1,6 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/core/bloc/user/user_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/personal/widgets/create_schedule_content.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/widgets/working_schedule_viewer.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +20,14 @@ class _ProfileSectionState extends State<ProfileSection> {
     context.read<UserCubit>().getUser();
   }
 
-  void _showCreateScheduleModal(BuildContext context, int userId) {
+  void _showWorkingScheduleViewer(BuildContext context, int userId) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => CreateScheduleContent(id: userId),
+      builder: (context) => WorkingScheduleViewer(userId: userId),
     );
   }
 
@@ -246,7 +246,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                               icon: Icons.schedule_outlined,
                               label: 'Schedule',
                               onPressed:
-                                  () => _showCreateScheduleModal(
+                                  () => _showWorkingScheduleViewer(
                                     context,
                                     user.id ?? 0,
                                   ),
