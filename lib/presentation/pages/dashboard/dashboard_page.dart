@@ -205,7 +205,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   heartbeats!.workingHours?.exceeds == true
                       ? TrendDirection.up
                       : TrendDirection.down,
-              trendPercentage: 0.0, // Yüzde kullanmıyoruz
+              trendPercentage: 0.0,
               trendText: _formatHoursDifference(heartbeats!.workingHours),
               icon: Icons.watch_later_outlined,
               color: const Color(0xFFE65100),

@@ -304,7 +304,12 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
                   return AnimatedContainer(
                     duration: Duration(milliseconds: 100 + (index * 50)),
                     curve: Curves.easeOutCubic,
-                    child: _buildDayCard(context, days[index], index),
+                    child: _buildDayCard(
+                      context,
+                      days[index],
+                      index,
+                      state.schedule,
+                    ),
                   );
                 },
               ),
@@ -530,11 +535,32 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
     BuildContext context,
     DayScheduleResponses day,
     int index,
+    ScheduleModel schedule,
   ) {
     final isWorkingDay = day.workingDay ?? false;
     final weekDay = day.week ?? '';
     final today = DateTime.now();
-    final isToday = today.weekday == _getWeekdayFromString(weekDay);
+
+    // Calculate the actual date for this day
+    bool isToday = false;
+    if (schedule.startDate != null) {
+      try {
+        final weekStart = DateTime.parse(schedule.startDate!);
+        final dayIndex =
+            _getWeekdayFromString(weekDay) - 1; // Convert to 0-based index
+        final dayDate = weekStart.add(Duration(days: dayIndex));
+        isToday =
+            dayDate.year == today.year &&
+            dayDate.month == today.month &&
+            dayDate.day == today.day;
+      } catch (e) {
+        // Fallback to weekday comparison if date parsing fails
+        isToday = today.weekday == _getWeekdayFromString(weekDay);
+      }
+    } else {
+      // Fallback to weekday comparison if start date is not available
+      isToday = today.weekday == _getWeekdayFromString(weekDay);
+    }
 
     String timeString = LocaleKeys.general_day_off.tr();
     if (isWorkingDay && day.startTime != null && day.endTime != null) {
