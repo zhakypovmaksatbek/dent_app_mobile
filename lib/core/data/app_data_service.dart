@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,5 +106,16 @@ class AppDataService {
   Future<void> setUserId({required int userId}) async {
     final prefs = await preferences();
     await prefs.setInt(AppConstants.instance.userId, userId);
+  }
+
+  Future<Role?> getRole() async {
+    final prefs = await preferences();
+    final role = prefs.getString(AppConstants.instance.role);
+    return role != null ? Role.fromString(role) : null;
+  }
+
+  Future<void> setRole({required Role role}) async {
+    final prefs = await preferences();
+    await prefs.setString(AppConstants.instance.role, role.name);
   }
 }

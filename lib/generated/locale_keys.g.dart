@@ -90,6 +90,8 @@ abstract class  LocaleKeys {
   static const general_center = 'general.center';
   static const general_inner_tooth_details = 'general.inner_tooth_details';
   static const general_main = 'general.main';
+  static const general_working_hours = 'general.working_hours';
+  static const general_rating = 'general.rating';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';

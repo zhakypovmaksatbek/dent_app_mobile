@@ -29,6 +29,7 @@ class CustomAssetImage extends StatelessWidget {
           isSvg!
               ? SvgPicture.asset(
                 path,
+
                 colorFilter:
                     svgColor != null
                         ? ColorFilter.mode(

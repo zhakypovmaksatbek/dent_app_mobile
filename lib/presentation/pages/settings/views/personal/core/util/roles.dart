@@ -14,7 +14,8 @@ enum Role {
   // from string
   static Role fromString(String value) {
     return Role.values.firstWhere(
-      (e) => e.displayName.toUpperCase() == value.toUpperCase(),
+      (e) => e.name == value.toLowerCase(),
+      orElse: () => Role.doctor,
     );
   }
 }

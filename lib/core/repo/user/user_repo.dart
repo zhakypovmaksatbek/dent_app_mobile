@@ -6,6 +6,7 @@ import 'package:dent_app_mobile/models/response_model.dart';
 import 'package:dent_app_mobile/models/users/create_schedule_model.dart';
 import 'package:dent_app_mobile/models/users/schedule_model.dart';
 import 'package:dent_app_mobile/models/users/specialty_model.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 
 abstract class UserRepo {
   Future<LoginResponseModel> login(LoginModel loginModel);
@@ -45,6 +46,9 @@ class UserRepoImpl extends UserRepo {
       await appDataService.setClinicId(clinicId: data.clinicId ?? 0);
       await appDataService.setTokenExpiry(
         expiryTime: DateTime.now().add(Duration(days: 3)),
+      );
+      await appDataService.setRole(
+        role: Role.fromString(data.role ?? Role.doctor.name),
       );
     }
     return data;

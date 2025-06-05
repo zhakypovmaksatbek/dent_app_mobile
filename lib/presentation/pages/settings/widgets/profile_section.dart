@@ -1,5 +1,7 @@
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/core/bloc/user/user_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/widgets/working_schedule_viewer.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -191,72 +193,88 @@ class _ProfileSectionState extends State<ProfileSection> {
                   ),
                 ),
                 // Action Buttons Section
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      // Quick Stats Row
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.event,
-                              label: 'Appointments',
-                              value: '24',
-                              color: Colors.blue,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.schedule,
-                              label: 'Working Hours',
-                              value: '8h',
-                              color: Colors.green,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildStatCard(
-                              icon: Icons.star,
-                              label: 'Rating',
-                              value: '4.9',
-                              color: Colors.orange,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      // Action Buttons
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionButton(
-                              icon: Icons.edit_outlined,
-                              label: LocaleKeys.buttons_edit_profile.tr(),
-                              onPressed: () {
-                                // Navigate to profile edit page
-                              },
-                              isPrimary: false,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildActionButton(
-                              icon: Icons.schedule_outlined,
-                              label: 'Schedule',
-                              onPressed:
-                                  () => _showWorkingScheduleViewer(
-                                    context,
-                                    user.id ?? 0,
+                FutureBuilder<Role?>(
+                  future: AppDataService.instance.getRole(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    final role = snapshot.data;
+                    if (role == Role.doctor) {
+                      return Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          children: [
+                            // Quick Stats Row
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildStatCard(
+                                    icon: Icons.event,
+                                    label: LocaleKeys.routes_appointments.tr(),
+                                    value: '24',
+                                    color: Colors.blue,
                                   ),
-                              isPrimary: true,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _buildStatCard(
+                                    icon: Icons.schedule,
+                                    label:
+                                        LocaleKeys.general_working_hours.tr(),
+                                    value: '8h',
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _buildStatCard(
+                                    icon: Icons.star,
+                                    label: LocaleKeys.general_rating.tr(),
+                                    value: '4.9',
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                            const SizedBox(height: 20),
+                            // Action Buttons
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildActionButton(
+                                    icon: Icons.edit_outlined,
+                                    label: LocaleKeys.buttons_edit_profile.tr(),
+                                    onPressed: () {
+                                      // Navigate to profile edit page
+                                    },
+                                    isPrimary: false,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _buildActionButton(
+                                    icon: Icons.schedule_outlined,
+                                    label: 'Schedule',
+                                    onPressed:
+                                        () => _showWorkingScheduleViewer(
+                                          context,
+                                          user.id ?? 0,
+                                        ),
+                                    isPrimary: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
               ],
             ),

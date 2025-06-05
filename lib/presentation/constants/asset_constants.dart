@@ -1,4 +1,14 @@
-enum AssetConstants { toothLogo, logo, whatsapp, teeth }
+enum AssetConstants {
+  toothLogo,
+  logo,
+  whatsapp,
+  teeth,
+  chart,
+  user,
+  settings,
+  calendar,
+  schedule,
+}
 
 enum TeethAssetConstants {
   tooth11,

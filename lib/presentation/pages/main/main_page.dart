@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/presentation/constants/asset_constants.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:dent_app_mobile/router/app_route_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -33,25 +35,65 @@ class _MainPageState extends State<MainPage> {
             useLegacyColorScheme: false,
             items: [
               NavigationItemModel(
-                icon: Icon(Icons.analytics_outlined),
+                icon: CustomAssetImage(
+                  path: AssetConstants.chart.svg,
+                  isSvg: true,
+                ),
                 label: LocaleKeys.routes_dashboard.tr(),
+                activeIcon: CustomAssetImage(
+                  path: AssetConstants.chart.svg,
+                  isSvg: true,
+                  svgColor: ColorConstants.primary,
+                ),
               ),
               NavigationItemModel(
-                icon: Icon(Icons.calendar_month),
+                icon: CustomAssetImage(
+                  path: AssetConstants.calendar.svg,
+                  isSvg: true,
+                ),
                 label: LocaleKeys.routes_calendar.tr(),
+                activeIcon: CustomAssetImage(
+                  path: AssetConstants.calendar.svg,
+                  isSvg: true,
+                  svgColor: ColorConstants.primary,
+                ),
               ),
               NavigationItemModel(
-                icon: Icon(Icons.fact_check_outlined),
+                icon: CustomAssetImage(
+                  path: AssetConstants.schedule.svg,
+                  isSvg: true,
+                ),
                 label: LocaleKeys.routes_report.tr(),
+                activeIcon: CustomAssetImage(
+                  path: AssetConstants.schedule.svg,
+                  isSvg: true,
+                  svgColor: ColorConstants.primary,
+                ),
               ),
 
               NavigationItemModel(
-                icon: Icon(Icons.person),
+                icon: CustomAssetImage(
+                  path: AssetConstants.user.svg,
+                  isSvg: true,
+                ),
                 label: LocaleKeys.routes_patients.tr(),
+                activeIcon: CustomAssetImage(
+                  path: AssetConstants.user.svg,
+                  isSvg: true,
+                  svgColor: ColorConstants.primary,
+                ),
               ),
               NavigationItemModel(
-                icon: Icon(Icons.settings),
+                icon: CustomAssetImage(
+                  path: AssetConstants.settings.svg,
+                  isSvg: true,
+                ),
                 label: LocaleKeys.routes_settings.tr(),
+                activeIcon: CustomAssetImage(
+                  path: AssetConstants.settings.svg,
+                  isSvg: true,
+                  svgColor: ColorConstants.primary,
+                ),
               ),
             ],
             currentIndex: context.tabsRouter.activeIndex,
@@ -67,5 +109,9 @@ class _MainPageState extends State<MainPage> {
 }
 
 class NavigationItemModel extends BottomNavigationBarItem {
-  NavigationItemModel({required super.icon, required super.label});
+  NavigationItemModel({
+    required super.icon,
+    required super.label,
+    required super.activeIcon,
+  });
 }

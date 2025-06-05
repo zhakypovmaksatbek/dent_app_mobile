@@ -102,7 +102,9 @@ class CodegenLoader extends AssetLoader{
     "center_right": "Центр Право",
     "center": "Центр",
     "inner_tooth_details": "Внутренние зубы:",
-    "main": "Основной"
+    "main": "Основной",
+    "working_hours": "Рабочие часы",
+    "rating": "Рейтинг"
   },
   "buttons": {
     "login": "Войти",
