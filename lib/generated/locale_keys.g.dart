@@ -132,6 +132,7 @@ abstract class  LocaleKeys {
   static const buttons_select_doctor = 'buttons.select_doctor';
   static const buttons_start_treatment = 'buttons.start_treatment';
   static const buttons_create_schedule = 'buttons.create_schedule';
+  static const buttons_show_more = 'buttons.show_more';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';

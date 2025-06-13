@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/widgets/tooth_diagnosis_modal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -30,21 +31,27 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
               leftString: LocaleKeys.general_left.tr(),
 
               onChange: (selected) {
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Material(
-                      child: SizedBox(
-                        height: 300,
-                        child: Column(
-                          children: [
-                            Text('Tooth Diagnosis ${selected.length}'),
-                          ],
+                if (selected.isNotEmpty) {
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder:
+                        (context) => ToothDiagnosisModal(
+                          selectedTeeth: selected,
+
+                          onDiagnosisSelected: (diagnosis) {
+                            // Handle diagnosis selection
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Selected: ${diagnosis.title}'),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                            Navigator.pop(context);
+                          },
                         ),
-                      ),
-                    );
-                  },
-                );
+                  );
+                }
               },
             ),
           ),

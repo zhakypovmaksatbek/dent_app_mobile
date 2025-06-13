@@ -271,7 +271,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
                               });
                             },
                             icon: const Icon(Icons.add),
-                            label: const Text('Ek bilgileri göster'),
+                            label: Text(LocaleKeys.buttons_show_more.tr()),
                           ),
                         )
                       else
@@ -394,7 +394,9 @@ class _BirthdayPickerFieldState extends State<BirthdayPickerField> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: theme.colorScheme.outline.withOpacity(0.5)),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.5),
+          ),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -404,7 +406,7 @@ class _BirthdayPickerFieldState extends State<BirthdayPickerField> {
             AppText(
               title: LocaleKeys.forms_birthday.tr(),
               textType: TextType.subtitle,
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 4),
             AppText(

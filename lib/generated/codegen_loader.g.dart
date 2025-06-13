@@ -145,7 +145,8 @@ class CodegenLoader extends AssetLoader{
     "load_documents": "Загрузить документы",
     "select_doctor": "Выберите врача",
     "start_treatment": "Начать лечение",
-    "create_schedule": "Создать график"
+    "create_schedule": "Создать график",
+    "show_more": "Показать больше"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
