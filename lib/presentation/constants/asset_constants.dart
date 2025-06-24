@@ -8,6 +8,10 @@ enum AssetConstants {
   settings,
   calendar,
   schedule,
+  cash,
+  card,
+  mbank,
+  optima,
 }
 
 enum TeethAssetConstants {

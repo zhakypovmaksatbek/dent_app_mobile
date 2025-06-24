@@ -5,6 +5,7 @@ import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/services/fast_payment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/edit_appointment_dialog_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
@@ -56,7 +57,6 @@ class AppointmentDialogService {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        print(appointmentModel.appointmentStatus);
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -140,6 +140,24 @@ class AppointmentDialogService {
                   router.popAndPush(
                     TreatmentRoute(calendarAppointment: appointmentModel),
                   );
+                },
+              ),
+              DefElevatedButton(
+                title: LocaleKeys.buttons_fast_pay.tr(),
+                backgroundColor: ColorConstants.optima,
+                onPressed: () {
+                  if (appointmentModel.appointmentId != null) {
+                    router.pop();
+                    FastPaymentService().showServices(
+                      context,
+                      appointmentModel.appointmentId!,
+                    );
+                  } else {
+                    AppSnackBar.showErrorSnackBar(
+                      context,
+                      'Appointment ID not found',
+                    );
+                  }
                 },
               ),
               if (appointmentModel.appointmentStatus !=
@@ -287,13 +305,9 @@ class AppointmentDialogService {
                   //   appointment.appointmentId!,
                   // );
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Could not delete appointment (missing ID)',
-                      ),
-                      backgroundColor: Colors.red,
-                    ),
+                  AppSnackBar.showErrorSnackBar(
+                    context,
+                    'Could not delete appointment (missing ID)',
                   );
                 }
               },

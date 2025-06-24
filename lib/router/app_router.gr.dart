@@ -183,6 +183,43 @@ class PatientRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PaymentView]
+class PaymentViewRoute extends PageRouteInfo<PaymentViewRouteArgs> {
+  PaymentViewRoute({
+    Key? key,
+    required int appointmentId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PaymentViewRoute.name,
+         args: PaymentViewRouteArgs(key: key, appointmentId: appointmentId),
+         initialChildren: children,
+       );
+
+  static const String name = 'PaymentViewRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PaymentViewRouteArgs>();
+      return PaymentView(key: args.key, appointmentId: args.appointmentId);
+    },
+  );
+}
+
+class PaymentViewRouteArgs {
+  const PaymentViewRouteArgs({this.key, required this.appointmentId});
+
+  final Key? key;
+
+  final int appointmentId;
+
+  @override
+  String toString() {
+    return 'PaymentViewRouteArgs{key: $key, appointmentId: $appointmentId}';
+  }
+}
+
+/// generated route for
 /// [PersonalDetailPage]
 class PersonalDetailRoute extends PageRouteInfo<PersonalDetailRouteArgs> {
   PersonalDetailRoute({

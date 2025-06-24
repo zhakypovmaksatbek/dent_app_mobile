@@ -16,6 +16,7 @@ class DioService {
     final tokenDio = Dio(
       BaseOptions(
         baseUrl: AppConstants.instance.baseUrlTest,
+        contentType: "application/json",
         headers: {"Accept": "application/json"},
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
@@ -32,6 +33,7 @@ class DioService {
   Dio dio = Dio(
     BaseOptions(
       baseUrl: AppConstants.instance.baseUrlTest,
+      contentType: "application/json",
       headers: {"Accept": "application/json"},
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
@@ -50,9 +52,15 @@ class DioService {
           headers: {
             'Authorization': 'Bearer $token',
             'Accept-Language': currentLanguage,
+            'Content-Type': 'application/json',
           },
         )
-        : Options(headers: {'Accept-Language': currentLanguage});
+        : Options(
+          headers: {
+            'Accept-Language': currentLanguage,
+            'Content-Type': 'application/json',
+          },
+        );
   }
 
   Future<Options> _buildFormOptions() async {

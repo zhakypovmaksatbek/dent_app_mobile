@@ -12,7 +12,7 @@ class DefElevatedButton extends StatelessWidget {
     this.backgroundColor,
   });
   final String title;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? minWidth;
   final double? minHeight;
   final double? maxWidth;

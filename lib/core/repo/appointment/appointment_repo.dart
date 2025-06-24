@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
@@ -11,10 +12,12 @@ import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
+import 'package:dent_app_mobile/models/payment/payment_model.dart';
+import 'package:dent_app_mobile/models/payment/receipt_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 abstract class IAppointmentRepo {
   Future<List<AppointmentModel>> getAppointments();
@@ -51,6 +54,9 @@ abstract class IAppointmentRepo {
     required TimeOfDay startTime,
     required TimeOfDay endTime,
   });
+  Future<String> saveServices(int appointmentId, List<int> serviceIds);
+  Future<ReceiptModel> getReceipt(int appointmentId);
+  Future<void> fastPay(PaymentModel payment, int appointmentId);
 }
 
 class AppointmentRepo extends IAppointmentRepo {
@@ -276,5 +282,28 @@ class AppointmentRepo extends IAppointmentRepo {
     return data
         .map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<String> saveServices(int appointmentId, List<int> serviceIds) async {
+    final response = await dio.post(
+      'api/works/quick/$appointmentId',
+      data: serviceIds,
+    );
+    return response.data['message'] ??
+        LocaleKeys.notifications_payment_success.tr();
+  }
+
+  @override
+  Future<ReceiptModel> getReceipt(int appointmentId) async {
+    final response = await dio.get(
+      'api/payments/wants-to-fast-pay/$appointmentId',
+    );
+    return ReceiptModel.fromJson(response.data);
+  }
+
+  @override
+  Future<void> fastPay(PaymentModel payment, int appointmentId) async {
+    await dio.post('api/payments/toPay/$appointmentId', data: payment.toJson());
   }
 }

@@ -78,7 +78,7 @@ class CodegenLoader extends AssetLoader{
     "total_documents": "Всего документов",
     "total_items": "Всего",
     "total_value": "Всего стоимость",
-    "total_amount": "Всего сумма",
+    "total_amount": "Общая сумма",
     "right": "Правая",
     "left": "Левая",
     "location": "Расположение:",
@@ -104,7 +104,10 @@ class CodegenLoader extends AssetLoader{
     "inner_tooth_details": "Внутренние зубы:",
     "main": "Основной",
     "working_hours": "Рабочие часы",
-    "rating": "Рейтинг"
+    "rating": "Рейтинг",
+    "select_services_for_payment": "Выберите услуги для оплаты",
+    "total_services_selected": "{count} услуг выбрано",
+    "card": "Карта"
   },
   "buttons": {
     "login": "Войти",
@@ -146,7 +149,10 @@ class CodegenLoader extends AssetLoader{
     "select_doctor": "Выберите врача",
     "start_treatment": "Начать лечение",
     "create_schedule": "Создать график",
-    "show_more": "Показать больше"
+    "show_more": "Показать больше",
+    "fast_pay": "Быстрая оплата",
+    "pay": "Оплатить",
+    "continue": "Продолжить"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -278,7 +284,10 @@ class CodegenLoader extends AssetLoader{
     "product_no_available": "Продукт не доступен",
     "document_no_available": "Документ не доступен",
     "delete_document_confirmation": "Вы уверены, что хотите удалить документ {name}?",
-    "add_schedule": "Добавить график"
+    "add_schedule": "Добавить график",
+    "payment_success": "Оплата успешно проведена",
+    "payment_error": "Ошибка при оплате",
+    "please_select_at_least_one_service": "Пожалуйста, выберите хотя бы одну услугу"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -474,6 +483,15 @@ class CodegenLoader extends AssetLoader{
     "end_time": "Время окончания",
     "select_room": "Выберите кабинет",
     "no_rooms_available": "Нет доступных кабинетов"
+  },
+  "diagnosis": {
+    "select_type": "Выберите тип диагноза",
+    "icd_code": "Код МКБ",
+    "surfaces": "Поверхности",
+    "select_this": "Выбрать этот диагноз",
+    "no_teeth_selected": "Нет выбранных зубов",
+    "select_teeth_prompt": "Пожалуйста, выберите зубы для диагностики",
+    "available_options": "Доступные варианты"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": _ru};

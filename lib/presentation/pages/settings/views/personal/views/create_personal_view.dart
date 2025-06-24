@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/users/personal_model.dart';

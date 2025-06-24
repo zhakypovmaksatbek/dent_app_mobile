@@ -1,19 +1,44 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/tooth/tooth_state_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/teeth_data.dart';
+import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+part 'tooth_diagnosis_details_modal.dart';
+
 /// A professional modal bottom sheet widget for displaying tooth diagnosis options
-class ToothDiagnosisModal extends StatelessWidget {
-  final List<String> selectedTeeth;
-  final Function(ToothStateModel)? onDiagnosisSelected;
+class ToothDiagnosisModal extends StatefulWidget {
+  final ValueChanged<ToothStateModel> onDiagnosisSelected;
+  final ToothStateModel? selectedDiagnosis;
 
   const ToothDiagnosisModal({
     super.key,
-    required this.selectedTeeth,
-    this.onDiagnosisSelected,
+    required this.onDiagnosisSelected,
+    this.selectedDiagnosis,
   });
+
+  @override
+  State<ToothDiagnosisModal> createState() => _ToothDiagnosisModalState();
+}
+
+class _ToothDiagnosisModalState extends State<ToothDiagnosisModal> {
+  late ScrollController _scrollController;
+  ToothStateModel? _selectedDiagnosis;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _selectedDiagnosis = widget.selectedDiagnosis;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,55 +48,46 @@ class ToothDiagnosisModal extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
       ),
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.7,
-        maxChildSize: 0.95,
-        snap: true,
-        expand: false,
-        snapSizes: const [0.7, 0.95],
-        builder: (context, scrollController) {
-          return NotificationListener<DraggableScrollableNotification>(
-            onNotification: (notification) {
-              // Handle scroll conflicts
-              return false;
-            },
-            child: Container(
-              color: theme.scaffoldBackgroundColor,
-              child: Column(
-                children: [
-                  // Professional Handle Bar Area
-                  _buildHandleBar(theme),
-
-                  // Enhanced Header
-                  _buildProfessionalHeader(theme, context),
-
-                  // Main Content with better scroll handling
-                  Expanded(
-                    child:
-                        selectedTeeth.isEmpty
-                            ? _buildEmptyState(theme)
-                            : _buildScrollableContent(theme, scrollController),
-                  ),
-                ],
+      child: Column(
+        children: [
+          _HandleBar(theme: theme),
+          _Header(theme: theme, onClose: () => Navigator.pop(context)),
+          Expanded(
+            child: _DiagnosisContent(
+              theme: theme,
+              scrollController: _scrollController,
+              selectedDiagnosis: _selectedDiagnosis,
+              onDiagnosisSelected: (diagnosis) {
+                setState(() {
+                  _selectedDiagnosis = diagnosis;
+                });
+                widget.onDiagnosisSelected(diagnosis);
+              },
+            ),
+          ),
+          if (_selectedDiagnosis != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+              child: DefElevatedButton(
+                title: LocaleKeys.buttons_continue.tr(),
+                onPressed: () {},
               ),
             ),
-          );
-        },
+          ],
+        ],
       ),
     );
   }
+}
 
-  /// Builds a professional handle bar
-  Widget _buildHandleBar(ThemeData theme) {
+class _HandleBar extends StatelessWidget {
+  final ThemeData theme;
+
+  const _HandleBar({required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       child: Container(
@@ -90,280 +106,255 @@ class ToothDiagnosisModal extends StatelessWidget {
       ),
     );
   }
+}
 
-  /// Builds the professional header section
-  Widget _buildProfessionalHeader(ThemeData theme, BuildContext context) {
+class _Header extends StatelessWidget {
+  final ThemeData theme;
+  final VoidCallback onClose;
+
+  const _Header({required this.theme, required this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 8, 20, 20),
+      padding: const EdgeInsets.fromLTRB(20, 12, 16, 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.primaryColor.withValues(alpha: 0.03),
-            theme.primaryColor.withValues(alpha: 0.06),
-          ],
-        ),
+        color: theme.scaffoldBackgroundColor,
         border: Border(
           bottom: BorderSide(
-            color: theme.dividerColor.withValues(alpha: 0.2),
-            width: 1.5,
+            color: theme.dividerColor.withValues(alpha: 0.08),
+            width: 1,
           ),
         ),
       ),
       child: Row(
         children: [
-          // Professional Icon Container
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  theme.primaryColor.withValues(alpha: 0.1),
-                  theme.primaryColor.withValues(alpha: 0.15),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: theme.primaryColor.withValues(alpha: 0.2),
-                width: 1,
-              ),
-            ),
-            child: Icon(
-              Icons.medical_services_rounded,
-              color: theme.primaryColor,
-              size: 28,
-            ),
-          ),
-          const SizedBox(width: 20),
-
-          // Header Content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  LocaleKeys.routes_diagnosis.tr(),
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.primaryColor,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                if (selectedTeeth.isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.primaryColor.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: theme.primaryColor.withValues(alpha: 0.2),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.straighten_rounded,
-                          size: 16,
-                          color: theme.primaryColor,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          '${LocaleKeys.general_tooth.tr()}: ${selectedTeeth.join(", ")}',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.primaryColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-
-          // Close Button
-          Material(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(28),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(28),
-              onTap: () => Navigator.pop(context),
-              splashColor: theme.primaryColor.withValues(alpha: 0.1),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                child: Icon(
-                  Icons.close_rounded,
-                  color: theme.textTheme.bodyLarge?.color?.withValues(
-                    alpha: 0.7,
-                  ),
-                  size: 24,
-                ),
-              ),
-            ),
-          ),
+          _buildIconContainer(),
+          const SizedBox(width: 12),
+          Expanded(child: _buildTitleSection()),
+          _buildCloseButton(),
         ],
       ),
     );
   }
 
-  /// Builds the scrollable content with better scroll handling
-  Widget _buildScrollableContent(
-    ThemeData theme,
-    ScrollController scrollController,
-  ) {
-    return CustomScrollView(
-      controller: scrollController,
-      physics: const ClampingScrollPhysics(),
-      slivers: [
-        // Section Title
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              children: [
-                Container(
-                  width: 4,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: theme.primaryColor,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Select Diagnosis Type',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.textTheme.titleLarge?.color,
-                  ),
-                ),
-              ],
-            ),
+  Widget _buildIconContainer() {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.primaryColor.withValues(alpha: 0.12),
+            theme.primaryColor.withValues(alpha: 0.08),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: theme.primaryColor.withValues(alpha: 0.15),
+          width: 1,
+        ),
+      ),
+      child: Icon(
+        Icons.medical_services_outlined,
+        color: theme.primaryColor,
+        size: 20,
+      ),
+    );
+  }
+
+  Widget _buildTitleSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocaleKeys.routes_diagnosis.tr(),
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: theme.textTheme.titleLarge?.color,
+            height: 1.2,
           ),
         ),
-
-        // Enhanced Grid
-        SliverPadding(
-          padding: const EdgeInsets.all(24),
-          sliver: SliverGrid(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              final tooth = TeethData.teeth[index];
-              return _buildEnhancedDiagnosisCard(theme, tooth);
-            }, childCount: TeethData.teeth.length),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              mainAxisExtent: 95,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
+        const SizedBox(height: 2),
+        Text(
+          'Seçim yapın ve devam edin',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
+            fontWeight: FontWeight.w400,
           ),
         ),
-
-        // Bottom padding for better UX
-        const SliverPadding(padding: EdgeInsets.only(bottom: 20)),
       ],
     );
   }
 
-  /// Builds an enhanced diagnosis card
-  Widget _buildEnhancedDiagnosisCard(ThemeData theme, ToothStateModel tooth) {
+  Widget _buildCloseButton() {
     return Material(
-      elevation: 2,
-      borderRadius: BorderRadius.circular(16),
-      shadowColor: tooth.color.withValues(alpha: 0.2),
+      color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // Add haptic feedback
-          // HapticFeedback.lightImpact();
-          onDiagnosisSelected?.call(tooth);
-        },
-        borderRadius: BorderRadius.circular(16),
-        splashColor: tooth.color.withValues(alpha: 0.1),
-        highlightColor: tooth.color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        onTap: onClose,
         child: Container(
+          width: 32,
+          height: 32,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                tooth.color.withValues(alpha: 0.05),
-                tooth.color.withValues(alpha: 0.1),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16),
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: tooth.color.withValues(alpha: 0.3),
-              width: 1.5,
+              color: theme.dividerColor.withValues(alpha: 0.12),
+              width: 1,
             ),
           ),
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Enhanced Color Indicator
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: tooth.color,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: tooth.color.withValues(alpha: 0.4),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    tooth.title,
-                    style: TextStyle(
-                      color: _getContrastColor(tooth.color),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
+          child: Icon(
+            Icons.close_rounded,
+            color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+            size: 18,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-              // Enhanced Text Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      tooth.title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.textTheme.titleMedium?.color,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+class _DiagnosisContent extends StatelessWidget {
+  final ThemeData theme;
+  final ScrollController scrollController;
+  final ToothStateModel? selectedDiagnosis;
+  final ValueChanged<ToothStateModel> onDiagnosisSelected;
+
+  const _DiagnosisContent({
+    required this.theme,
+    required this.scrollController,
+    required this.selectedDiagnosis,
+    required this.onDiagnosisSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      controller: scrollController,
+      physics: const ClampingScrollPhysics(),
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          sliver: SliverToBoxAdapter(child: _buildSectionTitle()),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          sliver: SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _DiagnosisCard(
+                category: TeethDiagnosisData.categories[index],
+                selectedDiagnosis: selectedDiagnosis,
+                onTap:
+                    (category) => _handleDiagnosisSelection(
+                      context,
+                      category,
+                      onDiagnosisSelected,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      tooth.description,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.textTheme.bodySmall?.color?.withValues(
-                          alpha: 0.8,
-                        ),
-                        height: 1.3,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
               ),
+              childCount: TeethDiagnosisData.categories.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 2,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionTitle() {
+    return Row(
+      children: [
+        Container(
+          width: 3,
+          height: 20,
+          decoration: BoxDecoration(
+            color: theme.primaryColor,
+            borderRadius: BorderRadius.circular(1.5),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          LocaleKeys.diagnosis_select_type.tr(),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _handleDiagnosisSelection(
+    BuildContext context,
+    ToothDiagnosisCategory category,
+    ValueChanged<ToothStateModel> onSelect,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder:
+          (_) => _DiagnosisDetailsModal(
+            category: category,
+            onSelect: (diagnosis) {
+              onSelect(diagnosis);
+            },
+          ),
+    );
+  }
+}
+
+class _DiagnosisCard extends StatelessWidget {
+  final ToothDiagnosisCategory category;
+  final ToothStateModel? selectedDiagnosis;
+  final ValueChanged<ToothDiagnosisCategory> onTap;
+
+  const _DiagnosisCard({
+    required this.category,
+    required this.onTap,
+    this.selectedDiagnosis,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isSelected =
+        selectedDiagnosis != null &&
+        category.diagnoses.contains(selectedDiagnosis);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => onTap(category),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color:
+                isSelected
+                    ? Colors.green.withValues(alpha: 0.15)
+                    : category.color.withValues(alpha: 0.08),
+            border: Border.all(
+              color:
+                  isSelected
+                      ? Colors.green
+                      : category.color.withValues(alpha: 0.2),
+              width: isSelected ? 2 : 1,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeaderRow(theme, isSelected),
+              const SizedBox(height: 8),
+              Expanded(child: _buildContentSection(theme)),
             ],
           ),
         ),
@@ -371,55 +362,89 @@ class ToothDiagnosisModal extends StatelessWidget {
     );
   }
 
-  /// Builds the empty state when no teeth are selected
-  Widget _buildEmptyState(ThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: theme.primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(32),
-              ),
-              child: Icon(
-                Icons.info_outline_rounded,
-                size: 80,
-                color: theme.primaryColor.withValues(alpha: 0.6),
-              ),
+  Widget _buildHeaderRow(ThemeData theme, bool isSelected) {
+    return Row(
+      children: [
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.green : category.color,
+              borderRadius: BorderRadius.circular(5),
             ),
-            const SizedBox(height: 32),
-            Text(
-              'No Teeth Selected',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.textTheme.headlineSmall?.color,
+            child: AppText(
+              title: category.title,
+              textType: TextType.subtitle,
+              color: _getContrastColor(
+                isSelected ? Colors.green : category.color,
               ),
-              textAlign: TextAlign.center,
+
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 12),
-            Text(
-              'Please select teeth from the diagram\nto view available diagnosis options',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withValues(
-                  alpha: 0.7,
-                ),
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+          ),
         ),
-      ),
+        if (category.diagnoses.length > 1) ...[
+          const SizedBox(width: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(3),
+              border: Border.all(
+                color: theme.dividerColor.withValues(alpha: 0.2),
+                width: 0.5,
+              ),
+            ),
+            child: AppText(
+              title: category.diagnoses.length.toString(),
+              textType: TextType.subtitle,
+              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+        if (isSelected) ...[
+          const Spacer(),
+          Icon(Icons.check_circle, color: Colors.green, size: 14),
+        ],
+      ],
     );
   }
 
-  /// Gets contrasting color for text on colored background
+  Widget _buildContentSection(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          child: Text(
+            category.diagnoses.first.description,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 11,
+              height: 1.2,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'ICD: ${category.diagnoses.first.icdCode}',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
+            fontSize: 10,
+            height: 1.1,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
   Color _getContrastColor(Color backgroundColor) {
-    final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black87 : Colors.white;
+    return backgroundColor.computeLuminance() > 0.5
+        ? Colors.black87
+        : Colors.white;
   }
 }

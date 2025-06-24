@@ -1,5 +1,7 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/tooth_diagnosis_modal.dart';
+import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -37,17 +39,15 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                     backgroundColor: Colors.transparent,
                     builder:
                         (context) => ToothDiagnosisModal(
-                          selectedTeeth: selected,
-
+                          selectedDiagnosis: null,
                           onDiagnosisSelected: (diagnosis) {
                             // Handle diagnosis selection
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Selected: ${diagnosis.title}'),
-                                duration: const Duration(seconds: 2),
-                              ),
+                            AppSnackBar.showSuccessSnackBar(
+                              context,
+                              'Diagnosis selected: ${diagnosis.title}',
                             );
-                            Navigator.pop(context);
+
+                            router.maybePop();
                           },
                         ),
                   );

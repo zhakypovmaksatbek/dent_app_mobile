@@ -39,6 +39,12 @@ final class ColorConstants {
   static const Color im = Color(0xFF4169E3);
   static const Color cr = Color(0xFFFFD800);
   static const Color per = Color(0xFFDC133D);
+
+  static const caries = Color(0xFFFFA726);
+  static const endo = Color(0xFFAB47BC);
+  static const prosthetics = Color(0xFF8D6E63);
+  static const healthy = Color(0xFFFFFFFF);
+  static const implant = Color(0xFF42A5F5);
 }
 
 // TypeDef to maintain backwards compatibility

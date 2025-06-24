@@ -92,6 +92,9 @@ abstract class  LocaleKeys {
   static const general_main = 'general.main';
   static const general_working_hours = 'general.working_hours';
   static const general_rating = 'general.rating';
+  static const general_select_services_for_payment = 'general.select_services_for_payment';
+  static const general_total_services_selected = 'general.total_services_selected';
+  static const general_card = 'general.card';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -133,6 +136,9 @@ abstract class  LocaleKeys {
   static const buttons_start_treatment = 'buttons.start_treatment';
   static const buttons_create_schedule = 'buttons.create_schedule';
   static const buttons_show_more = 'buttons.show_more';
+  static const buttons_fast_pay = 'buttons.fast_pay';
+  static const buttons_pay = 'buttons.pay';
+  static const buttons_continue = 'buttons.continue';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -259,6 +265,9 @@ abstract class  LocaleKeys {
   static const notifications_document_no_available = 'notifications.document_no_available';
   static const notifications_delete_document_confirmation = 'notifications.delete_document_confirmation';
   static const notifications_add_schedule = 'notifications.add_schedule';
+  static const notifications_payment_success = 'notifications.payment_success';
+  static const notifications_payment_error = 'notifications.payment_error';
+  static const notifications_please_select_at_least_one_service = 'notifications.please_select_at_least_one_service';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';
@@ -445,5 +454,13 @@ abstract class  LocaleKeys {
   static const appointment_select_room = 'appointment.select_room';
   static const appointment_no_rooms_available = 'appointment.no_rooms_available';
   static const appointment = 'appointment';
+  static const diagnosis_select_type = 'diagnosis.select_type';
+  static const diagnosis_icd_code = 'diagnosis.icd_code';
+  static const diagnosis_surfaces = 'diagnosis.surfaces';
+  static const diagnosis_select_this = 'diagnosis.select_this';
+  static const diagnosis_no_teeth_selected = 'diagnosis.no_teeth_selected';
+  static const diagnosis_select_teeth_prompt = 'diagnosis.select_teeth_prompt';
+  static const diagnosis_available_options = 'diagnosis.available_options';
+  static const diagnosis = 'diagnosis';
 
 }
