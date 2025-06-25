@@ -236,6 +236,8 @@ class _PaymentViewState extends State<PaymentView> {
                               PaymentDiscountInput(
                                 controller: _discountController,
                                 discountType: _discountType,
+                                amountController: _amountController,
+                                onDiscountChanged: _calculateAmounts,
                               ),
                               const SizedBox(height: 16),
 

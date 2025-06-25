@@ -41,6 +41,7 @@ class PaymentTypeSelection extends StatelessWidget {
                           horizontal: 16,
                           vertical: 12,
                         ),
+
                         decoration: BoxDecoration(
                           color:
                               isSelected
@@ -55,7 +56,11 @@ class PaymentTypeSelection extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            CustomAssetImage(path: type.icon),
+                            CustomAssetImage(
+                              path: type.icon,
+                              height: 64,
+                              width: 64,
+                            ),
                             const SizedBox(width: 8),
                             AppText(
                               title: type.title,
@@ -146,10 +151,14 @@ class PaymentDiscountInput extends StatelessWidget {
     super.key,
     required this.controller,
     required this.discountType,
+    required this.amountController,
+    required this.onDiscountChanged,
   });
 
   final TextEditingController controller;
   final ValueNotifier<SalaryType> discountType;
+  final TextEditingController amountController;
+  final VoidCallback onDiscountChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -180,17 +189,7 @@ class PaymentDiscountInput extends StatelessWidget {
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (value) {
-                      // If percentage and value > 100, set to 1
-                      if (discountTypeValue == SalaryType.percent &&
-                          value.isNotEmpty) {
-                        final numValue = int.tryParse(value) ?? 0;
-                        if (numValue > 100) {
-                          controller.text = '1';
-                          controller.selection = TextSelection.fromPosition(
-                            TextPosition(offset: controller.text.length),
-                          );
-                        }
-                      }
+                      _validateAndUpdateDiscount(value, discountTypeValue);
                     },
                   );
                 },
@@ -205,7 +204,11 @@ class PaymentDiscountInput extends StatelessWidget {
                       SalaryType.values.map((type) {
                         final isSelected = selectedType == type;
                         return GestureDetector(
-                          onTap: () => discountType.value = type,
+                          onTap: () {
+                            discountType.value = type;
+                            // Trigger recalculation when discount type changes
+                            _validateAndUpdateDiscount(controller.text, type);
+                          },
                           child: Container(
                             margin: const EdgeInsets.only(left: 8),
                             padding: const EdgeInsets.symmetric(
@@ -244,6 +247,38 @@ class PaymentDiscountInput extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _validateAndUpdateDiscount(String value, SalaryType discountTypeValue) {
+    if (value.isEmpty) {
+      onDiscountChanged();
+      return;
+    }
+
+    final numValue = double.tryParse(value) ?? 0;
+    final amountText = amountController.text.trim();
+    final totalAmount = double.tryParse(amountText) ?? 0;
+
+    if (discountTypeValue == SalaryType.percent) {
+      // Percentage validation: max 100%
+      if (numValue > 100) {
+        controller.text = '100';
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: controller.text.length),
+        );
+      }
+    } else {
+      // Fixed amount validation: cannot exceed total amount
+      if (totalAmount > 0 && numValue > totalAmount) {
+        controller.text = totalAmount.toInt().toString();
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: controller.text.length),
+        );
+      }
+    }
+
+    // Trigger recalculation
+    onDiscountChanged();
   }
 }
 

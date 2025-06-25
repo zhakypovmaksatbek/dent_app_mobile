@@ -99,6 +99,7 @@ class PaymentServicesListCard extends StatelessWidget {
           ),
           child: ListView.separated(
             shrinkWrap: true,
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: services.length,
             separatorBuilder:
