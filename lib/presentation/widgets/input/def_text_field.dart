@@ -53,6 +53,7 @@ class DefTextField extends StatelessWidget {
             hintText: hintText,
             labelText: labelText,
             border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(vertical: 20),
           ),
     );
   }
