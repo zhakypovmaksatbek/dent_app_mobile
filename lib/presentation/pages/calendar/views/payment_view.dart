@@ -365,9 +365,6 @@ class _PaymentViewState extends State<PaymentView> {
       return;
     }
 
-    final discountText = _discountController.text.trim();
-    final discount = double.tryParse(discountText) ?? 0;
-
     // Use the calculated final amount for payment
     final finalPaymentAmount =
         _finalAmount.value > 0 ? _finalAmount.value : originalAmount;
