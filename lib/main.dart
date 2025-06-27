@@ -13,6 +13,7 @@ import 'package:dent_app_mobile/presentation/pages/dashboard/core/heartbeats/hea
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_appointments/patient_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_detail.dart/patient_detail_dart_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/debtor/debtor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/deposit/deposit_cubit.dart';
@@ -118,5 +119,6 @@ class Initializer {
     BlocProvider(create: (context) => UserCubit()),
     BlocProvider(create: (context) => SaveServiceCubit()),
     BlocProvider(create: (context) => GetReceiptAppointmentCubit()),
+    BlocProvider(create: (context) => PatientDetailDartCubit()),
   ];
 }

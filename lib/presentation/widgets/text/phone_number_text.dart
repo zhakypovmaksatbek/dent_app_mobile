@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/core/utils/format_utils.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/util/patient_info_util.dart';
 import 'package:flutter/material.dart';
 
 class PhoneNumberText extends StatelessWidget {
@@ -21,12 +22,27 @@ class PhoneNumberText extends StatelessWidget {
   Widget build(BuildContext context) {
     final formattedNumber = FormatUtils.formatPhoneNumber(phoneNumber);
 
-    return Text(
-      formattedNumber,
-      style: style,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
+    return FutureBuilder(
+      future: PatientInfoUtil.getVisibilityPhoneNumber(),
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.hasData && asyncSnapshot.data == true) {
+          return Text(
+            formattedNumber,
+            style: style,
+            textAlign: textAlign,
+            maxLines: maxLines,
+            overflow: overflow,
+          );
+        } else {
+          return Text(
+            "**********",
+            style: style,
+            textAlign: textAlign,
+            maxLines: maxLines,
+            overflow: overflow,
+          );
+        }
+      },
     );
   }
 }

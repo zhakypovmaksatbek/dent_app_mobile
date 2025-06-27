@@ -1,6 +1,7 @@
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
+import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';
 
 abstract class IPatientRepo {
   Future<PatientDataModel> getPatients(int page, int size);
@@ -9,6 +10,7 @@ abstract class IPatientRepo {
   Future<void> updatePatient(int id, PatientCreateModel patient);
   Future<void> deletePatient(int id);
   Future<void> getPatient(int id);
+  Future<PatientDetailModel> getPatientDetail(int id);
 }
 
 class PatientRepo extends IPatientRepo {
@@ -53,5 +55,11 @@ class PatientRepo extends IPatientRepo {
   Future<void> updatePatient(int id, PatientCreateModel patient) async {
     final response = await dio.put('api/patients/$id', data: patient.toJson());
     return response.data;
+  }
+
+  @override
+  Future<PatientDetailModel> getPatientDetail(int id) async {
+    final response = await dio.get('api/patients/$id');
+    return PatientDetailModel.fromJson(response.data);
   }
 }

@@ -268,6 +268,8 @@ abstract class  LocaleKeys {
   static const notifications_payment_success = 'notifications.payment_success';
   static const notifications_payment_error = 'notifications.payment_error';
   static const notifications_please_select_at_least_one_service = 'notifications.please_select_at_least_one_service';
+  static const notifications_logout_info = 'notifications.logout_info';
+  static const notifications_logout_info_description = 'notifications.logout_info_description';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';

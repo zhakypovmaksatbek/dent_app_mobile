@@ -10,7 +10,6 @@ import 'package:dent_app_mobile/presentation/pages/dashboard/widgets/info_card.d
 import 'package:dent_app_mobile/presentation/pages/dashboard/widgets/monthly_chart.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/widgets/pie_chart.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
-import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +56,10 @@ class _DashboardPageState extends State<DashboardPage> {
         surfaceTintColor: Theme.of(context).primaryColor,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: CustomAssetImage(path: AssetConstants.logo.png),
+          child: Image.asset(
+            AssetConstants.toothLogo.png,
+            color: AppColors.white,
+          ),
         ),
         centerTitle: false,
         title: Text(

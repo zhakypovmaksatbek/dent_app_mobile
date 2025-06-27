@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
+import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_detail.dart/patient_detail_dart_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/teeth_page.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/appointment_comment_dialog.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/appointment_details_tab.dart';
@@ -29,12 +31,15 @@ class _AppointmentDetailState extends State<AppointmentDetail>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   late final AppointmentCubit _appointmentCubit;
+  late final PatientDetailDartCubit _patientDetailCubit;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _appointmentCubit = AppointmentCubit();
+    _patientDetailCubit = PatientDetailDartCubit();
+    _patientDetailCubit.getPatientDetail(widget.id);
     _loadAppointment();
   }
 
@@ -46,55 +51,68 @@ class _AppointmentDetailState extends State<AppointmentDetail>
   void dispose() {
     _tabController.dispose();
     _appointmentCubit.close();
+    _patientDetailCubit.close();
     super.dispose();
   }
 
+  PatientDetailModel? _patientDetail;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _appointmentCubit,
-      child: BlocConsumer<AppointmentCubit, AppointmentState>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => _appointmentCubit),
+        BlocProvider(create: (context) => _patientDetailCubit),
+      ],
+      child: BlocListener<PatientDetailDartCubit, PatientDetailDartState>(
         listener: (context, state) {
-          if (state is AppointmentDeleted) {
-            // Navigate back if appointment is deleted
-            context.router.pop();
+          if (state is PatientDetailDartLoaded) {
+            _patientDetail = state.patientDetail;
+            setState(() {});
           }
         },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(LocaleKeys.routes_appointment_detail.tr()),
-              actions: [
-                if (state is AppointmentLoaded)
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    tooltip: 'Edit Appointment',
-                    onPressed:
-                        () => _editAppointment(context, state.appointment),
-                  ),
-                if (state is AppointmentLoaded)
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Delete Appointment',
-                    onPressed:
-                        () => _confirmDeleteAppointment(
-                          context,
-                          state.appointment,
-                        ),
-                  ),
-              ],
-              bottom: TabBar(
-                controller: _tabController,
-                tabs: [
-                  Tab(icon: const Icon(Icons.info_outline), text: 'Details'),
-                  Tab(icon: const Icon(Icons.tour), text: 'Teeth'),
-                  Tab(icon: const Icon(Icons.image), text: 'X-Rays'),
+        child: BlocConsumer<AppointmentCubit, AppointmentState>(
+          listener: (context, state) {
+            if (state is AppointmentDeleted) {
+              // Navigate back if appointment is deleted
+              context.router.pop();
+            }
+          },
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(LocaleKeys.routes_appointment_detail.tr()),
+                actions: [
+                  if (state is AppointmentLoaded)
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      tooltip: 'Edit Appointment',
+                      onPressed:
+                          () => _editAppointment(context, state.appointment),
+                    ),
+                  if (state is AppointmentLoaded)
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      tooltip: 'Delete Appointment',
+                      onPressed:
+                          () => _confirmDeleteAppointment(
+                            context,
+                            state.appointment,
+                          ),
+                    ),
                 ],
+                bottom: TabBar(
+                  controller: _tabController,
+                  tabs: [
+                    Tab(icon: const Icon(Icons.info_outline), text: 'Details'),
+                    Tab(icon: const Icon(Icons.tour), text: 'Teeth'),
+                    Tab(icon: const Icon(Icons.image), text: 'X-Rays'),
+                  ],
+                ),
               ),
-            ),
-            body: _buildBody(state),
-          );
-        },
+              body: _buildBody(state),
+            );
+          },
+        ),
       ),
     );
   }
@@ -111,6 +129,7 @@ class _AppointmentDetailState extends State<AppointmentDetail>
           AppointmentDetailsTab(
             appointment: state.appointment,
             onShowCommentDialog: _showCommentDialog,
+            patientDetail: _patientDetail ?? PatientDetailModel(),
           ),
           TeethPage(patientId: widget.id),
           PlaceholderTab(

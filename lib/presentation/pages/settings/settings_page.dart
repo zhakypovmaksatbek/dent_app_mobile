@@ -5,6 +5,8 @@ import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/widgets/profile_section.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/notification/app_bottom_sheet.dart';
+import 'package:dent_app_mobile/presentation/widgets/notification/confirmation_bottom_sheet.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -65,8 +67,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: DefElevatedButton(
                   title: LocaleKeys.buttons_logout.tr(),
                   onPressed: () async {
-                    await AppDataService.instance.clearTokens();
-                    router.replaceAll([const LoginRoute()]);
+                    AppBottomSheet.showBottomSheet(
+                      context,
+                      ConfirmationBottomSheet(
+                        title: LocaleKeys.notifications_logout_info.tr(),
+                        description:
+                            LocaleKeys.notifications_logout_info_description
+                                .tr(),
+                        confirmButtonText: LocaleKeys.buttons_logout.tr(),
+                        cancelButtonText: LocaleKeys.buttons_cancel.tr(),
+                        onConfirm: () async {
+                          await AppDataService.instance.clearTokens();
+                          router.replaceAll([const LoginRoute()]);
+                        },
+                        onCancel: () => router.maybePop(),
+                      ),
+                    );
                   },
                 ),
               ),

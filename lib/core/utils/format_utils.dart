@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class FormatUtils {
- 
   static String formatPhoneNumber(
     String phoneNumber, {
     String countryCodeSeparator = ' ',
@@ -77,5 +76,28 @@ class FormatUtils {
       }
     }
     return message;
+  }
+
+  static String calculateAgeFromString(String? birthDateString) {
+    if (birthDateString == null || birthDateString.isEmpty) {
+      return '';
+    }
+    try {
+      final birthDate = DateTime.parse(birthDateString);
+      final today = DateTime.now();
+      int age = today.year - birthDate.year;
+      if (today.month < birthDate.month ||
+          (today.month == birthDate.month && today.day < birthDate.day)) {
+        age--;
+      }
+      return age.toString();
+    } catch (e) {
+      return '';
+    }
+  }
+
+  static String formatNumber(double number) {
+    final format = NumberFormat("#,##0", "ru");
+    return format.format(number);
   }
 }
