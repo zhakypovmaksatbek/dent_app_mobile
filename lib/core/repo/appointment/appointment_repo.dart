@@ -14,7 +14,6 @@ import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +47,7 @@ abstract class IAppointmentRepo {
   });
   Future<List<ToothModel>> getToothList(int patientId);
   Future<PatternModel> getPatternList(PatternType type, {String? search});
-  Future<List<ConditionModel>> getConditionList(ConditionType type);
+  Future<List<ConditionModel>> getConditionList();
   Future<List<RoomModel>> getRoomListByDate({
     required DateTime date,
     required TimeOfDay startTime,
@@ -240,8 +239,8 @@ class AppointmentRepo extends IAppointmentRepo {
   }
 
   @override
-  Future<List<ConditionModel>> getConditionList(ConditionType type) async {
-    final response = await dio.get('api/conditions/${type.name}');
+  Future<List<ConditionModel>> getConditionList() async {
+    final response = await dio.get('api/conditions/grouped');
     List<dynamic> data = response.data as List<dynamic>;
     return data
         .map((e) => ConditionModel.fromJson(e as Map<String, dynamic>))

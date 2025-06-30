@@ -45,6 +45,14 @@ final class ColorConstants {
   static const prosthetics = Color(0xFF8D6E63);
   static const healthy = Color(0xFFFFFFFF);
   static const implant = Color(0xFF42A5F5);
+
+  static const k02 = Color(0xFFFF9700);
+  static const k05 = Color(0xFFE72063);
+  static const k08 = Color(0xFF1975a3);
+  static const s02 = Color(0xFFF44236);
+  static const z01 = Color(0xFFFFFFFF);
+  static const z96 = Color(0xFF8889be);
+  static const z98 = Color(0xFF800080);
 }
 
 // TypeDef to maintain backwards compatibility

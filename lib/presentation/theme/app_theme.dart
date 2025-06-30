@@ -19,6 +19,8 @@ class AppTheme {
       seedColor: ColorConstants.white,
       error: ColorConstants.red,
     ),
+    hintColor: ColorConstants.grey,
+    dividerColor: ColorConstants.grey,
     cardColor: ColorConstants.secondary,
     cardTheme: CardThemeData(
       color: ColorConstants.white,

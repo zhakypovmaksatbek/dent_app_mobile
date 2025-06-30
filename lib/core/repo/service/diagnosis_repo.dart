@@ -23,4 +23,11 @@ class DiagnosisRepository {
   Future<void> deleteDiagnosis(int id) async {
     await _dio.delete('api/diagnosis/$id');
   }
+
+  Future<List<DiagnosisModel>> getDiagnosisList() async {
+    final response = await _dio.get('api/diagnosis');
+    return (response.data as List)
+        .map((e) => DiagnosisModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }

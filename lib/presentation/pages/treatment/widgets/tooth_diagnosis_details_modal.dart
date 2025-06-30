@@ -1,14 +1,15 @@
 part of 'tooth_diagnosis_modal.dart';
 
-class _DiagnosisDetailsModal extends StatelessWidget {
-  final ToothDiagnosisCategory category;
-  final ToothStateModel? selectedDiagnosis;
-  final ValueChanged<ToothStateModel> onSelect;
+class DiagnosisDetailsModal extends StatelessWidget {
+  final ConditionModel conditions;
+  final Conditions? selectedCondition;
+  final ValueChanged<Conditions> onSelect;
 
-  const _DiagnosisDetailsModal({
-    required this.category,
+  const DiagnosisDetailsModal({
+    super.key,
+    required this.conditions,
     required this.onSelect,
-    this.selectedDiagnosis,
+    this.selectedCondition,
   });
 
   @override
@@ -16,15 +17,17 @@ class _DiagnosisDetailsModal extends StatelessWidget {
     final theme = Theme.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
-      maxChildSize: 0.85,
+      maxChildSize: 0.9,
       minChildSize: 0.4,
       expand: false,
+
       builder: (context, controller) {
+        final size = MediaQuery.of(context);
         return Container(
           decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
+          margin: EdgeInsets.only(bottom: size.padding.bottom),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -33,14 +36,30 @@ class _DiagnosisDetailsModal extends StatelessWidget {
                 child: ListView.separated(
                   controller: controller,
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  itemCount: category.diagnoses.length,
+                  itemCount: conditions.conditions?.length ?? 0,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
-                    final diagnosis = category.diagnoses[index];
+                    final diagnosis = conditions.conditions?[index];
                     return _DiagnosisOption(
-                      diagnosis: diagnosis,
-                      isSelected: selectedDiagnosis == diagnosis,
-                      onSelect: () => onSelect(diagnosis),
+                      diagnosis:
+                          diagnosis ??
+                          Conditions(
+                            id: 0,
+                            name: "",
+                            code: "",
+                            color: AppColors.primary,
+                          ),
+                      isSelected: selectedCondition == diagnosis,
+                      onSelect:
+                          () => onSelect(
+                            diagnosis ??
+                                Conditions(
+                                  id: 0,
+                                  name: "",
+                                  code: "",
+                                  color: AppColors.primary,
+                                ),
+                          ),
                       theme: theme,
                     );
                   },
@@ -76,25 +95,30 @@ class _DiagnosisDetailsModal extends StatelessWidget {
               ),
             ),
           ),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: category.color,
+                  color:
+                      conditions.conditions?.first.color ?? AppColors.primary,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  category.title,
+                  conditions.codeName ?? "",
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: _getContrastColor(category.color),
+                    color: _getContrastColor(
+                      conditions.conditions?.first.color ?? AppColors.primary,
+                    ),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
               Text(
-                '${category.diagnoses.length} ${LocaleKeys.diagnosis_available_options.tr()}',
+                '${conditions.conditions?.length ?? 0} ${LocaleKeys.diagnosis_available_options.tr()}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.textTheme.bodySmall?.color?.withValues(
                     alpha: 0.7,
@@ -116,7 +140,7 @@ class _DiagnosisDetailsModal extends StatelessWidget {
 }
 
 class _DiagnosisOption extends StatelessWidget {
-  final ToothStateModel diagnosis;
+  final Conditions diagnosis;
   final bool isSelected;
   final VoidCallback onSelect;
   final ThemeData theme;
@@ -141,12 +165,14 @@ class _DiagnosisOption extends StatelessWidget {
             color:
                 isSelected
                     ? Colors.green.withValues(alpha: 0.15)
-                    : diagnosis.color.withValues(alpha: 0.08),
+                    : diagnosis.color?.withValues(alpha: 0.2) ??
+                        Colors.transparent,
             border: Border.all(
               color:
                   isSelected
                       ? Colors.green
-                      : diagnosis.color.withValues(alpha: 0.2),
+                      : diagnosis.color?.withValues(alpha: 0.2) ??
+                          Colors.transparent,
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -158,7 +184,7 @@ class _DiagnosisOption extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      diagnosis.description,
+                      diagnosis.name ?? "",
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -168,15 +194,15 @@ class _DiagnosisOption extends StatelessWidget {
                       children: [
                         _buildDetailChip(
                           LocaleKeys.diagnosis_icd_code.tr(),
-                          diagnosis.icdCode,
+                          diagnosis.code ?? "",
                         ),
-                        if (diagnosis.surfaces.isNotEmpty) ...[
-                          const SizedBox(width: 8),
-                          _buildDetailChip(
-                            LocaleKeys.diagnosis_surfaces.tr(),
-                            diagnosis.surfaces.join(', '),
-                          ),
-                        ],
+                        // if (diagnosis.surfaces?.isNotEmpty ?? false) ...[
+                        //   const SizedBox(width: 8),
+                        //   _buildDetailChip(
+                        //     LocaleKeys.diagnosis_surfaces.tr(),
+                        //     diagnosis.surfaces.join(', '),
+                        //   ),
+                        // ],
                       ],
                     ),
                   ],

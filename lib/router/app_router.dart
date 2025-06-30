@@ -18,6 +18,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/views
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/views/services_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/views/warehouse_page.dart';
 import 'package:dent_app_mobile/presentation/pages/splash/splash_page.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/view/teeth_condition_action.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/treatment_page.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,10 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: AppointmentDetailRoute.page, path: "/appointmentDetail"),
     AutoRoute(page: TreatmentRoute.page, path: "/treatment"),
     AutoRoute(page: PaymentViewRoute.page, path: "/payment"),
+    AutoRoute(
+      page: TeethConditionActionRoute.page,
+      path: "/teethConditionAction",
+    ),
   ];
 }
 

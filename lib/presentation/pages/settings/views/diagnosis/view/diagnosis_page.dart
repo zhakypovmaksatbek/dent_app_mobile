@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart'; // Correct import
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/diagnosis/diagnosis_model.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/cubit/diagnosis_configuration_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/diagnosis/diagnosis_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/diagnosis_configuration/diagnosis_configuration_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/widget/diagnosis_form_modal.dart';
 import 'package:dent_app_mobile/presentation/theme/extension/card_style_extension.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/app_loader.dart'; // Import loader

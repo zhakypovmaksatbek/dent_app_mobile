@@ -1,10 +1,8 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/widgets/tooth_diagnosis_modal.dart';
-import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
+import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:teeth_selector/teeth_selector.dart';
 
 class ToothDiagnosisTab extends StatefulWidget {
@@ -34,23 +32,24 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
 
               onChange: (selected) {
                 if (selected.isNotEmpty) {
-                  showCupertinoModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder:
-                        (context) => ToothDiagnosisModal(
-                          selectedDiagnosis: null,
-                          onDiagnosisSelected: (diagnosis) {
-                            // Handle diagnosis selection
-                            AppSnackBar.showSuccessSnackBar(
-                              context,
-                              'Diagnosis selected: ${diagnosis.title}',
-                            );
+                  router.push(const TeethConditionActionRoute());
+                  // showCupertinoModalBottomSheet(
+                  //   context: context,
+                  //   backgroundColor: Colors.transparent,
+                  //   builder:
+                  //       (context) => ToothDiagnosisModal(
+                  //         selectedDiagnosis: null,
+                  //         onDiagnosisSelected: (diagnosis) {
+                  //           // Handle diagnosis selection
+                  //           AppSnackBar.showSuccessSnackBar(
+                  //             context,
+                  //             'Diagnosis selected: ${diagnosis.title}',
+                  //           );
 
-                            router.maybePop();
-                          },
-                        ),
-                  );
+                  //           router.maybePop();
+                  //         },
+                  //       ),
+                  // );
                 }
               },
             ),

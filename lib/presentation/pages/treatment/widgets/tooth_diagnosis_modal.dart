@@ -1,8 +1,10 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/models/diagnosis/condition_model.dart';
 import 'package:dent_app_mobile/models/tooth/tooth_state_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/teeth_data.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/widgets/condition_card.dart';
+import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
-import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -244,15 +246,17 @@ class _DiagnosisContent extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => _DiagnosisCard(
-                category: TeethDiagnosisData.categories[index],
-                selectedDiagnosis: selectedDiagnosis,
-                onTap:
-                    (category) => _handleDiagnosisSelection(
-                      context,
-                      category,
-                      onDiagnosisSelected,
-                    ),
+              (context, index) => ConditionCard(
+                category: ConditionModel(),
+                onTap: (value) {},
+                // category: TeethDiagnosisData.categories[index],
+                // selectedDiagnosis: selectedDiagnosis as ConditionModel?,
+                // onTap:
+                //     (category) => _handleDiagnosisSelection(
+                //       context,
+                //       category,
+                //       onDiagnosisSelected,
+                //     ),
               ),
               childCount: TeethDiagnosisData.categories.length,
             ),
@@ -300,151 +304,10 @@ class _DiagnosisContent extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder:
-          (_) => _DiagnosisDetailsModal(
-            category: category,
-            onSelect: (diagnosis) {
-              onSelect(diagnosis);
-            },
+          (_) => DiagnosisDetailsModal(
+            conditions: ConditionModel(),
+            onSelect: (diagnosis) {},
           ),
     );
-  }
-}
-
-class _DiagnosisCard extends StatelessWidget {
-  final ToothDiagnosisCategory category;
-  final ToothStateModel? selectedDiagnosis;
-  final ValueChanged<ToothDiagnosisCategory> onTap;
-
-  const _DiagnosisCard({
-    required this.category,
-    required this.onTap,
-    this.selectedDiagnosis,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isSelected =
-        selectedDiagnosis != null &&
-        category.diagnoses.contains(selectedDiagnosis);
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => onTap(category),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color:
-                isSelected
-                    ? Colors.green.withValues(alpha: 0.15)
-                    : category.color.withValues(alpha: 0.08),
-            border: Border.all(
-              color:
-                  isSelected
-                      ? Colors.green
-                      : category.color.withValues(alpha: 0.2),
-              width: isSelected ? 2 : 1,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeaderRow(theme, isSelected),
-              const SizedBox(height: 8),
-              Expanded(child: _buildContentSection(theme)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderRow(ThemeData theme, bool isSelected) {
-    return Row(
-      children: [
-        Flexible(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.green : category.color,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: AppText(
-              title: category.title,
-              textType: TextType.subtitle,
-              color: _getContrastColor(
-                isSelected ? Colors.green : category.color,
-              ),
-
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        if (category.diagnoses.length > 1) ...[
-          const SizedBox(width: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(3),
-              border: Border.all(
-                color: theme.dividerColor.withValues(alpha: 0.2),
-                width: 0.5,
-              ),
-            ),
-            child: AppText(
-              title: category.diagnoses.length.toString(),
-              textType: TextType.subtitle,
-              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-        if (isSelected) ...[
-          const Spacer(),
-          Icon(Icons.check_circle, color: Colors.green, size: 14),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildContentSection(ThemeData theme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          child: Text(
-            category.diagnoses.first.description,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: 11,
-              height: 1.2,
-            ),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'ICD: ${category.diagnoses.first.icdCode}',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
-            fontSize: 10,
-            height: 1.1,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
-
-  Color _getContrastColor(Color backgroundColor) {
-    return backgroundColor.computeLuminance() > 0.5
-        ? Colors.black87
-        : Colors.white;
   }
 }

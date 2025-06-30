@@ -11,10 +11,11 @@ part 'condition_state.dart';
 class ConditionCubit extends Cubit<ConditionState> {
   ConditionCubit() : super(ConditionInitial());
   final IAppointmentRepo _appointmentRepo = AppointmentRepo();
+
   Future<void> getConditionList(ConditionType type) async {
     emit(ConditionLoading());
     try {
-      final conditions = await _appointmentRepo.getConditionList(type);
+      final conditions = await _appointmentRepo.getConditionList();
       emit(ConditionLoaded(conditions));
     } on DioException catch (e) {
       emit(ConditionError(FormatUtils.formatErrorMessage(e)));

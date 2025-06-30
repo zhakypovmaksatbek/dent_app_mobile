@@ -390,6 +390,22 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TeethConditionAction]
+class TeethConditionActionRoute extends PageRouteInfo<void> {
+  const TeethConditionActionRoute({List<PageRouteInfo>? children})
+    : super(TeethConditionActionRoute.name, initialChildren: children);
+
+  static const String name = 'TeethConditionActionRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TeethConditionAction();
+    },
+  );
+}
+
+/// generated route for
 /// [TreatmentPage]
 class TreatmentRoute extends PageRouteInfo<TreatmentRouteArgs> {
   TreatmentRoute({

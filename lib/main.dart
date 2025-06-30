@@ -21,8 +21,9 @@ import 'package:dent_app_mobile/presentation/pages/report/core/bloc/discount/dis
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/payment/payment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/report/core/bloc/report/report_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/core/bloc/user/user_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/cubit/diagnosis_configuration_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/all_diagnosis/all_diagnosis_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/diagnosis/diagnosis_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/diagnosis_configuration/diagnosis_configuration_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/create_schedule/create_schedule_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
@@ -38,12 +39,14 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/theme/app_theme.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 void main() async {
@@ -78,7 +81,12 @@ void setupLocator() {
 
 class Initializer {
   static Future<Widget> initialize(Widget child) async {
-    return MultiBlocProvider(providers: providers, child: child);
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ConditionService()),
+      ],
+      child: MultiBlocProvider(providers: providers, child: child),
+    );
   }
 
   static final List<SingleChildWidget> providers = [
@@ -120,5 +128,6 @@ class Initializer {
     BlocProvider(create: (context) => SaveServiceCubit()),
     BlocProvider(create: (context) => GetReceiptAppointmentCubit()),
     BlocProvider(create: (context) => PatientDetailDartCubit()),
+    BlocProvider(create: (context) => AllDiagnosisCubit()),
   ];
 }
