@@ -124,7 +124,7 @@ class ToothTypeCard extends StatelessWidget {
 
                   // Title
                   Text(
-                    _getToothTypeTitle(toothType),
+                    toothType.title,
                     style: theme.textTheme.labelLarge?.copyWith(
                       color:
                           isSelected
@@ -209,29 +209,6 @@ class ToothTypeCard extends StatelessWidget {
         return 'assets/svg/tooth_center_left.svg';
       case ToothType.all:
         return 'assets/svg/tooth_all.svg';
-    }
-  }
-
-  String _getToothTypeTitle(ToothType toothType) {
-    switch (toothType) {
-      case ToothType.main:
-        return 'Основной зуб';
-      case ToothType.right:
-        return 'Правая сторона';
-      case ToothType.left:
-        return 'Левая сторона';
-      case ToothType.top:
-        return 'Верхняя часть';
-      case ToothType.bottom:
-        return 'Нижняя часть';
-      case ToothType.jaw:
-        return 'Челюсть';
-      case ToothType.centerRight:
-        return 'Центр справа';
-      case ToothType.centerLeft:
-        return 'Центр слева';
-      case ToothType.all:
-        return 'Все';
     }
   }
 

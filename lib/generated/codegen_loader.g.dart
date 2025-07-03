@@ -152,7 +152,8 @@ class CodegenLoader extends AssetLoader{
     "show_more": "Показать больше",
     "fast_pay": "Быстрая оплата",
     "pay": "Оплатить",
-    "continue": "Продолжить"
+    "continue": "Продолжить",
+    "ok": "Понятно"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -214,7 +215,14 @@ class CodegenLoader extends AssetLoader{
     "supplier_name": "Название поставщика",
     "supplier": "Поставщик",
     "create_document": "Создать документ",
-    "edit_document": "Редактировать документ"
+    "edit_document": "Редактировать документ",
+    "tooth_id": "ID зуба",
+    "tooth_type": "Тип зуба",
+    "tooth_condition": "Состояние зуба",
+    "tooth_diagnosis": "Диагноз зуба",
+    "tooth_treatment": "Лечение зуба",
+    "tooth_x_ray": "Рентгенограмма зуба",
+    "tooth": "Зуб"
   },
   "routes": {
     "dashboard": "Главная",

@@ -139,6 +139,7 @@ abstract class  LocaleKeys {
   static const buttons_fast_pay = 'buttons.fast_pay';
   static const buttons_pay = 'buttons.pay';
   static const buttons_continue = 'buttons.continue';
+  static const buttons_ok = 'buttons.ok';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -198,6 +199,13 @@ abstract class  LocaleKeys {
   static const forms_supplier = 'forms.supplier';
   static const forms_create_document = 'forms.create_document';
   static const forms_edit_document = 'forms.edit_document';
+  static const forms_tooth_id = 'forms.tooth_id';
+  static const forms_tooth_type = 'forms.tooth_type';
+  static const forms_tooth_condition = 'forms.tooth_condition';
+  static const forms_tooth_diagnosis = 'forms.tooth_diagnosis';
+  static const forms_tooth_treatment = 'forms.tooth_treatment';
+  static const forms_tooth_x_ray = 'forms.tooth_x_ray';
+  static const forms_tooth = 'forms.tooth';
   static const forms = 'forms';
   static const routes_dashboard = 'routes.dashboard';
   static const routes_calendar = 'routes.calendar';

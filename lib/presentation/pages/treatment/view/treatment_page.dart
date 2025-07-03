@@ -41,8 +41,8 @@ class _TreatmentPageState extends State<TreatmentPage>
               borderRadius: BorderRadius.circular(10),
             ),
             tabs: [
-              Tab(text: 'Treatment'),
               Tab(text: 'Teeth'),
+              Tab(text: 'Treatment'),
               Tab(text: 'X-ray'),
             ],
           ),

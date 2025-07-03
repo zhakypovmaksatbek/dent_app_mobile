@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 class ServiceCard extends StatelessWidget {
   final ServiceItem service;
   final bool isSelected;
+  final int count;
   final VoidCallback onTap;
+  final VoidCallback? onIncrement;
+  final VoidCallback? onDecrement;
 
   const ServiceCard({
     super.key,
     required this.service,
     required this.isSelected,
+    required this.count,
     required this.onTap,
+    this.onIncrement,
+    this.onDecrement,
   });
 
   @override
@@ -128,8 +134,76 @@ class ServiceCard extends StatelessWidget {
                 ),
               ),
 
-              // Arrow Icon
-              if (isSelected)
+              // Counter Controls or Arrow Icon
+              if (isSelected && onIncrement != null && onDecrement != null)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: count > 0 ? onDecrement : null,
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            width: 42,
+                            height: 42,
+                            child: Icon(
+                              Icons.remove,
+                              size: 20,
+                              color:
+                                  count > 0
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.onSurface
+                                          .withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        constraints: BoxConstraints(minWidth: 30),
+                        child: Text(
+                          '$count',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: onIncrement,
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            width: 42,
+                            height: 42,
+                            child: Icon(
+                              Icons.add,
+                              size: 20,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else if (isSelected)
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 16,

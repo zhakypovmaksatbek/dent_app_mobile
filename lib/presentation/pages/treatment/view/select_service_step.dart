@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/service/service_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/get_service_item/get_service_item_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
@@ -6,6 +7,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/widgets/service_car
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class SelectServiceStep extends StatefulWidget {
   const SelectServiceStep({super.key});
@@ -20,7 +22,6 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
   final FocusNode _searchFocusNode = FocusNode();
 
   List<ServiceItem> _serviceItems = [];
-  ServiceItem? _selectedService;
   bool _isSearching = false;
   String _currentSearchQuery = '';
 
@@ -61,11 +62,16 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
     _searchFocusNode.unfocus();
   }
 
-  void _selectService(ServiceItem service) {
-    setState(() {
-      _selectedService = service;
-    });
-    context.read<ConditionService>().setSelectedService(service);
+  void _toggleService(ServiceItem service) {
+    context.read<ConditionService>().toggleService(service);
+  }
+
+  void _incrementService(ServiceItem service) {
+    context.read<ConditionService>().addService(service);
+  }
+
+  void _decrementService(ServiceItem service) {
+    context.read<ConditionService>().removeService(service);
   }
 
   void _showInstructions(BuildContext context) {
@@ -115,7 +121,7 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => router.pop(),
                       icon: const Icon(Icons.close),
                       style: IconButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -179,8 +185,8 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Понятно',
+                    child: Text(
+                      LocaleKeys.buttons_ok.tr(),
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -259,14 +265,10 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
       child: BlocConsumer<GetServiceItemCubit, GetServiceItemState>(
         listener: (context, state) {
           if (state is GetServiceItemLoaded) {
-            setState(() {
-              _serviceItems = state.serviceItems;
-              _isSearching = false;
-            });
+            _serviceItems = state.serviceItems;
+            _isSearching = false;
           } else if (state is GetServiceItemError) {
-            setState(() {
-              _isSearching = false;
-            });
+            _isSearching = false;
           }
         },
         builder: (context, state) {
@@ -504,19 +506,73 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
                 const SizedBox(height: 12),
               ],
 
-              // Results Count
-              if (_serviceItems.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(
-                    'Найдено: ${_serviceItems.length} услуг',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.6),
+              // Results Count and Selected Services Info
+              Row(
+                children: [
+                  if (_serviceItems.isNotEmpty)
+                    Expanded(
+                      child: Text(
+                        'Найдено: ${_serviceItems.length} услуг',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                      ),
                     ),
+                  Consumer<ConditionService>(
+                    builder: (context, conditionService, child) {
+                      final selectedCount =
+                          conditionService.selectedServices.length;
+                      final totalCount = conditionService.totalServicesCount;
+
+                      if (selectedCount > 0) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                size: 16,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'Выбрано: $selectedCount ($totalCount шт.)',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
-                ),
+                ],
+              ),
+              if (_serviceItems.isNotEmpty ||
+                  context.watch<ConditionService>().selectedServices.isNotEmpty)
+                const SizedBox(height: 12),
 
               // Services List
               Expanded(
@@ -541,13 +597,25 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
                                     const Divider(height: 1, thickness: 0.5),
                             itemBuilder: (context, index) {
                               final service = _serviceItems[index];
-                              final isSelected =
-                                  _selectedService?.id == service.id;
 
-                              return ServiceCard(
-                                service: service,
-                                isSelected: isSelected,
-                                onTap: () => _selectService(service),
+                              return Consumer<ConditionService>(
+                                builder: (context, conditionService, child) {
+                                  final isSelected = conditionService
+                                      .isServiceSelected(service);
+                                  final count = conditionService
+                                      .getServiceCount(service);
+
+                                  return ServiceCard(
+                                    service: service,
+                                    isSelected: isSelected,
+                                    count: count,
+                                    onTap: () => _toggleService(service),
+                                    onIncrement:
+                                        () => _incrementService(service),
+                                    onDecrement:
+                                        () => _decrementService(service),
+                                  );
+                                },
                               );
                             },
                           ),

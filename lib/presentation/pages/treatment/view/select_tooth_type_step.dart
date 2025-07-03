@@ -1,6 +1,8 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/tooth_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/tooth_type_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -123,8 +125,8 @@ class _SelectToothTypeStepState extends State<SelectToothTypeStep> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Понятно',
+                    child: Text(
+                      LocaleKeys.buttons_ok.tr(),
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),

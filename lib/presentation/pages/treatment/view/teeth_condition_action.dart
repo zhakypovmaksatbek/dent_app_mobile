@@ -21,7 +21,6 @@ class TeethConditionAction extends StatefulWidget {
 class _TeethConditionActionState extends State<TeethConditionAction>
     with TickerProviderStateMixin {
   late final ConditionCubit _conditionCubit;
-  late final ConditionService _conditionService;
   late final AnimationController _progressAnimationController;
   late final Animation<double> _progressAnimation;
 
@@ -56,7 +55,6 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   void initState() {
     super.initState();
     _conditionCubit = ConditionCubit();
-    _conditionService = ConditionService();
     _conditionCubit.getConditionList(ConditionType.main);
 
     _progressAnimationController = AnimationController(
@@ -88,10 +86,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        BlocProvider.value(value: _conditionCubit),
-        ChangeNotifierProvider.value(value: _conditionService),
-      ],
+      providers: [BlocProvider.value(value: _conditionCubit)],
       child: Consumer<ConditionService>(
         builder: (context, conditionService, child) {
           return Scaffold(
@@ -322,7 +317,9 @@ class _TeethConditionActionState extends State<TeethConditionAction>
               child: ElevatedButton.icon(
                 onPressed:
                     _canProceedToNextStep(conditionService) && !_isCompleting
-                        ? _onStepContinue
+                        ? () {
+                          _onStepContinue(context);
+                        }
                         : null,
                 icon:
                     _isCompleting
@@ -368,20 +365,20 @@ class _TeethConditionActionState extends State<TeethConditionAction>
       case 2:
         return conditionService.selectedDiagnosis != null;
       case 3:
-        return conditionService.selectedService != null;
+        return conditionService.selectedServices.isNotEmpty;
       default:
         return false;
     }
   }
 
-  void _onStepContinue() {
+  void _onStepContinue(BuildContext context) {
     if (_currentStep < _totalSteps - 1) {
       setState(() {
         _currentStep++;
       });
       _updateProgress();
     } else {
-      _completeProcess();
+      _completeProcess(context);
     }
   }
 
@@ -394,19 +391,21 @@ class _TeethConditionActionState extends State<TeethConditionAction>
     }
   }
 
-  Future<void> _completeProcess() async {
+  Future<void> _completeProcess(BuildContext context) async {
     setState(() {
       _isCompleting = true;
     });
 
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
+    if (context.mounted) {
+      context.read<ConditionService>().addJob();
+    }
 
     if (mounted) {
       setState(() {
         _isCompleting = false;
       });
-
       // Show success dialog
       _showSuccessDialog();
     }
