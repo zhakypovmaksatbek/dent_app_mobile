@@ -12,7 +12,7 @@ final class AppointmentInitial extends AppointmentState {}
 final class AppointmentLoading extends AppointmentState {}
 
 final class AppointmentLoaded extends AppointmentState {
-  final AppointmentModel appointment;
+  final AppointmentDetailModel appointment;
   const AppointmentLoaded({required this.appointment});
 }
 
@@ -24,12 +24,12 @@ final class AppointmentError extends AppointmentState {
 final class AppointmentDeleted extends AppointmentState {}
 
 final class AppointmentUpdated extends AppointmentState {
-  final AppointmentModel appointment;
+  final AppointmentDetailModel appointment;
   const AppointmentUpdated({required this.appointment});
 }
 
 final class AppointmentCommentUpdated extends AppointmentState {
-  final AppointmentModel appointment;
+  final AppointmentDetailModel appointment;
   final String message;
   const AppointmentCommentUpdated({
     required this.appointment,

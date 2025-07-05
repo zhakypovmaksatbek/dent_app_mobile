@@ -345,6 +345,18 @@ enum Gender {
   const Gender(this.title);
 
   final String title;
+
+  // from string
+  static Gender fromString(String value) {
+    switch (value) {
+      case 'MALE':
+        return Gender.male;
+      case 'FEMALE':
+        return Gender.female;
+      default:
+        return Gender.male;
+    }
+  }
 }
 
 enum FromWhere {

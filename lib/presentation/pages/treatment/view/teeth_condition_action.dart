@@ -363,7 +363,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
       case 1:
         return conditionService.toothType != null;
       case 2:
-        return conditionService.selectedDiagnosis != null;
+        return conditionService.selectedDiagnosis.isNotEmpty;
       case 3:
         return conditionService.selectedServices.isNotEmpty;
       default:

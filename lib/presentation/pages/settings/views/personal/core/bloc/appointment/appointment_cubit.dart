@@ -1,7 +1,7 @@
 import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
-import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';

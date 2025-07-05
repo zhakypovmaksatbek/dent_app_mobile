@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
+import 'package:dent_app_mobile/core/repo/appointment/i_appointment_repo.dart';
 import 'package:dent_app_mobile/core/utils/format_utils.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dio/dio.dart';
@@ -12,12 +13,12 @@ class PatientAppointmentsCubit extends Cubit<PatientAppointmentsState> {
 
   final IAppointmentRepo _appointmentRepo = AppointmentRepo();
 
-  Future<void> getPatientAppointments(int patientId) async {
+  Future<void> getPatientAppointments(int patientId, int page) async {
     emit(PatientAppointmentsLoading());
     try {
       final response = await _appointmentRepo.getPatientAppointments(
         patientId: patientId,
-        page: 1,
+        page: page,
       );
       emit(PatientAppointmentsLoaded(response: response));
     } on DioException catch (e) {

@@ -1,6 +1,8 @@
+import 'package:dent_app_mobile/core/repo/appointment/i_appointment_repo.dart';
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
@@ -14,65 +16,27 @@ import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
+import 'package:dent_app_mobile/models/work/work_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-abstract class IAppointmentRepo {
-  Future<List<AppointmentModel>> getAppointments();
-  Future<AppointmentModel> getAppointmentById(int id);
-  Future<void> createAppointment(CreateAppointmentModel appointment);
-  Future<void> updateAppointment(int id, CreateAppointmentModel appointment);
-  Future<String> updateAppointmentComment(
-    int id,
-    AppointmentCommentModel appointment,
-  );
-  Future<void> deleteAppointment(int id);
-  Future<List<CalendarAppointmentModel>> getCalendarAppointments({
-    required DateTime startDate,
-    required DateTime endDate,
-    List<int>? userIds,
-  });
-  Future<List<CalendarAppointmentModel>> getCalendarAppointmentsForDoctor({
-    required DateTime startDate,
-    required DateTime endDate,
-  });
-  Future<List<PatientShortModel>> getPatientShortList(String query);
-  Future<List<TimeModel>> getTimeList(int userId, DateTime date, int minute);
-  Future<List<RoomModel>> getRoomList();
-  Future<List<DoctorModel>> getDoctorList();
-  Future<VisitDataModel> getPatientAppointments({
-    required int patientId,
-    required int page,
-  });
-  Future<List<ToothModel>> getToothList(int patientId);
-  Future<PatternModel> getPatternList(PatternType type, {String? search});
-  Future<List<ConditionModel>> getConditionList();
-  Future<List<RoomModel>> getRoomListByDate({
-    required DateTime date,
-    required TimeOfDay startTime,
-    required TimeOfDay endTime,
-  });
-  Future<String> saveServices(int appointmentId, List<int> serviceIds);
-  Future<ReceiptModel> getReceipt(int appointmentId);
-  Future<void> fastPay(PaymentModel payment, int appointmentId);
-}
 
 class AppointmentRepo extends IAppointmentRepo {
   final dio = DioService();
   @override
-  Future<List<AppointmentModel>> getAppointments() async {
+  Future<List<AppointmentDetailModel>> getAppointments() async {
     final response = await dio.get('api/appointments');
     List<dynamic> data = response.data as List<dynamic>;
     return data
-        .map((e) => AppointmentModel.fromJson(e as Map<String, dynamic>))
+        .map((e) => AppointmentDetailModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 
   @override
-  Future<AppointmentModel> getAppointmentById(int id) async {
+  Future<AppointmentDetailModel> getAppointmentById(int id) async {
     final response = await dio.get('api/appointments/$id');
-    return AppointmentModel.fromJson(response.data);
+    return AppointmentDetailModel.fromJson(response.data);
   }
 
   @override
@@ -304,5 +268,42 @@ class AppointmentRepo extends IAppointmentRepo {
   @override
   Future<void> fastPay(PaymentModel payment, int appointmentId) async {
     await dio.post('api/payments/toPay/$appointmentId', data: payment.toJson());
+  }
+
+  @override
+  Future<void> saveWorks(int appointmentId, List<JobModel> jobs) async {
+    final List<Map<String, dynamic>> request =
+        jobs.map((job) {
+          return WorkModel(
+            toothNumber: int.parse(job.toothId),
+            serviceIds:
+                job.serviceIdsWithCount, // Use the new getter that repeats IDs based on count
+            diagnosisId: job.diagnosis.map((e) => e.id).toList() as List<int>,
+            surveyPlan: job.surveyPlan,
+            treatment: job.treatment,
+
+            recommendations: job.recommendation,
+            toothRequests: [
+              ToothRequests(
+                conditionId: job.condition.id!,
+                toothType: job.toothType.key,
+              ),
+            ],
+          ).toJson(); // Convert to JSON immediately
+        }).toList();
+
+    await dio.post('api/works/$appointmentId', data: request);
+  }
+
+  @override
+  Future<AppointmentPaginationModel> getPatientData(
+    int patientId, {
+    required int page,
+  }) async {
+    final response = await dio.get(
+      'api/appointments/patient/$patientId',
+      queryParameters: {'page': page},
+    );
+    return AppointmentPaginationModel.fromJson(response.data);
   }
 }

@@ -89,7 +89,7 @@ class PatientCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => router.push(AppointmentDetailRoute(id: patient.id ?? 0)),
+      onTap: () => router.push(PatientDetailRoute(id: patient.id ?? 0)),
       child: CustomCardDecoration(
         child: Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),

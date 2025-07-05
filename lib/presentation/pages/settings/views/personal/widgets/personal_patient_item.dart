@@ -41,7 +41,7 @@ class PersonalPatientItem extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          router.push(AppointmentDetailRoute(id: patient.appointmentId ?? 0));
+          router.push(PatientDetailRoute(id: patient.appointmentId ?? 0));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),

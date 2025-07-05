@@ -3,7 +3,6 @@ import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dar
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/pattern_utils.dart';
@@ -35,8 +34,6 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
   // Controllers
   late final TreatmentFormController _formController;
 
-  // State variables
-  RecordType? _recordType;
   AppointmentStatus? _appointmentStatus;
 
   @override
@@ -59,9 +56,6 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
   }
 
   void _initializeData() {
-    _recordType = RecordType.fromString(
-      widget.calendarAppointment?.recordType ?? '',
-    );
     _appointmentStatus = AppointmentStatus.fromKey(
       widget.calendarAppointment?.appointmentStatus ?? '',
     );

@@ -77,6 +77,9 @@ class ExpandableTextFieldWidget extends StatelessWidget {
                 controller: controller,
                 maxLines: maxLines,
                 minLines: 1,
+                onTapOutside: (event) {
+                  focusNode.unfocus();
+                },
                 onChanged: (_) {
                   // This will trigger the controller listener
                   // which will in turn call _searchPatterns if the field has focus

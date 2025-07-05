@@ -25,6 +25,12 @@ class TreatmentFormController {
       _controllers[PatternType.previousAndConcomitantDiseases]!;
   TextEditingController get labDataController =>
       _controllers[PatternType.xRayAndLaboratoryData]!;
+  TextEditingController get treatmentController =>
+      _controllers[PatternType.treatment]!;
+  TextEditingController get surveyPlanController =>
+      _controllers[PatternType.surveyPlan]!;
+  TextEditingController get recommendationController =>
+      _controllers[PatternType.recommendation]!;
 
   // Getters for specific focus nodes
   FocusNode get complaintsFocusNode => _focusNodes[PatternType.complaints]!;
@@ -34,6 +40,10 @@ class TreatmentFormController {
       _focusNodes[PatternType.previousAndConcomitantDiseases]!;
   FocusNode get labDataFocusNode =>
       _focusNodes[PatternType.xRayAndLaboratoryData]!;
+  FocusNode get treatmentFocusNode => _focusNodes[PatternType.treatment]!;
+  FocusNode get surveyPlanFocusNode => _focusNodes[PatternType.surveyPlan]!;
+  FocusNode get recommendationFocusNode =>
+      _focusNodes[PatternType.recommendation]!;
 
   // State getters
   PatternType? get activePatternType => _activePatternType;
@@ -50,12 +60,17 @@ class TreatmentFormController {
     _controllers[PatternType.previousAndConcomitantDiseases] =
         TextEditingController();
     _controllers[PatternType.xRayAndLaboratoryData] = TextEditingController();
-
+    _controllers[PatternType.treatment] = TextEditingController();
+    _controllers[PatternType.surveyPlan] = TextEditingController();
+    _controllers[PatternType.recommendation] = TextEditingController();
     // Initialize focus nodes for each pattern type
     _focusNodes[PatternType.complaints] = FocusNode();
     _focusNodes[PatternType.descriptionAndComments] = FocusNode();
     _focusNodes[PatternType.previousAndConcomitantDiseases] = FocusNode();
     _focusNodes[PatternType.xRayAndLaboratoryData] = FocusNode();
+    _focusNodes[PatternType.treatment] = FocusNode();
+    _focusNodes[PatternType.surveyPlan] = FocusNode();
+    _focusNodes[PatternType.recommendation] = FocusNode();
   }
 
   void setupTextControllerListeners(Function(String) onTextChanged) {

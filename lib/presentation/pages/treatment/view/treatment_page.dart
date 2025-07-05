@@ -51,8 +51,9 @@ class _TreatmentPageState extends State<TreatmentPage>
       body: TabBarView(
         controller: tabController,
         children: [
-          ToothDiagnosisTab(),
-
+          ToothDiagnosisTab(
+            appointmentId: widget.calendarAppointment!.appointmentId!,
+          ),
           TreatmentInfoTab(calendarAppointment: widget.calendarAppointment),
           Text('X-ray'),
         ],

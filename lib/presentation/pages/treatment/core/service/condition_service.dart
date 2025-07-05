@@ -1,6 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dent_app_mobile/models/diagnosis/condition_model.dart';
 import 'package:dent_app_mobile/models/diagnosis/diagnosis_model.dart';
 import 'package:dent_app_mobile/models/service/service_model.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/tooth_type.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -9,7 +12,7 @@ class ConditionService extends ChangeNotifier {
   String? _toothId;
   Conditions? _condition;
   ToothType? _toothType;
-  DiagnosisModel? _selectedDiagnosis;
+  final List<DiagnosisModel> _selectedDiagnosis = [];
   final Map<ServiceItem, int> _selectedServices = {};
 
   final List<JobModel> _jobs = [];
@@ -17,7 +20,7 @@ class ConditionService extends ChangeNotifier {
   String? get toothId => _toothId;
   Conditions? get condition => _condition;
   ToothType? get toothType => _toothType;
-  DiagnosisModel? get selectedDiagnosis => _selectedDiagnosis;
+  List<DiagnosisModel> get selectedDiagnosis => _selectedDiagnosis;
   Map<ServiceItem, int> get selectedServices =>
       Map.unmodifiable(_selectedServices);
   List<ServiceItem> get selectedServicesList => _selectedServices.keys.toList();
@@ -38,7 +41,7 @@ class ConditionService extends ChangeNotifier {
         servicesWithCount: Map.from(_selectedServices),
         condition: _condition!,
         toothType: _toothType!,
-        diagnosis: _selectedDiagnosis!,
+        diagnosis: List.from(_selectedDiagnosis), // Create a copy of the list
       ),
     );
     removeSelections();
@@ -47,7 +50,7 @@ class ConditionService extends ChangeNotifier {
 
   void removeSelections() {
     _selectedServices.clear();
-    _selectedDiagnosis = null;
+    _selectedDiagnosis.clear();
     _toothType = null;
     _condition = null;
     _toothId = null;
@@ -70,17 +73,22 @@ class ConditionService extends ChangeNotifier {
   }
 
   void setCondition(Conditions condition) {
+    // Initialize the list if it's null
     _condition = condition;
     notifyListeners();
   }
 
   void setSelectedDiagnosis(DiagnosisModel diagnosis) {
-    _selectedDiagnosis = diagnosis;
+    if (_selectedDiagnosis.any((d) => d.id == diagnosis.id)) {
+      _selectedDiagnosis.removeWhere((d) => d.id == diagnosis.id);
+    } else {
+      _selectedDiagnosis.add(diagnosis);
+    }
     notifyListeners();
   }
 
   void clearSelectedDiagnosis() {
-    _selectedDiagnosis = null;
+    _selectedDiagnosis.clear();
     notifyListeners();
   }
 
@@ -134,31 +142,51 @@ class ConditionService extends ChangeNotifier {
     _selectedServices.clear();
     notifyListeners();
   }
-}
 
-class JobModel {
-  final String id;
-  final String toothId;
-  final Map<ServiceItem, int> servicesWithCount;
-  final Conditions condition;
-  final ToothType toothType;
-  final DiagnosisModel diagnosis;
+  void removeJob(JobModel job) {
+    _jobs.remove(job);
+    notifyListeners();
+  }
 
-  JobModel({
-    required this.id,
-    required this.toothId,
-    required this.servicesWithCount,
-    required this.condition,
-    required this.toothType,
-    required this.diagnosis,
-  });
+  /// Updates a specific field of a job
+  void updateJob(String id, PatternType updateType, String value) {
+    try {
+      final jobIndex = _jobs.indexWhere((job) => job.id == id);
+      if (jobIndex == -1) {
+        throw ArgumentError('Job with id $id not found');
+      }
 
-  // Convenience getters
-  List<ServiceItem> get services => servicesWithCount.keys.toList();
-  int get totalServiceCount =>
-      servicesWithCount.values.fold(0, (sum, count) => sum + count);
-  double get totalPrice => servicesWithCount.entries.fold(
-    0.0,
-    (sum, entry) => sum + (entry.key.price ?? 0) * entry.value,
-  );
+      final job = _jobs[jobIndex];
+
+      final updatedJob = switch (updateType) {
+        PatternType.surveyPlan => job.copyWith(surveyPlan: value),
+        PatternType.recommendation => job.copyWith(recommendation: value),
+        PatternType.treatment => job.copyWith(treatment: value),
+        _ => throw ArgumentError('Unsupported update type: $updateType'),
+      };
+
+      _jobs[jobIndex] = updatedJob;
+      notifyListeners();
+    } catch (e) {
+      // Handle error appropriately - you might want to show a snackbar or log this
+      debugPrint('Error updating job: $e');
+      rethrow;
+    }
+  }
+
+  void clearJobs() {
+    _jobs.clear();
+    notifyListeners();
+  }
+
+  // Add helper methods for better condition management
+
+  void toggleCondition(Conditions condition) {
+    setCondition(condition);
+  }
+
+  void clearAllConditions() {
+    _condition = null;
+    notifyListeners();
+  }
 }

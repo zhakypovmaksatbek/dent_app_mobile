@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
+import 'package:dent_app_mobile/core/repo/appointment/i_appointment_repo.dart';
 import 'package:dent_app_mobile/core/utils/format_utils.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dio/dio.dart';

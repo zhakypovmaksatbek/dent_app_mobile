@@ -140,8 +140,8 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Понятно',
+                    child: Text(
+                      LocaleKeys.buttons_ok.tr(),
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),

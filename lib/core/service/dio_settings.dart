@@ -199,6 +199,8 @@ class DioLoggingInterceptor extends Interceptor {
       print('--- HTTP Response ---');
       print('Status Code: ${response.statusCode}');
       print('Response Data: ${response.data}');
+      print('Response Headers: ${response.headers}');
+      print('Response Status Message: ${response.realUri.path}');
       print('----------------------');
     }
     super.onResponse(response, handler);

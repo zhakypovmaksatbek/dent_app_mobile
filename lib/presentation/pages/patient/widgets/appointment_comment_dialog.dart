@@ -1,12 +1,12 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
-import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentCommentDialog extends StatefulWidget {
-  final AppointmentModel appointment;
+  final AppointmentDetailModel appointment;
   final Function(
     String comment,
     AppointmentStatus status,

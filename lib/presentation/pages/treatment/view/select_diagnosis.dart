@@ -2,10 +2,10 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/diagnosis/diagnosis_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/core/bloc/all_diagnosis/all_diagnosis_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/widgets/diagnosis_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class SelectDiagnosisStep extends StatefulWidget {
   const SelectDiagnosisStep({super.key});
@@ -17,9 +17,9 @@ class SelectDiagnosisStep extends StatefulWidget {
 class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
   late final AllDiagnosisCubit _diagnosisCubit;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   List<DiagnosisModel> _diagnosisList = [];
   List<DiagnosisModel> _filteredDiagnosisList = [];
-  DiagnosisModel? _selectedDiagnosis;
 
   @override
   void initState() {
@@ -33,6 +33,7 @@ class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -55,11 +56,7 @@ class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
     });
   }
 
-  void _selectDiagnosis(DiagnosisModel diagnosis) {
-    setState(() {
-      _selectedDiagnosis = diagnosis;
-    });
-    // Update the condition service with selected diagnosis
+  void _toggleDiagnosis(DiagnosisModel diagnosis) {
     context.read<ConditionService>().setSelectedDiagnosis(diagnosis);
   }
 
@@ -100,7 +97,7 @@ class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Как выбрать диагноз',
+                        'Как выбрать диагнозы',
                         style: Theme.of(
                           context,
                         ).textTheme.titleMedium?.copyWith(
@@ -138,25 +135,25 @@ class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
                       _buildInstructionStep(
                         context,
                         '1',
-                        'Поиск диагноза',
-                        'Введите название диагноза или его код в поле поиска',
-                        Icons.search,
+                        'Множественный выбор',
+                        'Выберите один или несколько диагнозов. Можно выбрать несколько для комплексного лечения',
+                        Icons.checklist,
                       ),
                       const SizedBox(height: 12),
                       _buildInstructionStep(
                         context,
                         '2',
-                        'Выбор диагноза',
-                        'Выберите подходящий диагноз из отфильтрованного списка',
-                        Icons.touch_app,
+                        'Поиск диагнозов',
+                        'Введите название диагноза или его код в поле поиска для быстрого поиска',
+                        Icons.search,
                       ),
                       const SizedBox(height: 12),
                       _buildInstructionStep(
                         context,
                         '3',
-                        'Продолжение',
-                        'После выбора диагноза нажмите "Далее" для перехода к следующему шагу',
-                        Icons.arrow_forward,
+                        'Управление выбором',
+                        'Нажмите на карточку для добавления/удаления. Выбранные диагнозы отмечены галочкой',
+                        Icons.touch_app,
                       ),
                     ],
                   ),
@@ -300,133 +297,192 @@ class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
             );
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Step Info with Tooltip
-              Row(
-                children: [
-                  Text(
-                    'Выбор диагноза',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () => _showInstructions(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.help_outline,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
+          return Consumer<ConditionService>(
+            builder:
+                (context, conditionService, child) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with selected count
+                    _buildHeader(context, conditionService),
+                    const SizedBox(height: 16),
 
-              // Search Field
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).dividerColor.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Поиск по названию или коду...',
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
-                    suffixIcon:
-                        _searchController.text.isNotEmpty
-                            ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                _searchController.clear();
-                              },
-                            )
-                            : null,
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
+                    // Search Field
+                    _buildSearchField(context),
+                    const SizedBox(height: 16),
 
-              // Results Count
-              if (_filteredDiagnosisList.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(
-                    'Найдено: ${_filteredDiagnosisList.length} диагнозов',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
-                  ),
-                ),
-
-              // Diagnosis List
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Theme.of(
-                        context,
-                      ).dividerColor.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child:
-                      _filteredDiagnosisList.isEmpty
-                          ? _buildEmptyState()
-                          : ListView.separated(
-                            padding: const EdgeInsets.all(8),
-                            itemCount: _filteredDiagnosisList.length,
-                            separatorBuilder:
-                                (context, index) =>
-                                    const Divider(height: 1, thickness: 0.5),
-                            itemBuilder: (context, index) {
-                              final diagnosis = _filteredDiagnosisList[index];
-                              final isSelected =
-                                  _selectedDiagnosis?.id == diagnosis.id;
-
-                              return DiagnosisCard(
-                                diagnosis: diagnosis,
-                                isSelected: isSelected,
-                                onTap: () => _selectDiagnosis(diagnosis),
-                              );
-                            },
+                    // Results Count
+                    if (_filteredDiagnosisList.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Text(
+                          'Найдено: ${_filteredDiagnosisList.length} диагнозов',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
+                        ),
+                      ),
+
+                    // Diagnosis List
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Theme.of(
+                              context,
+                            ).dividerColor.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child:
+                            _filteredDiagnosisList.isEmpty
+                                ? _buildEmptyState()
+                                : ListView.separated(
+                                  padding: const EdgeInsets.all(8),
+                                  itemCount: _filteredDiagnosisList.length,
+                                  separatorBuilder:
+                                      (context, index) => const Divider(
+                                        height: 16,
+                                        thickness: 0.5,
+                                      ),
+                                  itemBuilder: (context, index) {
+                                    final diagnosis =
+                                        _filteredDiagnosisList[index];
+                                    final isSelected = conditionService
+                                        .selectedDiagnosis
+                                        .any((d) => d.id == diagnosis.id);
+
+                                    return _ModernDiagnosisCard(
+                                      diagnosis: diagnosis,
+                                      isSelected: isSelected,
+                                      onTap: () => _toggleDiagnosis(diagnosis),
+                                    );
+                                  },
+                                ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, ConditionService conditionService) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Выбор диагнозов',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              if (conditionService.selectedDiagnosis.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Выбрано: ${conditionService.selectedDiagnosis.length}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () => _showInstructions(context),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.help_outline,
+              size: 18,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
+        if (conditionService.selectedDiagnosis.isNotEmpty) ...[
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => conditionService.clearSelectedDiagnosis(),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.clear_all, size: 18, color: Colors.red),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSearchField(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
+        ),
+      ),
+      child: TextField(
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        decoration: InputDecoration(
+          hintText: 'Поиск по названию или коду...',
+          prefixIcon: Icon(
+            Icons.search,
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+          suffixIcon:
+              _searchController.text.isNotEmpty
+                  ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      _searchFocusNode.unfocus();
+                    },
+                  )
+                  : null,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+        ),
       ),
     );
   }
@@ -464,6 +520,100 @@ class _SelectDiagnosisStepState extends State<SelectDiagnosisStep> {
                   ).colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
                 textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Modern diagnosis card widget for multiple selection
+class _ModernDiagnosisCard extends StatelessWidget {
+  final DiagnosisModel diagnosis;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _ModernDiagnosisCard({
+    required this.diagnosis,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color:
+                isSelected
+                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border:
+                isSelected
+                    ? Border.all(color: theme.colorScheme.primary, width: 2)
+                    : null,
+            boxShadow:
+                isSelected
+                    ? [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                    : null,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            diagnosis.name ?? 'Без названия',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color:
+                                  isSelected
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        AnimatedScale(
+                          scale: isSelected ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 200),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

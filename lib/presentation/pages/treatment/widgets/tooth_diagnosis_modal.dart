@@ -181,7 +181,7 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          'Seçim yapın ve devam edin',
+          'Выберите диагноз и продолжайте',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
             fontWeight: FontWeight.w400,
@@ -246,18 +246,8 @@ class _DiagnosisContent extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => ConditionCard(
-                category: ConditionModel(),
-                onTap: (value) {},
-                // category: TeethDiagnosisData.categories[index],
-                // selectedDiagnosis: selectedDiagnosis as ConditionModel?,
-                // onTap:
-                //     (category) => _handleDiagnosisSelection(
-                //       context,
-                //       category,
-                //       onDiagnosisSelected,
-                //     ),
-              ),
+              (context, index) =>
+                  ConditionCard(category: ConditionModel(), onTap: (value) {}),
               childCount: TeethDiagnosisData.categories.length,
             ),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

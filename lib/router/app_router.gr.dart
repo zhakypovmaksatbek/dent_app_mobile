@@ -11,43 +11,6 @@
 part of 'app_router.dart';
 
 /// generated route for
-/// [AppointmentDetail]
-class AppointmentDetailRoute extends PageRouteInfo<AppointmentDetailRouteArgs> {
-  AppointmentDetailRoute({
-    Key? key,
-    required int id,
-    List<PageRouteInfo>? children,
-  }) : super(
-         AppointmentDetailRoute.name,
-         args: AppointmentDetailRouteArgs(key: key, id: id),
-         initialChildren: children,
-       );
-
-  static const String name = 'AppointmentDetailRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<AppointmentDetailRouteArgs>();
-      return AppointmentDetail(key: args.key, id: args.id);
-    },
-  );
-}
-
-class AppointmentDetailRouteArgs {
-  const AppointmentDetailRouteArgs({this.key, required this.id});
-
-  final Key? key;
-
-  final int id;
-
-  @override
-  String toString() {
-    return 'AppointmentDetailRouteArgs{key: $key, id: $id}';
-  }
-}
-
-/// generated route for
 /// [CalendarPage]
 class CalendarRoute extends PageRouteInfo<void> {
   const CalendarRoute({List<PageRouteInfo>? children})
@@ -164,6 +127,40 @@ class MainRoute extends PageRouteInfo<void> {
       return const MainPage();
     },
   );
+}
+
+/// generated route for
+/// [PatientDetail]
+class PatientDetailRoute extends PageRouteInfo<PatientDetailRouteArgs> {
+  PatientDetailRoute({Key? key, required int id, List<PageRouteInfo>? children})
+    : super(
+        PatientDetailRoute.name,
+        args: PatientDetailRouteArgs(key: key, id: id),
+        initialChildren: children,
+      );
+
+  static const String name = 'PatientDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PatientDetailRouteArgs>();
+      return PatientDetail(key: args.key, id: args.id);
+    },
+  );
+}
+
+class PatientDetailRouteArgs {
+  const PatientDetailRouteArgs({this.key, required this.id});
+
+  final Key? key;
+
+  final int id;
+
+  @override
+  String toString() {
+    return 'PatientDetailRouteArgs{key: $key, id: $id}';
+  }
 }
 
 /// generated route for
@@ -464,4 +461,41 @@ class WarehouseRoute extends PageRouteInfo<void> {
       return const WarehousePage();
     },
   );
+}
+
+/// generated route for
+/// [WorkItemsView]
+class WorkItemsRoute extends PageRouteInfo<WorkItemsRouteArgs> {
+  WorkItemsRoute({
+    Key? key,
+    required int appointmentId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         WorkItemsRoute.name,
+         args: WorkItemsRouteArgs(key: key, appointmentId: appointmentId),
+         initialChildren: children,
+       );
+
+  static const String name = 'WorkItemsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<WorkItemsRouteArgs>();
+      return WorkItemsView(key: args.key, appointmentId: args.appointmentId);
+    },
+  );
+}
+
+class WorkItemsRouteArgs {
+  const WorkItemsRouteArgs({this.key, required this.appointmentId});
+
+  final Key? key;
+
+  final int appointmentId;
+
+  @override
+  String toString() {
+    return 'WorkItemsRouteArgs{key: $key, appointmentId: $appointmentId}';
+  }
 }

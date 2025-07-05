@@ -39,6 +39,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs/save_jobs_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/theme/app_theme.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
@@ -127,7 +128,8 @@ class Initializer {
     BlocProvider(create: (context) => UserCubit()),
     BlocProvider(create: (context) => SaveServiceCubit()),
     BlocProvider(create: (context) => GetReceiptAppointmentCubit()),
-    BlocProvider(create: (context) => PatientDetailDartCubit()),
+    BlocProvider(create: (context) => PatientDetailCubit()),
     BlocProvider(create: (context) => AllDiagnosisCubit()),
+    BlocProvider(create: (context) => SaveJobsCubit()),
   ];
 }

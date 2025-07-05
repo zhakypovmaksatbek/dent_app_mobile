@@ -13,23 +13,31 @@ class PatternUtils {
         return LocaleKeys.report_transferred_and_related_complaints.tr();
       case PatternType.xRayAndLaboratoryData:
         return LocaleKeys.report_laboratory_and_radiological_data.tr();
-      default:
-        return '';
+      case PatternType.surveyPlan:
+        return LocaleKeys.forms_survey_plan.tr();
+      case PatternType.recommendation:
+        return LocaleKeys.forms_recommendation.tr();
+      case PatternType.treatment:
+        return LocaleKeys.forms_treatment.tr();
     }
   }
 
   static String getHintTextForPatternType(PatternType patternType) {
     switch (patternType) {
       case PatternType.complaints:
-        return 'Additional complaints...';
+        return LocaleKeys.forms_complaints_description.tr();
       case PatternType.descriptionAndComments:
-        return 'Enter treatment description and comments...';
+        return LocaleKeys.forms_treatment_description.tr();
       case PatternType.previousAndConcomitantDiseases:
         return '';
       case PatternType.xRayAndLaboratoryData:
         return '';
-      default:
-        return '';
+      case PatternType.surveyPlan:
+        return LocaleKeys.forms_survey_plan_description.tr();
+      case PatternType.recommendation:
+        return LocaleKeys.forms_recommendation_description.tr();
+      case PatternType.treatment:
+        return LocaleKeys.forms_treatment_description.tr();
     }
   }
 }

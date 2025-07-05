@@ -107,7 +107,8 @@ class CodegenLoader extends AssetLoader{
     "rating": "Рейтинг",
     "select_services_for_payment": "Выберите услуги для оплаты",
     "total_services_selected": "{count} услуг выбрано",
-    "card": "Карта"
+    "card": "Карта",
+    "work_items": "Работы"
   },
   "buttons": {
     "login": "Войти",
@@ -222,7 +223,14 @@ class CodegenLoader extends AssetLoader{
     "tooth_diagnosis": "Диагноз зуба",
     "tooth_treatment": "Лечение зуба",
     "tooth_x_ray": "Рентгенограмма зуба",
-    "tooth": "Зуб"
+    "tooth": "Зуб",
+    "treatment": "Лечение",
+    "survey_plan": "Планирование обследования",
+    "recommendation": "Рекомендация",
+    "treatment_description": "Описание лечения",
+    "survey_plan_description": "Описание планирования обследования",
+    "recommendation_description": "Описание рекомендации",
+    "complaints_description": "Описание жалоб"
   },
   "routes": {
     "dashboard": "Главная",
@@ -398,7 +406,8 @@ class CodegenLoader extends AssetLoader{
     "confirm_delete_specialty": "Вы уверены, что хотите удалить специальность '{name}'?",
     "delete_specialty": "Удалить специальность",
     "delete_document": "Удалить документ",
-    "delete_product_confirmation": "Вы уверены, что хотите удалить продукт {name}?"
+    "delete_product_confirmation": "Вы уверены, что хотите удалить продукт {name}?",
+    "delete_work_item": "Вы уверены, что хотите удалить работу \"{name}\"?"
   },
   "validation": {
     "select_service_type": "Выберите тип услуги",

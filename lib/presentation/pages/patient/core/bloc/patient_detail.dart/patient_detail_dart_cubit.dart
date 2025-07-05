@@ -7,16 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'patient_detail_dart_state.dart';
 
-class PatientDetailDartCubit extends Cubit<PatientDetailDartState> {
-  PatientDetailDartCubit() : super(PatientDetailDartInitial());
+class PatientDetailCubit extends Cubit<PatientDetailState> {
+  PatientDetailCubit() : super(PatientDetailInitial());
   final IPatientRepo _patientRepo = PatientRepo();
   Future<void> getPatientDetail(int id) async {
-    emit(PatientDetailDartLoading());
+    emit(PatientDetailLoading());
     try {
       final patientDetail = await _patientRepo.getPatientDetail(id);
-      emit(PatientDetailDartLoaded(patientDetail: patientDetail));
+      emit(PatientDetailLoaded(patientDetail: patientDetail));
     } on DioException catch (e) {
-      emit(PatientDetailDartError(message: FormatUtils.formatErrorMessage(e)));
+      emit(PatientDetailError(message: FormatUtils.formatErrorMessage(e)));
     }
   }
 }

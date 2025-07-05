@@ -6,8 +6,8 @@ import 'package:dent_app_mobile/presentation/pages/calendar/views/calendar_page.
 import 'package:dent_app_mobile/presentation/pages/calendar/views/payment_view.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:dent_app_mobile/presentation/pages/main/main_page.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/patient_page.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/view/appointment_detail.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/view/patient_detail.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/view/patient_page.dart';
 import 'package:dent_app_mobile/presentation/pages/report/report_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/settings_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/view/diagnosis_page.dart';
@@ -20,6 +20,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/view
 import 'package:dent_app_mobile/presentation/pages/splash/splash_page.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/teeth_condition_action.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/treatment_page.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/view/work_items_view.dart';
 import 'package:flutter/material.dart';
 
 part "app_router.gr.dart";
@@ -51,13 +52,14 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: CreatePersonalRoute.page, path: "/createPersonal"),
     AutoRoute(page: PersonalDetailRoute.page, path: "/personalDetail"),
     AutoRoute(page: PersonalPatientsRoute.page, path: "/personalPatients"),
-    AutoRoute(page: AppointmentDetailRoute.page, path: "/appointmentDetail"),
+    AutoRoute(page: PatientDetailRoute.page, path: "/patientDetail"),
     AutoRoute(page: TreatmentRoute.page, path: "/treatment"),
     AutoRoute(page: PaymentViewRoute.page, path: "/payment"),
     AutoRoute(
       page: TeethConditionActionRoute.page,
       path: "/teethConditionAction",
     ),
+    AutoRoute(page: WorkItemsRoute.page, path: "/workItems"),
   ];
 }
 

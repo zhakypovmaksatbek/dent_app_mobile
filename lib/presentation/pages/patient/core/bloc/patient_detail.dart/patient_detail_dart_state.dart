@@ -1,24 +1,24 @@
 part of 'patient_detail_dart_cubit.dart';
 
-sealed class PatientDetailDartState extends Equatable {
-  const PatientDetailDartState();
+sealed class PatientDetailState extends Equatable {
+  const PatientDetailState();
 
   @override
   List<Object> get props => [];
 }
 
-final class PatientDetailDartInitial extends PatientDetailDartState {}
+final class PatientDetailInitial extends PatientDetailState {}
 
-final class PatientDetailDartLoading extends PatientDetailDartState {}
+final class PatientDetailLoading extends PatientDetailState {}
 
-final class PatientDetailDartLoaded extends PatientDetailDartState {
+final class PatientDetailLoaded extends PatientDetailState {
   final PatientDetailModel patientDetail;
 
-  const PatientDetailDartLoaded({required this.patientDetail});
+  const PatientDetailLoaded({required this.patientDetail});
 }
 
-final class PatientDetailDartError extends PatientDetailDartState {
+final class PatientDetailError extends PatientDetailState {
   final String message;
 
-  const PatientDetailDartError({required this.message});
+  const PatientDetailError({required this.message});
 }

@@ -95,6 +95,7 @@ abstract class  LocaleKeys {
   static const general_select_services_for_payment = 'general.select_services_for_payment';
   static const general_total_services_selected = 'general.total_services_selected';
   static const general_card = 'general.card';
+  static const general_work_items = 'general.work_items';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -206,6 +207,13 @@ abstract class  LocaleKeys {
   static const forms_tooth_treatment = 'forms.tooth_treatment';
   static const forms_tooth_x_ray = 'forms.tooth_x_ray';
   static const forms_tooth = 'forms.tooth';
+  static const forms_treatment = 'forms.treatment';
+  static const forms_survey_plan = 'forms.survey_plan';
+  static const forms_recommendation = 'forms.recommendation';
+  static const forms_treatment_description = 'forms.treatment_description';
+  static const forms_survey_plan_description = 'forms.survey_plan_description';
+  static const forms_recommendation_description = 'forms.recommendation_description';
+  static const forms_complaints_description = 'forms.complaints_description';
   static const forms = 'forms';
   static const routes_dashboard = 'routes.dashboard';
   static const routes_calendar = 'routes.calendar';
@@ -376,6 +384,7 @@ abstract class  LocaleKeys {
   static const alerts_delete_specialty = 'alerts.delete_specialty';
   static const alerts_delete_document = 'alerts.delete_document';
   static const alerts_delete_product_confirmation = 'alerts.delete_product_confirmation';
+  static const alerts_delete_work_item = 'alerts.delete_work_item';
   static const alerts = 'alerts';
   static const validation_select_service_type = 'validation.select_service_type';
   static const validation_enter_service_name = 'validation.enter_service_name';
