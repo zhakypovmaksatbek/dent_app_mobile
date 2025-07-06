@@ -278,7 +278,7 @@ class AppointmentRepo extends IAppointmentRepo {
             toothNumber: int.parse(job.toothId),
             serviceIds:
                 job.serviceIdsWithCount, // Use the new getter that repeats IDs based on count
-            diagnosisId: job.diagnosis.map((e) => e.id).toList() as List<int>,
+            diagnosisId: job.diagnosisIds,
             surveyPlan: job.surveyPlan,
             treatment: job.treatment,
 

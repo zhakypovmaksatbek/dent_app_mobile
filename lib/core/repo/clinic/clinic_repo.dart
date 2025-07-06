@@ -8,7 +8,7 @@ final class ClinicRepo extends ClinicIRepo {
   @override
   Future<ClinicModel> getClinic() async {
     final int? clinicId = await AppDataService.instance.getClinicId();
-    final response = await dio.get("/api/clinics/{$clinicId}");
+    final response = await dio.get("api/clinics/$clinicId");
     return ClinicModel.fromJson(response.data);
   }
 }

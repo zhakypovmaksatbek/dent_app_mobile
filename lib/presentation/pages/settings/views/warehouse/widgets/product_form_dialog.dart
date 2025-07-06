@@ -1,4 +1,8 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/warehouse/product_model.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ProductFormDialog extends StatefulWidget {
@@ -126,7 +130,9 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _isEditing ? 'Edit Product' : 'Add New Product',
+                    _isEditing
+                        ? LocaleKeys.forms_edit_product.tr()
+                        : LocaleKeys.forms_add_new_product.tr(),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   IconButton(
@@ -143,15 +149,15 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
               // Product name field
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Product Name',
-                  hintText: 'Enter product name',
+                decoration: InputDecoration(
+                  labelText: LocaleKeys.forms_product_name.tr(),
+                  hintText: LocaleKeys.forms_enter_product_name.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.inventory),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a product name';
+                    return LocaleKeys.forms_enter_product_name.tr();
                   }
                   return null;
                 },
@@ -162,19 +168,19 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
               // Price field
               TextFormField(
                 controller: _priceController,
-                decoration: const InputDecoration(
-                  labelText: 'Price',
-                  hintText: 'Enter product price',
+                decoration: InputDecoration(
+                  labelText: LocaleKeys.general_price.tr(),
+                  hintText: LocaleKeys.forms_enter_product_price.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.attach_money),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a price';
+                    return LocaleKeys.forms_enter_product_price.tr();
                   }
                   final price = double.tryParse(value);
                   if (price == null || price <= 0) {
-                    return 'Please enter a valid price';
+                    return LocaleKeys.forms_enter_product_price.tr();
                   }
                   return null;
                 },
@@ -187,17 +193,13 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
 
               // Quantity with increment/decrement controls
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.production_quantity_limits,
-                    color: Colors.grey,
+                  AppText(
+                    title: '${LocaleKeys.general_quantity.tr()}: ',
+                    textType: TextType.body,
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Quantity:',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const Spacer(),
+                  const SizedBox(width: 12),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
@@ -240,16 +242,14 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text(
-                      'Total: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    AppText(
+                      title: '${LocaleKeys.report_total.tr()}: ',
+                      textType: TextType.body,
                     ),
-                    Text(
-                      '$_total',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    PriceConvertWidget(
+                      price: _total,
+                      textType: TextType.body,
+                      fontWeight: FontWeight.bold,
                     ),
                   ],
                 ),
@@ -261,7 +261,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('CANCEL'),
+                    child: Text(LocaleKeys.buttons_cancel.tr()),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
@@ -272,7 +272,11 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                         vertical: 12,
                       ),
                     ),
-                    child: Text(_isEditing ? 'UPDATE' : 'SAVE'),
+                    child: Text(
+                      _isEditing
+                          ? LocaleKeys.buttons_update.tr()
+                          : LocaleKeys.buttons_save.tr(),
+                    ),
                   ),
                 ],
               ),

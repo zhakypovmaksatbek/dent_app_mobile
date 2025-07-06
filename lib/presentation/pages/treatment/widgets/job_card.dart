@@ -11,6 +11,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/utils/treatment_for
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/expandable_text_field_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/pattern_selection_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -301,10 +302,10 @@ class _JobCardState extends State<JobCard> {
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 12,
               children: [
                 // Diagnosis Info
                 _buildDiagnosisSection(context),
-                const SizedBox(height: 12),
 
                 // Condition and Tooth Type
                 Row(
@@ -332,11 +333,9 @@ class _JobCardState extends State<JobCard> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
 
                 // Services List with Counts
                 _buildServicesSection(context),
-                const SizedBox(height: 16),
 
                 // Total Price
                 Container(
@@ -391,14 +390,11 @@ class _JobCardState extends State<JobCard> {
                                 ).colorScheme.onSurface.withValues(alpha: 0.7),
                               ),
                             ),
-                            Text(
-                              '${widget.job.totalPrice.toStringAsFixed(0)} ₽',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                            PriceConvertWidget(
+                              price: widget.job.totalPrice,
+                              textType: TextType.title,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
                             ),
                           ],
                         ),
@@ -738,15 +734,15 @@ class _JobCardState extends State<JobCard> {
                                 ?.copyWith(fontWeight: FontWeight.w500),
                           ),
                           if (count > 1)
-                            Text(
-                              '${servicePrice.toStringAsFixed(0)} ₽ × $count',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withValues(alpha: 0.6),
-                              ),
+                            Row(
+                              children: [
+                                PriceConvertWidget(
+                                  price: servicePrice,
+                                  textType: TextType.description,
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ],
                             ),
                         ],
                       ),
@@ -789,14 +785,10 @@ class _JobCardState extends State<JobCard> {
                             ).colorScheme.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Text(
-                            '${totalServicePrice.toStringAsFixed(0)} ₽',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          child: PriceConvertWidget(
+                            price: totalServicePrice,
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],

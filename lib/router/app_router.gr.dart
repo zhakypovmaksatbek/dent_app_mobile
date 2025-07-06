@@ -11,6 +11,22 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AboutClinicPage]
+class AboutClinicRoute extends PageRouteInfo<void> {
+  const AboutClinicRoute({List<PageRouteInfo>? children})
+    : super(AboutClinicRoute.name, initialChildren: children);
+
+  static const String name = 'AboutClinicRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AboutClinicPage();
+    },
+  );
+}
+
+/// generated route for
 /// [CalendarPage]
 class CalendarRoute extends PageRouteInfo<void> {
   const CalendarRoute({List<PageRouteInfo>? children})

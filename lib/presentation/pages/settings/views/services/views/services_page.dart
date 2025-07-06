@@ -10,6 +10,9 @@ import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/theme/extension/card_style_extension.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/app_loader.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/currency_widget.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -474,14 +477,11 @@ class _ServicesViewState extends State<_ServicesView> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    item.price != null
-                        ? priceFormat.format(item.price)
-                        : '${priceFormat.currencySymbol} -', // Show symbol with dash if price is null.
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: ColorConstants.primary,
-                    ),
+                  PriceConvertWidget(
+                    price: item.price ?? 0,
+                    textType: TextType.body,
+                    color: ColorConstants.primary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ],
               ),
@@ -780,10 +780,7 @@ class _ServiceFormModalState extends State<ServiceFormModal> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 4.0),
-          child: Text(
-            priceFormat.currencySymbol,
-            style: const TextStyle(fontSize: 16),
-          ),
+          child: CurrencyWidget(),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
       ),

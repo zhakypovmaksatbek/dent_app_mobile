@@ -12,6 +12,8 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/widg
 import 'package:dent_app_mobile/presentation/widgets/app_loader.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -381,67 +383,7 @@ class _WarehousePageState extends State<WarehousePage>
               searchBox,
 
               // Summary card
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              LocaleKeys.general_total_products.tr(),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              products.length.toString(),
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              LocaleKeys.general_total_items.tr(),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              products
-                                  .fold(
-                                    0,
-                                    (sum, product) =>
-                                        sum + (product.quantity ?? 0),
-                                  )
-                                  .toString(),
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              LocaleKeys.general_total_value.tr(),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              products
-                                  .fold(
-                                    0.0,
-                                    (sum, product) =>
-                                        sum + (product.totalPrice ?? 0),
-                                  )
-                                  .toString(),
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              _buildSummaryCard(products),
 
               // Products list
               Expanded(
@@ -460,14 +402,33 @@ class _WarehousePageState extends State<WarehousePage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 4),
-                              Text(
-                                '${LocaleKeys.general_price.tr()}: ${product.price ?? 0}',
+                              Row(
+                                children: [
+                                  AppText(
+                                    title: '${LocaleKeys.general_price.tr()}:',
+                                    textType: TextType.subtitle,
+                                  ),
+                                  PriceConvertWidget(
+                                    price: product.price ?? 0,
+                                    textType: TextType.subtitle,
+                                  ),
+                                ],
                               ),
                               Text(
                                 '${LocaleKeys.general_quantity.tr()}: ${product.quantity ?? 0}',
                               ),
-                              Text(
-                                '${LocaleKeys.general_total_amount.tr()}: ${product.totalPrice ?? 0}',
+                              Row(
+                                children: [
+                                  AppText(
+                                    title:
+                                        '${LocaleKeys.general_total_amount.tr()}: ',
+                                    textType: TextType.subtitle,
+                                  ),
+                                  PriceConvertWidget(
+                                    price: product.totalPrice ?? 0,
+                                    textType: TextType.subtitle,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -760,6 +721,115 @@ class _WarehousePageState extends State<WarehousePage>
               ),
             ],
           ),
+    );
+  }
+
+  // Modern and clean summary card
+  Widget _buildSummaryCard(List<ProductModel> products) {
+    final totalItems = products.fold(
+      0,
+      (sum, product) => sum + (product.quantity ?? 0),
+    );
+    final totalValue = products.fold(
+      0.0,
+      (sum, product) => sum + (product.totalPrice ?? 0),
+    );
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _StatisticItem(
+            title: LocaleKeys.general_total_products.tr(),
+            value: products.length.toString(),
+            icon: Icons.inventory,
+            color: Colors.blue,
+          ),
+          _StatisticItem(
+            title: LocaleKeys.general_total_items.tr(),
+            value: totalItems.toString(),
+            icon: Icons.shopping_cart,
+            color: Colors.green,
+          ),
+          _StatisticItem(
+            title: LocaleKeys.general_total_value.tr(),
+            valueWidget: PriceConvertWidget(
+              price: totalValue,
+              textType: TextType.header,
+              fontWeight: FontWeight.w600,
+            ),
+            icon: Icons.attach_money,
+            color: Colors.orange,
+            isLast: true,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Reusable statistic item widget
+class _StatisticItem extends StatelessWidget {
+  final String title;
+  final String? value;
+  final Widget? valueWidget;
+  final IconData icon;
+  final Color color;
+  final bool isLast;
+
+  const _StatisticItem({
+    required this.title,
+    this.value,
+    this.valueWidget,
+    required this.icon,
+    required this.color,
+    this.isLast = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: color, size: 24),
+          ),
+          const SizedBox(height: 12),
+          AppText(
+            title: title,
+            textType: TextType.description,
+            color: Colors.grey[600],
+            textAlign: TextAlign.center,
+            maxLines: 2,
+          ),
+          const SizedBox(height: 8),
+          valueWidget ??
+              AppText(
+                title: value ?? '0',
+                textType: TextType.header,
+                fontWeight: FontWeight.w600,
+                textAlign: TextAlign.center,
+              ),
+        ],
+      ),
     );
   }
 }

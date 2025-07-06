@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_app
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -406,31 +407,15 @@ class PatientAppointmentCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          AppText(
-            title: '${_formatAmount(amount)} сом',
+          PriceConvertWidget(
+            price: amount,
             textType: TextType.subtitle,
-            fontWeight: FontWeight.w600,
             color: color,
+            fontWeight: FontWeight.w600,
           ),
         ],
       ),
     );
-  }
-
-  String _formatAmount(double amount) {
-    if (amount == amount.roundToDouble()) {
-      return amount.toInt().toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (Match m) => '${m[1]} ',
-      );
-    } else {
-      return amount
-          .toStringAsFixed(2)
-          .replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (Match m) => '${m[1]} ',
-          );
-    }
   }
 
   Color _getStatusColor(String recordType) {

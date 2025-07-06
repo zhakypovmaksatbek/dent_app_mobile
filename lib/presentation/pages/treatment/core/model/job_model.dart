@@ -54,6 +54,10 @@ class JobModel {
     return result;
   }
 
+  List<int> get diagnosisIds {
+    return diagnosis.map((e) => e.id!).toList();
+  }
+
   JobModel copyWith({
     String? id,
     String? toothId,

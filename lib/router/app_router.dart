@@ -10,6 +10,7 @@ import 'package:dent_app_mobile/presentation/pages/patient/view/patient_detail.d
 import 'package:dent_app_mobile/presentation/pages/patient/view/patient_page.dart';
 import 'package:dent_app_mobile/presentation/pages/report/report_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/settings_page.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/about_clinic/about_clinic_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/view/diagnosis_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/views/create_personal_view.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/views/personal_detail_page.dart';
@@ -60,6 +61,7 @@ class AppRouter extends RootStackRouter {
       path: "/teethConditionAction",
     ),
     AutoRoute(page: WorkItemsRoute.page, path: "/workItems"),
+    AutoRoute(page: AboutClinicRoute.page, path: "/aboutClinic"),
   ];
 }
 

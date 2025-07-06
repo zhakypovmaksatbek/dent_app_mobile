@@ -108,7 +108,8 @@ class CodegenLoader extends AssetLoader{
     "select_services_for_payment": "Выберите услуги для оплаты",
     "total_services_selected": "{count} услуг выбрано",
     "card": "Карта",
-    "work_items": "Работы"
+    "work_items": "Работы",
+    "about_clinic_description": "Краткая информация о клинике"
   },
   "buttons": {
     "login": "Войти",
@@ -230,7 +231,17 @@ class CodegenLoader extends AssetLoader{
     "treatment_description": "Описание лечения",
     "survey_plan_description": "Описание планирования обследования",
     "recommendation_description": "Описание рекомендации",
-    "complaints_description": "Описание жалоб"
+    "complaints_description": "Описание жалоб",
+    "x_ray": "Рентген",
+    "enter_price": "Введите цену",
+    "enter_product_price": "Введите цену продукта",
+    "enter_quantity": "Введите количество",
+    "enter_product_quantity": "Введите количество продукта",
+    "enter_product_name": "Введите название продукта",
+    "enter_product_description": "Введите описание продукта",
+    "product_name": "Название продукта",
+    "edit_product": "Редактировать продукт",
+    "add_new_product": "Добавить новый продукт"
   },
   "routes": {
     "dashboard": "Главная",
@@ -258,7 +269,8 @@ class CodegenLoader extends AssetLoader{
     "personal_detail": "Информация о персонале",
     "patient_detail": "Информация о пациенте",
     "appointment_detail": "Информация о записи",
-    "visits": "Визиты"
+    "visits": "Визиты",
+    "about_clinic": "Информация о клинике"
   },
   "patients": {
     "add_patient": "Добавить пациента",
@@ -511,6 +523,13 @@ class CodegenLoader extends AssetLoader{
     "no_teeth_selected": "Нет выбранных зубов",
     "select_teeth_prompt": "Пожалуйста, выберите зубы для диагностики",
     "available_options": "Доступные варианты"
+  },
+  "currency": {
+    "som": "Сом",
+    "usd": "Доллар",
+    "rub": "Рубль",
+    "kzt": "Тенге",
+    "eur": "Евро"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": _ru};

@@ -96,6 +96,7 @@ abstract class  LocaleKeys {
   static const general_total_services_selected = 'general.total_services_selected';
   static const general_card = 'general.card';
   static const general_work_items = 'general.work_items';
+  static const general_about_clinic_description = 'general.about_clinic_description';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -214,6 +215,16 @@ abstract class  LocaleKeys {
   static const forms_survey_plan_description = 'forms.survey_plan_description';
   static const forms_recommendation_description = 'forms.recommendation_description';
   static const forms_complaints_description = 'forms.complaints_description';
+  static const forms_x_ray = 'forms.x_ray';
+  static const forms_enter_price = 'forms.enter_price';
+  static const forms_enter_product_price = 'forms.enter_product_price';
+  static const forms_enter_quantity = 'forms.enter_quantity';
+  static const forms_enter_product_quantity = 'forms.enter_product_quantity';
+  static const forms_enter_product_name = 'forms.enter_product_name';
+  static const forms_enter_product_description = 'forms.enter_product_description';
+  static const forms_product_name = 'forms.product_name';
+  static const forms_edit_product = 'forms.edit_product';
+  static const forms_add_new_product = 'forms.add_new_product';
   static const forms = 'forms';
   static const routes_dashboard = 'routes.dashboard';
   static const routes_calendar = 'routes.calendar';
@@ -241,6 +252,7 @@ abstract class  LocaleKeys {
   static const routes_patient_detail = 'routes.patient_detail';
   static const routes_appointment_detail = 'routes.appointment_detail';
   static const routes_visits = 'routes.visits';
+  static const routes_about_clinic = 'routes.about_clinic';
   static const routes = 'routes';
   static const patients_add_patient = 'patients.add_patient';
   static const patients_search_patient = 'patients.search_patient';
@@ -481,5 +493,11 @@ abstract class  LocaleKeys {
   static const diagnosis_select_teeth_prompt = 'diagnosis.select_teeth_prompt';
   static const diagnosis_available_options = 'diagnosis.available_options';
   static const diagnosis = 'diagnosis';
+  static const currency_som = 'currency.som';
+  static const currency_usd = 'currency.usd';
+  static const currency_rub = 'currency.rub';
+  static const currency_kzt = 'currency.kzt';
+  static const currency_eur = 'currency.eur';
+  static const currency = 'currency';
 
 }

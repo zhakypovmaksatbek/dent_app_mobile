@@ -26,7 +26,7 @@ class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
   void _initializeChartBehaviors() {
     _tooltipBehavior = TooltipBehavior(
       enable: true,
-      format: '${LocaleKeys.general_quantity}: point.y',
+      format: '${LocaleKeys.general_quantity.tr()}: point.y',
       textStyle: const TextStyle(fontSize: 14),
       duration: 3000,
       color: Colors.black87,
@@ -38,7 +38,7 @@ class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
       enableSelectionZooming: true,
       selectionRectBorderColor: Colors.blue,
       selectionRectBorderWidth: 1,
-      selectionRectColor: Colors.blue.withOpacity(0.1),
+      selectionRectColor: Colors.blue.withValues(alpha: 0.1),
       enablePanning: true,
       zoomMode: ZoomMode.x,
     );
@@ -104,7 +104,7 @@ class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.6),
+                theme.colorScheme.primary.withValues(alpha: 0.6),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

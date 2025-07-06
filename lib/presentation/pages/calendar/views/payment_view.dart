@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:dent_app_mobile/core/utils/payment_types.dart';
 import 'package:dent_app_mobile/core/utils/salary_type.dart';
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_receipt/get_receipt_appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/pay_appointment/pay_appointment_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -158,19 +160,19 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                     ],
 
-                    // Appointment ID Section
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-                      sliver: SliverToBoxAdapter(
-                        child: PaymentInfoCard(
-                          appointmentId: state.receipt.appointmentId ?? 0,
-                        ),
-                      ),
-                    ),
+                    // // Appointment ID Section
+                    // SliverPadding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                    //   sliver: SliverToBoxAdapter(
+                    //     child: PaymentInfoCard(
+                    //       appointmentId: state.receipt.appointmentId ?? 0,
+                    //     ),
+                    //   ),
+                    // ),
 
                     // Services Section
                     SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                       sliver: SliverToBoxAdapter(
                         child: PaymentServicesListCard(
                           services:
@@ -341,8 +343,8 @@ class _PaymentViewState extends State<PaymentView> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const AppText(
-              title: 'Повторить',
+            child: AppText(
+              title: LocaleKeys.buttons_retry.tr(),
               textType: TextType.body,
               color: AppColors.white,
             ),

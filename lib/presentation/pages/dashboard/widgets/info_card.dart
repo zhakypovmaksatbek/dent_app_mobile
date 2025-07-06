@@ -173,8 +173,8 @@ class StatCard extends StatelessWidget {
               show: true,
               color:
                   isPositive
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.redAccent.withOpacity(0.1),
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : Colors.redAccent.withValues(alpha: 0.1),
             ),
           ),
         ],

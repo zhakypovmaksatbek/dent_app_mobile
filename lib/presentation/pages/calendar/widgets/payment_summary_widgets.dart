@@ -1,6 +1,7 @@
 import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:flutter/material.dart';
 
 class PaymentCalculationSummary extends StatelessWidget {
@@ -55,11 +56,11 @@ class PaymentCalculationSummary extends StatelessWidget {
                         textType: TextType.body,
                         color: AppColors.textSecondary,
                       ),
-                      AppText(
-                        title: '${formatAmount(originalAmount)} сом',
+                      PriceConvertWidget(
+                        price: originalAmount,
                         textType: TextType.body,
-                        fontWeight: FontWeight.w500,
                         color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w500,
                       ),
                     ],
                   ),
@@ -76,11 +77,11 @@ class PaymentCalculationSummary extends StatelessWidget {
                           textType: TextType.body,
                           color: AppColors.textSecondary,
                         ),
-                        AppText(
-                          title: '- ${formatAmount(discount)} сом',
+                        PriceConvertWidget(
+                          price: discount,
                           textType: TextType.body,
-                          fontWeight: FontWeight.w500,
                           color: AppColors.success,
+                          fontWeight: FontWeight.w500,
                         ),
                       ],
                     ),
@@ -99,8 +100,8 @@ class PaymentCalculationSummary extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
                       ),
-                      AppText(
-                        title: '${formatAmount(finalAmount)} сом',
+                      PriceConvertWidget(
+                        price: finalAmount,
                         textType: TextType.title,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -198,14 +199,11 @@ class ReceiptPaymentSummary extends StatelessWidget {
           fontWeight: isTotal ? FontWeight.w600 : FontWeight.w400,
           color: AppColors.textPrimary,
         ),
-        AppText(
-          title: '${isDiscount ? '-' : ''}${formatAmount(amount)} сом',
+        PriceConvertWidget(
+          price: amount,
           textType: isTotal ? TextType.title : TextType.body,
           fontWeight: FontWeight.w600,
-          color:
-              isDiscount
-                  ? AppColors.success
-                  : (isTotal ? AppColors.primary : AppColors.textPrimary),
+          color: isDiscount ? AppColors.success : AppColors.textPrimary,
         ),
       ],
     );
@@ -319,8 +317,8 @@ class PaymentStatusCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          AppText(
-            title: '${formatAmount(amount)} сом',
+          PriceConvertWidget(
+            price: amount,
             textType: TextType.title,
             fontWeight: FontWeight.w600,
             color: color,

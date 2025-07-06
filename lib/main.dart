@@ -97,8 +97,8 @@ class Initializer {
     BlocProvider(create: (_) => PatientBloc(patientRepo: PatientRepo())),
     BlocProvider(create: (_) => CreatePatientCubit()),
     BlocProvider(create: (_) => ReportCubit()),
-    BlocProvider(create: (context) => PaymentCubit()),
-    BlocProvider(create: (context) => DiscountCubit()),
+    BlocProvider(create: (_) => PaymentCubit()),
+    BlocProvider(create: (_) => DiscountCubit()),
     BlocProvider(create: (context) => DepositCubit()),
     BlocProvider(create: (context) => DebtorCubit()),
     BlocProvider(create: (context) => ServiceCubit()),
@@ -129,9 +129,9 @@ class Initializer {
     BlocProvider(create: (context) => UserCubit()),
     BlocProvider(create: (context) => SaveServiceCubit()),
     BlocProvider(create: (context) => GetReceiptAppointmentCubit()),
-    BlocProvider(create: (context) => PatientDetailCubit()),
-    BlocProvider(create: (context) => AllDiagnosisCubit()),
-    BlocProvider(create: (context) => SaveJobsCubit()),
+    BlocProvider(create: (_) => PatientDetailCubit()),
+    BlocProvider(create: (_) => AllDiagnosisCubit()),
+    BlocProvider(create: (_) => SaveJobsCubit()),
     BlocProvider(create: (_) => SettingsCubit()),
   ];
 }

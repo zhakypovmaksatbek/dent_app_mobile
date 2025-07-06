@@ -55,7 +55,7 @@ class _ServicesPieChartState extends State<ServicesPieChart> {
             color: theme.colorScheme.onSurface,
           ),
           backgroundColor: theme.colorScheme.surface,
-          borderColor: theme.colorScheme.outline.withOpacity(0.5),
+          borderColor: theme.colorScheme.outline.withValues(alpha: 0.5),
           borderWidth: 1,
         ),
         tooltipBehavior: tooltipBehavior,

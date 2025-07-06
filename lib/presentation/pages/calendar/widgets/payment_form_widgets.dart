@@ -4,6 +4,8 @@ import 'package:dent_app_mobile/presentation/pages/calendar/bloc/pay_appointment
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/currency_widget.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,8 +60,8 @@ class PaymentTypeSelection extends StatelessWidget {
                           children: [
                             CustomAssetImage(
                               path: type.icon,
-                              height: 64,
-                              width: 64,
+                              height: 44,
+                              width: 44,
                             ),
                             const SizedBox(width: 8),
                             AppText(
@@ -121,8 +123,8 @@ class PaymentAmountInput extends StatelessWidget {
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: AppText(
-                  title: 'макс. ${formatAmount(maxAmount)} сом',
+                child: PriceConvertWidget(
+                  price: maxAmount,
                   textType: TextType.description,
                   color: AppColors.primary,
                 ),
@@ -133,9 +135,9 @@ class PaymentAmountInput extends StatelessWidget {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Введите сумму',
-            suffixText: 'сом',
+            suffix: const CurrencyWidget(),
             border: OutlineInputBorder(),
           ),
           keyboardType: TextInputType.number,
@@ -184,7 +186,7 @@ class PaymentDiscountInput extends StatelessWidget {
                       hintText: '0',
                       border: const OutlineInputBorder(),
                       suffixText:
-                          discountTypeValue == SalaryType.percent ? '%' : 'сом',
+                          discountTypeValue == SalaryType.percent ? '%' : '\$',
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -229,7 +231,7 @@ class PaymentDiscountInput extends StatelessWidget {
                               ),
                             ),
                             child: AppText(
-                              title: type == SalaryType.percent ? '%' : 'сом',
+                              title: type == SalaryType.percent ? '%' : '\$',
                               textType: TextType.body,
                               fontWeight: FontWeight.w500,
                               color:

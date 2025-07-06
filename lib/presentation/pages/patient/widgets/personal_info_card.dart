@@ -1,7 +1,10 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/util/patient_info_util.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -98,7 +101,7 @@ class PersonalInfoCard extends StatelessWidget {
                 patientDetail.gender!.isNotEmpty)
               _buildDetailRow(
                 context,
-                label: 'Gender',
+                label: LocaleKeys.forms_gender.tr(),
                 value: Gender.fromString(patientDetail.gender!).title.tr(),
                 icon: Icons.person_outline,
                 iconColor: Colors.purple,
@@ -351,12 +354,11 @@ class PersonalInfoCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            '${amount.toStringAsFixed(0)} сом',
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+          PriceConvertWidget(
+            price: amount,
+            textType: TextType.header,
+            color: color,
+            fontWeight: FontWeight.bold,
           ),
         ],
       ),

@@ -27,7 +27,7 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
     _tooltipBehavior = TooltipBehavior(
       enable: true,
       format:
-          '${LocaleKeys.general_quantity}: point.y', // Rusça "Miktar: point.y"
+          '${LocaleKeys.general_quantity.tr()}: point.y', // Rusça "Miktar: point.y"
       textStyle: const TextStyle(fontSize: 14),
       duration: 3000,
       color: Colors.black87,
@@ -39,7 +39,7 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
       enableSelectionZooming: true,
       selectionRectBorderColor: Colors.blue,
       selectionRectBorderWidth: 1,
-      selectionRectColor: Colors.blue.withOpacity(0.1),
+      selectionRectColor: Colors.blue.withValues(alpha: 0.1),
       enablePanning: true,
       zoomMode: ZoomMode.x, // Sadece x ekseni üzerinde zoom
     );
@@ -108,7 +108,7 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.6),
+                theme.colorScheme.primary.withValues(alpha: 0.6),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

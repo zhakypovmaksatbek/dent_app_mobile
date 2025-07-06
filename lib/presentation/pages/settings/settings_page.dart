@@ -122,11 +122,11 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       },
       {
-        'title': LocaleKeys.routes_clinic_settings.tr(),
+        'title': LocaleKeys.routes_about_clinic.tr(),
         'icon': Icons.business_outlined,
-        'description': LocaleKeys.general_clinic_settings_info.tr(),
+        'description': LocaleKeys.general_about_clinic_description.tr(),
         'onTap': () {
-          // Navigate to clinic settings
+          router.push(const AboutClinicRoute());
         },
       },
       {

@@ -1,5 +1,8 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PaymentInfoCard extends StatelessWidget {
@@ -78,8 +81,8 @@ class PaymentServicesListCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppText(
-          title: 'Услуги',
+        AppText(
+          title: LocaleKeys.routes_services.tr(),
           textType: TextType.title,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
@@ -166,11 +169,19 @@ class PaymentServiceItem extends StatelessWidget {
                           color: AppColors.textSecondary,
                         ),
                         const SizedBox(width: 4),
-                        AppText(
-                          title:
-                              '${formatAmount(servicePrice.toDouble())} сом × $serviceQuantity',
-                          textType: TextType.description,
-                          color: AppColors.textSecondary,
+                        Row(
+                          children: [
+                            PriceConvertWidget(
+                              price: servicePrice,
+                              textType: TextType.description,
+                              color: AppColors.textSecondary,
+                            ),
+                            AppText(
+                              title: ' ×$serviceQuantity',
+                              textType: TextType.description,
+                              color: AppColors.textSecondary,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -180,8 +191,8 @@ class PaymentServiceItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  AppText(
-                    title: '${formatAmount(serviceSum.toDouble())} сом',
+                  PriceConvertWidget(
+                    price: serviceSum,
                     textType: TextType.body,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primary,

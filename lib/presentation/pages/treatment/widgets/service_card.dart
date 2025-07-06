@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/models/service/service_model.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:flutter/material.dart';
 
 class ServiceCard extends StatelessWidget {
@@ -117,14 +118,8 @@ class ServiceCard extends StatelessWidget {
                               ).colorScheme.secondary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Text(
-                              '${service.price!.toStringAsFixed(0)} ₽',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            child: PriceConvertWidget(
+                              price: service.price ?? 0,
                             ),
                           ),
                         ],

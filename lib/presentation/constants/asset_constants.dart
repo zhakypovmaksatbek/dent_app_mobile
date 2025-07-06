@@ -12,6 +12,11 @@ enum AssetConstants {
   card,
   mbank,
   optima,
+  aCalendar,
+  aChart,
+  aSchedule,
+  aSettings,
+  aUser,
 }
 
 enum TeethAssetConstants {
