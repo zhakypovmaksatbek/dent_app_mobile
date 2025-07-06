@@ -1,3 +1,4 @@
+import 'package:dent_app_mobile/core/bloc/cubit/settings_cubit.dart';
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
@@ -91,11 +92,11 @@ class Initializer {
   }
 
   static final List<SingleChildWidget> providers = [
-    BlocProvider(create: (context) => LoginCubit()),
-    BlocProvider(create: (context) => HeartbeatsCubit()),
-    BlocProvider(create: (context) => PatientBloc(patientRepo: PatientRepo())),
-    BlocProvider(create: (context) => CreatePatientCubit()),
-    BlocProvider(create: (context) => ReportCubit()),
+    BlocProvider(create: (_) => LoginCubit()),
+    BlocProvider(create: (_) => HeartbeatsCubit()),
+    BlocProvider(create: (_) => PatientBloc(patientRepo: PatientRepo())),
+    BlocProvider(create: (_) => CreatePatientCubit()),
+    BlocProvider(create: (_) => ReportCubit()),
     BlocProvider(create: (context) => PaymentCubit()),
     BlocProvider(create: (context) => DiscountCubit()),
     BlocProvider(create: (context) => DepositCubit()),
@@ -131,5 +132,6 @@ class Initializer {
     BlocProvider(create: (context) => PatientDetailCubit()),
     BlocProvider(create: (context) => AllDiagnosisCubit()),
     BlocProvider(create: (context) => SaveJobsCubit()),
+    BlocProvider(create: (_) => SettingsCubit()),
   ];
 }

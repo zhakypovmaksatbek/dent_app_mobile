@@ -17,4 +17,5 @@ final class AppConstants {
   final String userId = "userId";
   final String clinicId = "clinicId";
   final String role = "role";
+  final String currency = "currency";
 }

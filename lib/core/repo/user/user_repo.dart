@@ -40,18 +40,20 @@ class UserRepoImpl extends UserRepo {
     );
     final data = LoginResponseModel.fromJson(response.data);
     if (data.jwt != null) {
-      await appDataService.setToken(accessToken: data.jwt!);
-      await appDataService.setUserId(userId: data.id ?? 0);
-      await appDataService.setIsLogin(true);
-      await appDataService.setClinicId(clinicId: data.clinicId ?? 0);
-      await appDataService.setTokenExpiry(
-        expiryTime: DateTime.now().add(Duration(days: 3)),
-      );
-      await appDataService.setRole(
-        role: Role.fromString(data.role ?? Role.doctor.name),
-      );
+      await _saveInformations(data);
     }
     return data;
+  }
+
+  Future<void> _saveInformations(LoginResponseModel data) async {
+    await appDataService.setToken(accessToken: data.jwt!);
+    await appDataService.setUserId(userId: data.id ?? 0);
+    await appDataService.setIsLogin(true);
+    await appDataService.setClinicId(clinicId: data.clinicId ?? 0);
+
+    await appDataService.setRole(
+      role: Role.fromString(data.role ?? Role.doctor.name),
+    );
   }
 
   @override

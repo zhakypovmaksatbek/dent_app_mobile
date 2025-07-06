@@ -1,6 +1,8 @@
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
+import 'package:dent_app_mobile/core/utils/currency.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:flutter/foundation.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDataService {
@@ -64,33 +66,15 @@ class AppDataService {
     return prefs.getBool(AppConstants.instance.isLogin) ?? false;
   }
 
-  Future<void> setTokenExpiry({required DateTime expiryTime}) async {
-    final prefs = await preferences();
-    await prefs.setInt(
-      AppConstants.instance.tokenExpiry,
-      expiryTime.millisecondsSinceEpoch,
-    );
-  }
-
-  Future<DateTime?> getTokenExpiry() async {
-    final prefs = await preferences();
-    final expiry = prefs.getInt(AppConstants.instance.tokenExpiry);
-    return expiry != null ? DateTime.fromMillisecondsSinceEpoch(expiry) : null;
-  }
-
   Future<bool> isTokenExpired() async {
-    final expiry = await getTokenExpiry();
-    if (expiry == null) return true;
+    final token = await getToken();
+    if (token == null) return true;
 
-    final now = DateTime.now();
-    final isExpired = now.isAfter(expiry.subtract(const Duration(minutes: 20)));
+    final isExpired = JwtDecoder.isExpired(token);
 
     if (isExpired) {
       if (kDebugMode) {
         print('⏰ Token expired or expiring soon');
-        print('⏰ Current time: ${now.toIso8601String()}');
-        print('⏰ Token expiry: ${expiry.toIso8601String()}');
-        print('⏰ Remaining time: ${expiry.difference(now).inSeconds} seconds');
       }
     }
 
@@ -117,5 +101,16 @@ class AppDataService {
   Future<void> setRole({required Role role}) async {
     final prefs = await preferences();
     await prefs.setString(AppConstants.instance.role, role.name);
+  }
+
+  Future<void> setCurrency({required Currency currency}) async {
+    final prefs = await preferences();
+    await prefs.setString(AppConstants.instance.currency, currency.code);
+  }
+
+  Future<Currency> getCurrency() async {
+    final prefs = await preferences();
+    final currency = prefs.getString(AppConstants.instance.currency);
+    return currency != null ? Currency.fromCode(currency) : Currency.som;
   }
 }
