@@ -6,11 +6,11 @@ import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_pati
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/form_text_field.dart';
+import 'package:dent_app_mobile/presentation/widgets/input/phone_input_field.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatePatientPage extends StatefulWidget {
@@ -101,6 +101,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
 
   Widget _buildRequiredFields() {
     return Column(
+      spacing: 12,
       children: [
         FormTextField(
           hintText: LocaleKeys.forms_name.tr(),
@@ -114,7 +115,6 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
         ),
-        const SizedBox(height: 12),
         FormTextField(
           hintText: LocaleKeys.forms_surname.tr(),
           controller: _surnameController,
@@ -127,8 +127,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
         ),
-        const SizedBox(height: 12),
-        FormTextField(
+        PhoneInputField(
           hintText: LocaleKeys.forms_phone.tr(),
           controller: _phoneController,
           validator: (value) {
@@ -137,31 +136,50 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
             }
             return null;
           },
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          keyboardType: TextInputType.phone,
-          textInputAction: TextInputAction.next,
         ),
-        const SizedBox(height: 12),
-        DropdownButtonFormField<Gender>(
-          items:
-              Gender.values
-                  .map(
-                    (e) =>
-                        DropdownMenuItem(value: e, child: Text(e.title.tr())),
-                  )
-                  .toList(),
-          onChanged: (value) {
-            if (value != null) {
-              setState(() {
-                _selectedGender = value;
-              });
-            }
-          },
-          decoration: InputDecoration(
-            labelText: LocaleKeys.forms_gender.tr(),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        GestureDetector(
+          onTap: () => _showGenderPicker(context),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.5),
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppText(
+                  title: LocaleKeys.forms_gender.tr(),
+                  textType: TextType.subtitle,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppText(
+                      title: _selectedGender.title.tr(),
+                      textType: TextType.body,
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          value: _selectedGender,
         ),
       ],
     );
@@ -169,6 +187,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
 
   Widget _buildAdditionalFields() {
     return Column(
+      spacing: 12,
       children: [
         FormTextField(
           hintText: LocaleKeys.forms_patronymic.tr(),
@@ -176,57 +195,225 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
         ),
-        const SizedBox(height: 12),
-        FormTextField(
+
+        PhoneInputField(
           hintText: LocaleKeys.forms_secondary_phone_number.tr(),
           controller: _secondaryPhoneController,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          keyboardType: TextInputType.phone,
-          textInputAction: TextInputAction.next,
         ),
-        const SizedBox(height: 12),
         FormTextField(
           hintText: LocaleKeys.forms_email.tr(),
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.done,
         ),
-        const SizedBox(height: 12),
         BirthdayPickerField(
           initialValue: _birthday,
           onChanged: (newDate) {
             _birthday = newDate;
           },
         ),
-        const SizedBox(height: 12),
         FormTextField(
           hintText: LocaleKeys.forms_passport_number.tr(),
           controller: _passportNumberController,
         ),
-        const SizedBox(height: 12),
-        DropdownButtonFormField<FromWhere>(
-          items:
-              FromWhere.values
-                  .map(
-                    (e) =>
-                        DropdownMenuItem(value: e, child: Text(e.title.tr())),
-                  )
-                  .toList(),
-          onChanged: (value) {
-            if (value != null) {
-              setState(() {
-                _selectedFromWhere = value;
-              });
-            }
-          },
-          decoration: InputDecoration(
-            labelText: LocaleKeys.forms_from_where.tr(),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        GestureDetector(
+          onTap: () => _showFromWherePicker(context),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.5),
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppText(
+                  title: LocaleKeys.forms_from_where.tr(),
+                  textType: TextType.subtitle,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppText(
+                      title: _selectedFromWhere.title.tr(),
+                      textType: TextType.body,
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          value: _selectedFromWhere,
         ),
       ],
     );
+  }
+
+  Future<void> _showGenderPicker(BuildContext context) async {
+    // Close keyboard first
+    FocusScope.of(context).unfocus();
+
+    final selectedGender = await showModalBottomSheet<Gender>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder:
+          (context) => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 4,
+                    width: 40,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          title: LocaleKeys.forms_gender.tr(),
+                          textType: TextType.subtitle,
+                        ),
+                        const SizedBox(height: 16),
+                        ...Gender.values.map(
+                          (gender) => ListTile(
+                            title: Text(gender.title.tr()),
+                            leading: Radio<Gender>(
+                              value: gender,
+                              groupValue: _selectedGender,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  Navigator.of(context).pop(value);
+                                }
+                              },
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop(gender);
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+
+    if (selectedGender != null) {
+      setState(() {
+        _selectedGender = selectedGender;
+      });
+    }
+  }
+
+  Future<void> _showFromWherePicker(BuildContext context) async {
+    // Close keyboard first
+    FocusScope.of(context).unfocus();
+
+    final selectedFromWhere = await showModalBottomSheet<FromWhere>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder:
+          (context) => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 4,
+                    width: 40,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          title: LocaleKeys.forms_from_where.tr(),
+                          textType: TextType.subtitle,
+                        ),
+                        const SizedBox(height: 16),
+                        ...FromWhere.values.map(
+                          (fromWhere) => ListTile(
+                            title: Text(fromWhere.title.tr()),
+                            leading: Radio<FromWhere>(
+                              value: fromWhere,
+                              groupValue: _selectedFromWhere,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  Navigator.of(context).pop(value);
+                                }
+                              },
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop(fromWhere);
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+
+    if (selectedFromWhere != null) {
+      setState(() {
+        _selectedFromWhere = selectedFromWhere;
+      });
+    }
   }
 
   @override
@@ -288,6 +475,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
                           },
                         ),
                       ),
+                      SizedBox(height: MediaQuery.of(context).padding.bottom),
                     ],
                   ),
                 ),

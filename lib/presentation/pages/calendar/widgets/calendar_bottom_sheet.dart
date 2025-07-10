@@ -1,8 +1,10 @@
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/appointment_dialog_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_item_widget.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -95,22 +97,35 @@ class CalendarBottomSheet extends StatelessWidget {
 
   // Build the doctor filters section
   Widget _buildDoctorFiltersSection(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Doctor dropdown with clear button
-            _buildDoctorSelectionRow(context),
+    return FutureBuilder(
+      future: AppDataService.instance.getRole(),
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.data == Role.admin) {
+          return SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Doctor dropdown with clear button
+                  _buildDoctorSelectionRow(context),
 
-            // Selected doctors chips
-            if (selectedDoctors.isNotEmpty) _buildSelectedDoctorsChips(context),
+                  // Selected doctors chips
+                  if (selectedDoctors.isNotEmpty)
+                    _buildSelectedDoctorsChips(context),
 
-            if (selectedDoctors.isNotEmpty) const Divider(height: 1),
-          ],
-        ),
-      ),
+                  if (selectedDoctors.isNotEmpty) const Divider(height: 1),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return SliverToBoxAdapter();
+        }
+      },
     );
   }
 

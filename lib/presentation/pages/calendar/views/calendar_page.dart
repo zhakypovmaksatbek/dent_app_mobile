@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
@@ -13,6 +14,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_fix
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -74,7 +76,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   // Load appointments for the current month or visible date range
-  void _loadAppointmentsForDateRange() {
+  Future<void> _loadAppointmentsForDateRange() async {
     // Determine start and end date based on month view
     final DateTime today = _selectedDate;
     final DateTime monthStart = DateTime(today.year, today.month, 1);
@@ -86,11 +88,16 @@ class _CalendarPageState extends State<CalendarPage> {
     context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
       monthStart,
       monthEnd,
-      userIds:
-          _selectedDoctors.isNotEmpty
-              ? _selectedDoctors.map((e) => (e.id ?? 0)).toList()
-              : null,
+      userIds: await _selectionDoctor(),
     );
+  }
+
+  Future<List<int>?> _selectionDoctor() async {
+    final Role role = await AppDataService.instance.getRole();
+    final int? doctorId = await AppDataService.instance.getUserId();
+    return role == Role.admin && _selectedDoctors.isNotEmpty
+        ? _selectedDoctors.map((e) => (e.id ?? 0)).toList()
+        : [doctorId ?? 0];
   }
 
   // Callback when a date is selected in month view
@@ -129,7 +136,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   // Callback when month view is changed (navigation)
-  void _onViewChanged(ViewChangedDetails details) {
+  Future<void> _onViewChanged(ViewChangedDetails details) async {
     if (details.visibleDates.isNotEmpty) {
       // Reload appointments for the new visible date range
       final DateTime rangeStart = details.visibleDates.first;
@@ -138,6 +145,7 @@ class _CalendarPageState extends State<CalendarPage> {
       context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
         rangeStart,
         rangeEnd,
+        userIds: await _selectionDoctor(),
       );
     }
   }

@@ -19,6 +19,7 @@ class TeethSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TeethSelector(
       onChange: onTeethSelected,
+
       // Show permanent teeth
       showPermanent: true,
       // Show primary (child) teeth

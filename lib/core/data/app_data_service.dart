@@ -92,10 +92,10 @@ class AppDataService {
     await prefs.setInt(AppConstants.instance.userId, userId);
   }
 
-  Future<Role?> getRole() async {
+  Future<Role> getRole() async {
     final prefs = await preferences();
     final role = prefs.getString(AppConstants.instance.role);
-    return role != null ? Role.fromString(role) : null;
+    return role != null ? Role.fromString(role) : Role.doctor;
   }
 
   Future<void> setRole({required Role role}) async {

@@ -15,6 +15,7 @@ class PhoneInputField extends StatefulWidget {
   final bool autofocus;
   final InputDecoration? decoration;
   final EdgeInsetsGeometry contentPadding;
+  final String? Function(String?)? validator;
 
   const PhoneInputField({
     super.key,
@@ -33,6 +34,7 @@ class PhoneInputField extends StatefulWidget {
       horizontal: 16,
       vertical: 16,
     ),
+    this.validator,
   });
 
   @override
@@ -109,7 +111,7 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: _displayController,
       focusNode: widget.focusNode,
       enabled: widget.enabled,
@@ -118,7 +120,8 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
       textInputAction: TextInputAction.next,
       onChanged: _handleTextChanged,
       onEditingComplete: widget.onEditingComplete,
-      onSubmitted: widget.onSubmitted,
+      onFieldSubmitted: widget.onSubmitted,
+      validator: widget.validator,
       inputFormatters: [
         LengthLimitingTextInputFormatter(20), // Prevent too long inputs
       ],
