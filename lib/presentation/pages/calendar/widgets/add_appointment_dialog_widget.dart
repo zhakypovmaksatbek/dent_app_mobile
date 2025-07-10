@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
@@ -15,6 +17,7 @@ import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.d
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
+import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
@@ -63,12 +66,15 @@ class _AddAppointmentDialogWidgetState
   int? roomId;
   int minute = 30;
 
-  final List<int> _minuteOptions = [30, 40, 50, 60];
+  final List<int> _minuteOptions = [10, 20, 30, 40, 50, 60];
 
   TimeModel? _selectedTimeSlot;
   bool _showNoPatientResults = false;
 
   final List<RoomModel> _rooms = [];
+
+  // Timer for debouncing duration selection
+  Timer? _durationSelectionTimer;
 
   @override
   void initState() {
@@ -96,6 +102,14 @@ class _AddAppointmentDialogWidgetState
     }
   }
 
+  // Debounced method for loading free time slots
+  void _debouncedLoadFreeTimeSlots() {
+    _durationSelectionTimer?.cancel();
+    _durationSelectionTimer = Timer(const Duration(seconds: 1), () {
+      _loadFreeTimeSlots();
+    });
+  }
+
   @override
   void dispose() {
     _searchPatientCubit.close();
@@ -107,6 +121,7 @@ class _AddAppointmentDialogWidgetState
     _doctorFocusNode.dispose();
     _appointmentActionCubit.close();
     _roomCubit.close();
+    _durationSelectionTimer?.cancel();
     super.dispose();
   }
 
@@ -157,21 +172,19 @@ class _AddAppointmentDialogWidgetState
                   _buildHeader(),
                   const Divider(),
                   _buildDoctorSection(),
+                  _buildDateSection(),
+                  _buildCombinedTimeAndDurationSection(),
+
                   _buildPatientSection(),
                   _buildTypeSection(),
                   _buildStatusSection(),
-                  _buildDurationSection(),
-                  _buildDateSection(),
-                  _buildTimeSection(),
+
                   _buildRoomSection(),
                   _buildNotesSection(),
                   const SizedBox(height: 8),
                   _buildSaveButton(),
                   // Add an extra SizedBox to ensure there's room when the keyboard appears
-                  SizedBox(
-                    height:
-                        MediaQuery.of(context).viewInsets.bottom > 0 ? 150 : 16,
-                  ),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom),
                 ],
               ),
             ),
@@ -238,35 +251,8 @@ class _AddAppointmentDialogWidgetState
                   doctorName = null;
                   _selectedTimeSlot = null;
                 });
-                _personalCubit.emit(PersonalInitial());
               },
             );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDurationSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionTitle(
-          number: "5",
-          title: LocaleKeys.appointment_time.tr(),
-          isActive: doctorId != null,
-        ),
-        const SizedBox(height: 8),
-        DurationSelector(
-          minuteOptions: _minuteOptions,
-          selectedMinute: minute,
-          enabled: doctorId != null,
-          onDurationSelected: (duration) {
-            setState(() {
-              minute = duration;
-              _selectedTimeSlot = null;
-            });
-            _loadFreeTimeSlots();
           },
         ),
       ],
@@ -278,7 +264,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "2",
+          number: "4",
           title: LocaleKeys.appointment_patient.tr(),
           isActive: doctorId != null,
         ),
@@ -319,10 +305,9 @@ class _AddAppointmentDialogWidgetState
                   patientName = null;
                   _showNoPatientResults = false;
                 });
-                _searchPatientCubit.emit(SearchPatientInitial());
               },
-              onAddPatient: () {
-                showCupertinoModalBottomSheet(
+              onAddPatient: () async {
+                final result = await showCupertinoModalBottomSheet(
                   context: context,
                   builder:
                       (context) => CreatePatientPage(
@@ -331,6 +316,12 @@ class _AddAppointmentDialogWidgetState
                         patientName: _patientController.text,
                       ),
                 );
+                if (result != null) {
+                  setState(() {
+                    _patientController.text = result;
+                    context.read<SearchPatientCubit>().searchPatients(result);
+                  });
+                }
               },
             );
           },
@@ -344,7 +335,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "6",
+          number: "2",
           title: LocaleKeys.forms_select_date.tr(),
           isActive: doctorId != null,
         ),
@@ -354,10 +345,16 @@ class _AddAppointmentDialogWidgetState
               doctorId == null
                   ? null
                   : () async {
+                    // Ensure initialDate is not before firstDate
+                    final DateTime today = DateTime.now();
+                    final DateTime firstDate = today;
+                    final DateTime initialDate =
+                        selectedDate.isBefore(today) ? today : selectedDate;
+
                     final DateTime? picked = await showDatePicker(
                       context: context,
-                      initialDate: selectedDate,
-                      firstDate: DateTime.now(),
+                      initialDate: initialDate,
+                      firstDate: firstDate,
                       lastDate: DateTime.now().add(const Duration(days: 365)),
                     );
                     if (picked != null && picked != selectedDate) {
@@ -396,19 +393,19 @@ class _AddAppointmentDialogWidgetState
     );
   }
 
-  Widget _buildTimeSection() {
+  Widget _buildCombinedTimeAndDurationSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "7",
+          number: "3",
           title: LocaleKeys.appointment_time.tr(),
           isActive: doctorId != null,
         ),
         const SizedBox(height: 8),
         doctorId == null
             ? const SelectDoctorMessage()
-            : TimeSlotSelector(
+            : CombinedTimeDurationSelector(
               selectedTimeSlot: _selectedTimeSlot,
               onTimeSelected: (timeSlot, startTimeOfDay, endTimeOfDay) {
                 setState(() {
@@ -419,6 +416,15 @@ class _AddAppointmentDialogWidgetState
                 });
               },
               onRefresh: _loadFreeTimeSlots,
+              minuteOptions: _minuteOptions,
+              selectedMinute: minute,
+              onDurationSelected: (duration) {
+                setState(() {
+                  minute = duration;
+                  _selectedTimeSlot = null;
+                });
+                _debouncedLoadFreeTimeSlots();
+              },
             ),
       ],
     );
@@ -429,7 +435,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "3",
+          number: "5",
           title: LocaleKeys.appointment_appointment_type_label.tr(),
           isActive: doctorId != null && patientId != null,
         ),
@@ -465,7 +471,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "4",
+          number: "6",
           title: LocaleKeys.appointment_status_label.tr(),
           isActive: doctorId != null && patientId != null,
         ),
@@ -499,7 +505,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "8",
+          number: "7",
           title: LocaleKeys.appointment_room.tr(),
           isActive: doctorId != null && patientId != null,
         ),
@@ -551,7 +557,7 @@ class _AddAppointmentDialogWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle(
-          number: "9",
+          number: "8",
           title: LocaleKeys.appointment_notes.tr(),
           isActive: doctorId != null && patientId != null,
           isRequired: false,
@@ -592,7 +598,7 @@ class _AddAppointmentDialogWidgetState
     final bool canSave =
         doctorId != null && patientId != null && _selectedTimeSlot != null;
 
-    return BlocListener<AppointmentActionCubit, AppointmentActionState>(
+    return BlocConsumer<AppointmentActionCubit, AppointmentActionState>(
       listener: (context, state) {
         if (state is AppointmentActionSuccess) {
           router.maybePop();
@@ -605,16 +611,21 @@ class _AddAppointmentDialogWidgetState
           AppSnackBar.showErrorSnackBar(context, state.message);
         }
       },
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+      builder: (context, state) {
+        if (state is AppointmentActionLoading) {
+          return const LoadingWidget();
+        }
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            onPressed: canSave ? _saveAppointment : null,
+            child: Text(LocaleKeys.buttons_save.tr()),
           ),
-          onPressed: canSave ? _saveAppointment : null,
-          child: Text(LocaleKeys.buttons_save.tr()),
-        ),
-      ),
+        );
+      },
     );
   }
 

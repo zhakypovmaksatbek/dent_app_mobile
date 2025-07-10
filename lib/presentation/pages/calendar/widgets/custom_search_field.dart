@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CustomSearchField<T> extends StatefulWidget {
@@ -13,6 +15,7 @@ class CustomSearchField<T> extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool readOnly;
   final bool enabled;
+  final Function()? onAddPatient;
 
   const CustomSearchField({
     super.key,
@@ -26,6 +29,7 @@ class CustomSearchField<T> extends StatefulWidget {
     this.validator,
     this.readOnly = false,
     this.enabled = true,
+    this.onAddPatient,
   });
 
   @override
@@ -101,7 +105,24 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
                   constraints: const BoxConstraints(maxHeight: 200),
                   child:
                       widget.suggestions.isEmpty
-                          ? const SizedBox.shrink()
+                          ? Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  LocaleKeys.notifications_no_data_found.tr(),
+                                  style: TextStyle(color: Colors.grey[600]),
+                                ),
+                                TextButton.icon(
+                                  onPressed: widget.onAddPatient,
+                                  icon: const Icon(Icons.add),
+                                  label: Text(LocaleKeys.buttons_add.tr()),
+                                ),
+                                const SizedBox.shrink(),
+                              ],
+                            ),
+                          )
                           : ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,

@@ -117,6 +117,7 @@ class PatientSearchField extends StatelessWidget {
                 return null;
               },
               readOnly: patientId != null,
+              onAddPatient: onAddPatient,
             ),
             if (state is SearchPatientError)
               Padding(
@@ -126,25 +127,25 @@ class PatientSearchField extends StatelessWidget {
                   style: TextStyle(color: Colors.red[700], fontSize: 12),
                 ),
               ),
-            if (showNoPatientResults)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        LocaleKeys.notifications_no_data_found.tr(),
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: onAddPatient,
-                      icon: const Icon(Icons.add),
-                      label: Text(LocaleKeys.buttons_add.tr()),
-                    ),
-                  ],
-                ),
-              ),
+            // if (showNoPatientResults)
+            //   Padding(
+            //     padding: const EdgeInsets.only(top: 8),
+            //     child: Row(
+            //       children: [
+            //         Expanded(
+            //           child: Text(
+            //             LocaleKeys.notifications_no_data_found.tr(),
+            //             style: TextStyle(color: Colors.grey[600]),
+            //           ),
+            //         ),
+            //         TextButton.icon(
+            //           onPressed: onAddPatient,
+            //           icon: const Icon(Icons.add),
+            //           label: Text(LocaleKeys.buttons_add.tr()),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
           ],
         );
       },

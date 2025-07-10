@@ -1,3 +1,4 @@
+export 'combined_time_duration_selector.dart';
 export 'doctor_search_field.dart';
 export 'duration_selector.dart';
 export 'patient_search_field.dart';

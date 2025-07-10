@@ -7,6 +7,7 @@ import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_blo
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/form_text_field.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/phone_input_field.dart';
+import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -420,69 +421,74 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _createPatientCubit,
-      child: BlocListener<CreatePatientCubit, CreatePatientState>(
+      child: BlocConsumer<CreatePatientCubit, CreatePatientState>(
         listener: (context, state) {
           if (state is CreatePatientSuccess) {
             context.read<PatientBloc>().add(
               GetPatients(page: 1, isRefresh: true),
             );
-            router.maybePop();
+            router.maybePop<String>(state.lastName);
           }
         },
-        child: Material(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        title: LocaleKeys.patients_add_patient.tr(),
-                        textType: TextType.body,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRequiredFields(),
-                      const SizedBox(height: 16),
-                      if (!_showAdditionalFields)
-                        Center(
-                          child: TextButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                _showAdditionalFields = true;
-                              });
-                            },
-                            icon: const Icon(Icons.add),
-                            label: Text(LocaleKeys.buttons_show_more.tr()),
-                          ),
-                        )
-                      else
-                        _buildAdditionalFields(),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: DefElevatedButton(
-                          title: LocaleKeys.buttons_save.tr(),
-                          onPressed: () {
-                            if (_validate()) {
-                              _onSave();
-                            }
-                          },
+        builder: (context, state) {
+          return Material(
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          title: LocaleKeys.patients_add_patient.tr(),
+                          textType: TextType.body,
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).padding.bottom),
-                    ],
+                        const SizedBox(height: 16),
+                        _buildRequiredFields(),
+                        const SizedBox(height: 16),
+                        if (!_showAdditionalFields)
+                          Center(
+                            child: TextButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  _showAdditionalFields = true;
+                                });
+                              },
+                              icon: const Icon(Icons.add),
+                              label: Text(LocaleKeys.buttons_show_more.tr()),
+                            ),
+                          )
+                        else
+                          _buildAdditionalFields(),
+                        const SizedBox(height: 16),
+                        if (state is CreatePatientLoading)
+                          const LoadingWidget()
+                        else
+                          SizedBox(
+                            width: double.infinity,
+                            child: DefElevatedButton(
+                              title: LocaleKeys.buttons_save.tr(),
+                              onPressed: () {
+                                if (_validate()) {
+                                  _onSave();
+                                }
+                              },
+                            ),
+                          ),
+                        SizedBox(height: MediaQuery.of(context).padding.bottom),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

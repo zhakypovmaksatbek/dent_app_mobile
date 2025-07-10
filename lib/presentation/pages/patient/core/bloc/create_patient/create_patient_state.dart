@@ -11,7 +11,11 @@ final class CreatePatientInitial extends CreatePatientState {}
 
 final class CreatePatientLoading extends CreatePatientState {}
 
-final class CreatePatientSuccess extends CreatePatientState {}
+final class CreatePatientSuccess extends CreatePatientState {
+  final String lastName;
+
+  const CreatePatientSuccess({required this.lastName});
+}
 
 final class CreatePatientFailure extends CreatePatientState {
   final String message;

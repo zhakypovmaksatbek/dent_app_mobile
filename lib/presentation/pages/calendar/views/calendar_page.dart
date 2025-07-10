@@ -95,9 +95,19 @@ class _CalendarPageState extends State<CalendarPage> {
   Future<List<int>?> _selectionDoctor() async {
     final Role role = await AppDataService.instance.getRole();
     final int? doctorId = await AppDataService.instance.getUserId();
-    return role == Role.admin && _selectedDoctors.isNotEmpty
-        ? _selectedDoctors.map((e) => (e.id ?? 0)).toList()
-        : [doctorId ?? 0];
+
+    if (role == Role.admin) {
+      if (_selectedDoctors.isNotEmpty) {
+        // Admin belirli doktorları seçmiş: Sadece seçilenleri göster
+        return _selectedDoctors.map((e) => (e.id ?? 0)).toList();
+      } else {
+        // Admin hiç doktor seçmemiş: TÜM doktorları göster
+        return null; // null = tüm doktorlar anlamında
+      }
+    } else {
+      // Normal doktor: Sadece kendisini göster
+      return [doctorId ?? 0];
+    }
   }
 
   // Callback when a date is selected in month view

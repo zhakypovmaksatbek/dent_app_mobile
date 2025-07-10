@@ -160,7 +160,6 @@ class _EditAppointmentDialogWidgetState
         _freeTimeCubit.getFreeTime(doctorId!, selectedDate, minute);
       } else {
         // For past appointments, only the original time can be used - return empty list
-        _freeTimeCubit.emit(FreeTimeLoaded(times: []));
       }
     }
   }

@@ -132,14 +132,14 @@ class _ServicesContentState extends State<ServicesContent> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.optima.withValues(alpha: 0.8), AppColors.optima],
+          colors: [AppColors.primary.withValues(alpha: 0.8), AppColors.primary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppColors.optima.withValues(alpha: 0.2),
+            color: AppColors.primary.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -250,10 +250,10 @@ class _ServicesContentState extends State<ServicesContent> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: AppColors.optima.withValues(alpha: 0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(Icons.category, size: 20, color: AppColors.optima),
+      child: Icon(Icons.category, size: 20, color: AppColors.primary),
     );
   }
 
@@ -280,7 +280,7 @@ class _ServicesContentState extends State<ServicesContent> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.optima,
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(12),
       ),
       child: AppText(
@@ -332,13 +332,13 @@ class _ServicesContentState extends State<ServicesContent> {
       decoration: BoxDecoration(
         color:
             isSelected
-                ? AppColors.optima.withValues(alpha: 0.1)
+                ? AppColors.primary.withValues(alpha: 0.1)
                 : AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color:
               isSelected
-                  ? AppColors.optima.withValues(alpha: 0.4)
+                  ? AppColors.primary.withValues(alpha: 0.4)
                   : AppColors.lightGrey,
           width: isSelected ? 1.5 : 1,
         ),
@@ -374,11 +374,11 @@ class _ServicesContentState extends State<ServicesContent> {
       height: 18,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isSelected ? AppColors.optima : AppColors.lightGrey,
+        color: isSelected ? AppColors.primary : AppColors.lightGrey,
         border: Border.all(
           color:
               isSelected
-                  ? AppColors.optima.withValues(alpha: 0.4)
+                  ? AppColors.primary.withValues(alpha: 0.4)
                   : AppColors.lightGrey,
           width: 2,
         ),
@@ -395,7 +395,7 @@ class _ServicesContentState extends State<ServicesContent> {
       title: service.name ?? 'Без названия',
       textType: TextType.body,
       fontWeight: FontWeight.w500,
-      color: isSelected ? AppColors.optima : AppColors.black,
+      color: isSelected ? AppColors.primary : AppColors.black,
     );
   }
 
@@ -405,7 +405,9 @@ class _ServicesContentState extends State<ServicesContent> {
       textType: TextType.subtitle,
       fontWeight: FontWeight.bold,
       color:
-          isSelected ? AppColors.optima : AppColors.grey.withValues(alpha: 0.8),
+          isSelected
+              ? AppColors.primary
+              : AppColors.grey.withValues(alpha: 0.8),
     );
   }
 
@@ -425,12 +427,15 @@ class _ServicesContentState extends State<ServicesContent> {
       child: BlocBuilder<SaveServiceCubit, SaveServiceState>(
         bloc: _fastPayCubit,
         builder: (context, fastPayState) {
+          if (fastPayState is SaveServiceLoading) {
+            return const LoadingWidget();
+          }
           return SafeArea(
             child: SizedBox(
               width: double.infinity,
               height: 56,
               child: DefElevatedButton(
-                backgroundColor: AppColors.optima,
+                backgroundColor: AppColors.primary,
                 onPressed:
                     fastPayState is SaveServiceLoading ? null : _processPayment,
                 title:
