@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/tabs/tooth_diagnosis_tab.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/tabs/treatment_info_tab.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/tabs/upload_x_ray_tab.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _TreatmentPageState extends State<TreatmentPage>
             appointmentId: widget.calendarAppointment!.appointmentId!,
           ),
           TreatmentInfoTab(calendarAppointment: widget.calendarAppointment),
-          Text('X-ray'),
+          UploadXRayTab(),
         ],
       ),
     );

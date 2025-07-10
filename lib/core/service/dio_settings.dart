@@ -96,10 +96,16 @@ class DioService {
     String url, {
     Object? data,
     bool? isFormData = false,
+    Map<String, dynamic>? queryParameters,
   }) async {
     final Options options =
         isFormData == true ? await _buildFormOptions() : await _buildOptions();
-    return dio.post(url, data: data, options: options);
+    return dio.post(
+      url,
+      data: data,
+      options: options,
+      queryParameters: queryParameters,
+    );
   }
 
   Future<Response> get(

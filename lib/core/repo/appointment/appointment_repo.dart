@@ -1,5 +1,7 @@
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/repo/appointment/i_appointment_repo.dart';
 import 'package:dent_app_mobile/core/service/dio_settings.dart';
+import 'package:dent_app_mobile/core/utils/image_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
@@ -16,11 +18,15 @@ import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
+import 'package:dent_app_mobile/models/work/image_response_model.dart';
+import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
 import 'package:dent_app_mobile/models/work/work_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AppointmentRepo extends IAppointmentRepo {
   final dio = DioService();
@@ -305,5 +311,35 @@ class AppointmentRepo extends IAppointmentRepo {
       queryParameters: {'page': page},
     );
     return AppointmentPaginationModel.fromJson(response.data);
+  }
+
+  @override
+  Future<ImageResponseModel> saveImage(XFile image, ImageType type) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path, filename: image.name),
+    });
+    final response = await dio.post(
+      'api/files/${type.name.toUpperCase()}',
+      data: formData,
+    );
+    return ImageResponseModel.fromJson(response.data);
+  }
+
+  @override
+  Future<void> deleteImage(String imageId) async {
+    await dio.delete('api/files/$imageId');
+  }
+
+  @override
+  Future<void> uploadImageToPatient(UploadPatientRontgenModel request) async {
+    final int? userId = await AppDataService.instance.getUserId();
+    await dio.post(
+      'api/images/snapshots/$userId/${request.imageId}',
+      queryParameters: {
+        'appointmentId': request.appointmentId,
+        'description': request.description,
+        'teeth': request.teeth,
+      },
+    );
   }
 }

@@ -59,6 +59,14 @@
 	<string>DentApp использует микрофон для записи голосовых заметок и распознавания речи для удобства ввода информации.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>DentApp использует распознавание речи для преобразования голосовых заметок в текст, что упрощает ведение записей о пациентах.</string>
-	
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>DentApp запрашивает доступ к вашей медиатеке для выбора и просмотра фотографий, связанных с лечением пациентов.</string>
+
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>DentApp запрашивает разрешение на сохранение фотографий, связанных с медицинскими процедурами и результатами лечения.</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>DentApp использует камеру для создания фотографий, необходимых для диагностики и документирования стоматологических процедур.</string>
+
 </dict>
 </plist>

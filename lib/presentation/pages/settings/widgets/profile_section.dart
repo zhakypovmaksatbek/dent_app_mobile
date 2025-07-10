@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/core/bloc/cubit/settings_cubit.dart';
+import 'package:dent_app_mobile/core/bloc/settings_cubit/settings_cubit.dart';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/core/bloc/user/user_cubit.dart';

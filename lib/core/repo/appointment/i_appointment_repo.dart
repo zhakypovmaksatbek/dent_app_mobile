@@ -1,3 +1,4 @@
+import 'package:dent_app_mobile/core/utils/image_type.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
@@ -13,9 +14,12 @@ import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
+import 'package:dent_app_mobile/models/work/image_response_model.dart';
+import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class IAppointmentRepo {
   Future<List<AppointmentDetailModel>> getAppointments();
@@ -60,4 +64,9 @@ abstract class IAppointmentRepo {
     int patientId, {
     required int page,
   });
+  Future<ImageResponseModel> saveImage(XFile image, ImageType type);
+  Future<void> deleteImage(String imageId);
+  Future<void> uploadImageToPatient(
+    UploadPatientRontgenModel uploadPatientRontgenModel,
+  );
 }

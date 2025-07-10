@@ -1,4 +1,6 @@
-import 'package:dent_app_mobile/core/bloc/cubit/settings_cubit.dart';
+import 'package:dent_app_mobile/core/bloc/settings_cubit/settings_cubit.dart';
+import 'package:dent_app_mobile/core/bloc/upload/upload_image_cubit.dart';
+import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
@@ -133,5 +135,8 @@ class Initializer {
     BlocProvider(create: (_) => AllDiagnosisCubit()),
     BlocProvider(create: (_) => SaveJobsCubit()),
     BlocProvider(create: (_) => SettingsCubit()),
+    BlocProvider(
+      create: (_) => UploadImageCubit(appointmentRepo: AppointmentRepo()),
+    ),
   ];
 }
