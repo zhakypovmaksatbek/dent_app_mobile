@@ -17,13 +17,15 @@ class UploadXRayTab extends StatefulWidget {
   State<UploadXRayTab> createState() => _UploadXRayTabState();
 }
 
-class _UploadXRayTabState extends State<UploadXRayTab> {
+class _UploadXRayTabState extends State<UploadXRayTab>
+    with AutomaticKeepAliveClientMixin {
   final ImagePicker _picker = ImagePicker();
   String? _uploadedImage;
   String? _imageId; // Track image ID for professional deletion
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocListener<UploadImageCubit, UploadImageState>(
       listener: (context, state) {
         if (state is UploadImageSuccess) {
@@ -326,4 +328,8 @@ class _UploadXRayTabState extends State<UploadXRayTab> {
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
