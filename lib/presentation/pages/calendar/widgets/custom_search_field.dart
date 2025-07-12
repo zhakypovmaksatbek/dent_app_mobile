@@ -58,6 +58,8 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
   }
 
   void _onFocusChange() {
+    if (!mounted) return;
+
     if (widget.focusNode.hasFocus) {
       _showOverlay();
     } else {
@@ -88,6 +90,51 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
 
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final Size size = renderBox.size;
+    final Offset position = renderBox.localToGlobal(Offset.zero);
+
+    // Klavye yüksekliğini al
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    // İçeriğe göre dinamik overlay yüksekliği hesapla
+    double dynamicOverlayHeight;
+    if (widget.suggestions.isEmpty) {
+      // Sonuç yok durumu: text + button + padding
+      dynamicOverlayHeight = 120;
+    } else {
+      // Her item için yaklaşık 60px + padding
+      const double itemHeight = 60;
+      const double padding = 16;
+      dynamicOverlayHeight = (widget.suggestions.length * itemHeight + padding)
+          .clamp(80, 200);
+    }
+
+    // TextFormField'in alt kısmının ekran pozisyonu
+    final double fieldBottom = position.dy + size.height;
+
+    // Kullanılabilir alan (klavye üstü)
+    final double availableSpace = screenHeight - keyboardHeight - fieldBottom;
+
+    // Eğer kullanılabilir alan overlay için yeterli değilse, yukarı kaydır
+    double offsetY = size.height;
+    double maxHeight = dynamicOverlayHeight;
+
+    if (availableSpace < dynamicOverlayHeight && keyboardHeight > 0) {
+      // Yukarıdaki kullanılabilir alanı hesapla
+      final double spaceAbove = position.dy;
+
+      // Eğer dinamik yükseklik küçükse, TextField'e yakın konumlandır
+      if (dynamicOverlayHeight <= 120) {
+        offsetY = -dynamicOverlayHeight - 8; // Küçük gap
+        maxHeight = dynamicOverlayHeight;
+      } else {
+        maxHeight = (spaceAbove - 20).clamp(100, dynamicOverlayHeight);
+        offsetY = -maxHeight;
+      }
+    } else if (availableSpace < dynamicOverlayHeight) {
+      // Aşağıdaki alan sınırlıysa, yüksekliği sınırla
+      maxHeight = (availableSpace - 20).clamp(80, dynamicOverlayHeight);
+    }
 
     _overlayEntry = OverlayEntry(
       builder:
@@ -96,13 +143,16 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
             child: CompositedTransformFollower(
               link: _layerLink,
               showWhenUnlinked: false,
-              offset: Offset(0, size.height),
+              offset: Offset(0, offsetY),
               child: Material(
                 elevation: 4,
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 child: Container(
-                  constraints: const BoxConstraints(maxHeight: 200),
+                  constraints: BoxConstraints(
+                    maxHeight: maxHeight,
+                    minHeight: 50,
+                  ),
                   child:
                       widget.suggestions.isEmpty
                           ? Padding(
@@ -115,7 +165,11 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
                                 TextButton.icon(
-                                  onPressed: widget.onAddPatient,
+                                  onPressed: () {
+                                    _removeOverlay();
+                                    widget.focusNode.unfocus();
+                                    widget.onAddPatient?.call();
+                                  },
                                   icon: const Icon(Icons.add),
                                   label: Text(LocaleKeys.buttons_add.tr()),
                                 ),
@@ -139,7 +193,14 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
                                     widget.onSuggestionTap!(suggestion);
                                   }
                                   _removeOverlay();
-                                  widget.focusNode.unfocus();
+                                  // Use a post-frame callback to safely unfocus
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) {
+                                    if (mounted) {
+                                      widget.focusNode.unfocus();
+                                    }
+                                  });
                                 },
                                 child:
                                     suggestion.child ??
@@ -198,6 +259,13 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
 
   @override
   Widget build(BuildContext context) {
+    // Klavye yüksekliği değiştiğinde overlay'i güncelle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _showSuggestions && _overlayEntry != null) {
+        _updateOverlay();
+      }
+    });
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextFormField(
@@ -213,6 +281,16 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
         validator: widget.validator,
         readOnly: widget.readOnly,
         enabled: widget.enabled,
+        contextMenuBuilder: (context, editableTextState) {
+          // Disable context menu if text field is not focused or not mounted
+          if (!mounted || !widget.focusNode.hasFocus) {
+            return const SizedBox.shrink();
+          }
+          // Return default context menu for focused text field
+          return AdaptiveTextSelectionToolbar.editableText(
+            editableTextState: editableTextState,
+          );
+        },
       ),
     );
   }

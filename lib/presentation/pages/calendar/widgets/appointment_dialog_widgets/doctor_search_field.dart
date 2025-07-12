@@ -1,40 +1,86 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
-import 'package:dent_app_mobile/models/users/user_model.dart';
+import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/custom_search_field.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DoctorSearchField extends StatelessWidget {
+class DoctorSearchField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
-  final List<UserModel> suggestions;
   final int? doctorId;
-  final Function(UserModel) onDoctorSelected;
+  final Function(DoctorModel) onDoctorSelected;
   final VoidCallback onDoctorCleared;
 
   const DoctorSearchField({
     super.key,
     required this.controller,
     required this.focusNode,
-    required this.suggestions,
     required this.doctorId,
     required this.onDoctorSelected,
     required this.onDoctorCleared,
   });
 
   @override
+  State<DoctorSearchField> createState() => _DoctorSearchFieldState();
+}
+
+class _DoctorSearchFieldState extends State<DoctorSearchField> {
+  List<DoctorModel> _allDoctors = [];
+  List<DoctorModel> _filteredDoctors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onSearchChanged);
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = widget.controller.text.toLowerCase();
+    if (query.isEmpty) {
+      setState(() {
+        _filteredDoctors = _allDoctors;
+      });
+    } else {
+      setState(() {
+        _filteredDoctors =
+            _allDoctors.where((doctor) {
+              final fullName = doctor.fullName?.toLowerCase() ?? '';
+              return fullName.contains(query);
+            }).toList();
+      });
+    }
+  }
+
+  void _updateDoctorsList(List<DoctorModel> doctors) {
+    final activeDoctors =
+        doctors.where((doctor) => doctor.table == true).toList();
+    setState(() {
+      _allDoctors = activeDoctors;
+      _filteredDoctors = activeDoctors;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PersonalCubit, PersonalState>(
+    return BlocConsumer<DoctorCubit, DoctorState>(
       listener: (context, state) {
-        // Listener managed in the parent
+        if (state is DoctorLoaded) {
+          _updateDoctorsList(state.doctors);
+        }
       },
       builder: (context, state) {
         final suggestionItems =
-            suggestions
+            _filteredDoctors
                 .map(
-                  (doctor) => CustomSearchItem<UserModel>(
+                  (doctor) => CustomSearchItem<DoctorModel>(
                     text: doctor.fullName ?? '',
                     item: doctor,
                     child: Padding(
@@ -49,13 +95,15 @@ class DoctorSearchField extends StatelessWidget {
                             doctor.fullName ?? '',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            doctor.email ?? '',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
+                          if (doctor.specialities != null &&
+                              doctor.specialities!.isNotEmpty)
+                            Text(
+                              doctor.specialities!.join(', '),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -66,31 +114,30 @@ class DoctorSearchField extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomSearchField<UserModel>(
-              controller: controller,
-              focusNode: focusNode,
+            CustomSearchField<DoctorModel>(
+              controller: widget.controller,
+              focusNode: widget.focusNode,
               hint: LocaleKeys.report_doctor.tr(),
               suggestions: suggestionItems,
-              onSearchTextChanged: (query) {
-                // Make request regardless of query length
-                context.read<PersonalCubit>().getPersonalList(1, search: query);
+              onSearchTextChanged: (_) {
+                // Search is handled locally in _onSearchChanged
               },
               onSuggestionTap: (suggestion) {
                 if (suggestion.item != null) {
-                  onDoctorSelected(suggestion.item!);
+                  widget.onDoctorSelected(suggestion.item!);
                 }
               },
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.medical_services),
-                labelText: LocaleKeys.report_doctor.tr(),
+                labelText: "* ${LocaleKeys.report_doctor.tr()}",
                 border: const OutlineInputBorder(),
                 suffixIcon:
-                    doctorId != null
+                    widget.doctorId != null
                         ? IconButton(
                           icon: const Icon(Icons.clear),
-                          onPressed: onDoctorCleared,
+                          onPressed: widget.onDoctorCleared,
                         )
-                        : state is PersonalLoading
+                        : state is DoctorLoading
                         ? const SizedBox(
                           height: 20,
                           width: 20,
@@ -99,14 +146,14 @@ class DoctorSearchField extends StatelessWidget {
                         : null,
               ),
               validator: (value) {
-                if (doctorId == null) {
+                if (widget.doctorId == null) {
                   return LocaleKeys.errors_required_field.tr();
                 }
                 return null;
               },
-              readOnly: doctorId != null,
+              readOnly: widget.doctorId != null,
             ),
-            if (state is PersonalError)
+            if (state is DoctorError)
               Padding(
                 padding: const EdgeInsets.only(top: 8, left: 8),
                 child: Text(

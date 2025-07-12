@@ -127,6 +127,10 @@ class DiagnosisDetailsModal extends StatelessWidget {
               ),
             ],
           ),
+          AppText(
+            title: conditions.codeDescription ?? "",
+            textType: TextType.description,
+          ),
         ],
       ),
     );
@@ -164,13 +168,13 @@ class _DiagnosisOption extends StatelessWidget {
           decoration: BoxDecoration(
             color:
                 isSelected
-                    ? Colors.green.withValues(alpha: 0.15)
+                    ? AppColors.primary.withValues(alpha: 0.15)
                     : diagnosis.color?.withValues(alpha: 0.2) ??
                         Colors.transparent,
             border: Border.all(
               color:
                   isSelected
-                      ? Colors.green
+                      ? AppColors.primary
                       : diagnosis.color?.withValues(alpha: 0.2) ??
                           Colors.transparent,
               width: isSelected ? 2 : 1,
@@ -183,11 +187,10 @@ class _DiagnosisOption extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      diagnosis.name ?? "",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    AppText(
+                      title: diagnosis.name ?? "",
+                      textType: TextType.subtitle,
+                      fontWeight: FontWeight.w600,
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -196,13 +199,6 @@ class _DiagnosisOption extends StatelessWidget {
                           LocaleKeys.diagnosis_icd_code.tr(),
                           diagnosis.code ?? "",
                         ),
-                        // if (diagnosis.surfaces?.isNotEmpty ?? false) ...[
-                        //   const SizedBox(width: 8),
-                        //   _buildDetailChip(
-                        //     LocaleKeys.diagnosis_surfaces.tr(),
-                        //     diagnosis.surfaces.join(', '),
-                        //   ),
-                        // ],
                       ],
                     ),
                   ],
@@ -210,7 +206,7 @@ class _DiagnosisOption extends StatelessWidget {
               ),
               if (isSelected) ...[
                 const SizedBox(width: 12),
-                Icon(Icons.check_circle, color: Colors.green, size: 20),
+                Icon(Icons.check_circle, color: AppColors.primary, size: 20),
               ],
             ],
           ),

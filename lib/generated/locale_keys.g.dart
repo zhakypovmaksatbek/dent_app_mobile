@@ -142,6 +142,8 @@ abstract class  LocaleKeys {
   static const buttons_pay = 'buttons.pay';
   static const buttons_continue = 'buttons.continue';
   static const buttons_ok = 'buttons.ok';
+  static const buttons_save_jobs = 'buttons.save_jobs';
+  static const buttons_complete = 'buttons.complete';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -484,6 +486,11 @@ abstract class  LocaleKeys {
   static const appointment_end_time = 'appointment.end_time';
   static const appointment_select_room = 'appointment.select_room';
   static const appointment_no_rooms_available = 'appointment.no_rooms_available';
+  static const appointment_not_have_grafic = 'appointment.not_have_grafic';
+  static const appointment_not_have_grafic_content = 'appointment.not_have_grafic_content';
+  static const appointment_select_doctor_first = 'appointment.select_doctor_first';
+  static const appointment_show_advanced_options = 'appointment.show_advanced_options';
+  static const appointment_hide_advanced_options = 'appointment.hide_advanced_options';
   static const appointment = 'appointment';
   static const diagnosis_select_type = 'diagnosis.select_type';
   static const diagnosis_icd_code = 'diagnosis.icd_code';
@@ -492,6 +499,11 @@ abstract class  LocaleKeys {
   static const diagnosis_no_teeth_selected = 'diagnosis.no_teeth_selected';
   static const diagnosis_select_teeth_prompt = 'diagnosis.select_teeth_prompt';
   static const diagnosis_available_options = 'diagnosis.available_options';
+  static const diagnosis_how_to_select_condition = 'diagnosis.how_to_select_condition';
+  static const diagnosis_select_condition = 'diagnosis.select_condition';
+  static const diagnosis_select_tooth_type = 'diagnosis.select_tooth_type';
+  static const diagnosis_no_work_items = 'diagnosis.no_work_items';
+  static const diagnosis_work_items = 'diagnosis.work_items';
   static const diagnosis = 'diagnosis';
   static const currency_som = 'currency.som';
   static const currency_usd = 'currency.usd';

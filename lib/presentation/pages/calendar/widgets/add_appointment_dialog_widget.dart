@@ -6,15 +6,14 @@ import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
-import 'package:dent_app_mobile/models/users/user_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/search_patient/search_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_dialog_widgets/index.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal/personal_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
@@ -45,7 +44,7 @@ class _AddAppointmentDialogWidgetState
   late final GlobalKey<FormState> formKey;
   late final SearchPatientCubit _searchPatientCubit;
   late final FreeTimeCubit _freeTimeCubit;
-  late final PersonalCubit _personalCubit;
+  late final DoctorCubit _doctorCubit;
   late final AppointmentActionCubit _appointmentActionCubit;
   late final RoomCubit _roomCubit;
 
@@ -54,7 +53,6 @@ class _AddAppointmentDialogWidgetState
   final FocusNode _patientFocusNode = FocusNode();
   final FocusNode _doctorFocusNode = FocusNode();
   final List<PatientShortModel> _patientSuggestions = [];
-  final List<UserModel> _doctorSuggestions = [];
 
   String? patientName;
   String? doctorName;
@@ -70,6 +68,8 @@ class _AddAppointmentDialogWidgetState
 
   TimeModel? _selectedTimeSlot;
   bool _showNoPatientResults = false;
+  bool _showAdvancedOptions = false;
+  String? _pendingPatientName; // Yeni eklenen patient'in tam ismi
 
   final List<RoomModel> _rooms = [];
 
@@ -85,10 +85,10 @@ class _AddAppointmentDialogWidgetState
     formKey = GlobalKey<FormState>();
     _searchPatientCubit = SearchPatientCubit();
     _freeTimeCubit = FreeTimeCubit();
-    _personalCubit = PersonalCubit();
+    _doctorCubit = DoctorCubit();
     _appointmentActionCubit = AppointmentActionCubit();
     _roomCubit = RoomCubit();
-    _personalCubit.getPersonalList(1);
+    _doctorCubit.getDoctors();
     _searchPatientCubit.searchPatients(" ");
   }
 
@@ -114,7 +114,7 @@ class _AddAppointmentDialogWidgetState
   void dispose() {
     _searchPatientCubit.close();
     _freeTimeCubit.close();
-    _personalCubit.close();
+    _doctorCubit.close();
     _patientController.dispose();
     _doctorController.dispose();
     _patientFocusNode.dispose();
@@ -133,7 +133,7 @@ class _AddAppointmentDialogWidgetState
           create: (context) => _searchPatientCubit,
         ),
         BlocProvider<FreeTimeCubit>(create: (context) => _freeTimeCubit),
-        BlocProvider<PersonalCubit>(create: (context) => _personalCubit),
+        BlocProvider<DoctorCubit>(create: (context) => _doctorCubit),
         BlocProvider<AppointmentActionCubit>(
           create: (context) => _appointmentActionCubit,
         ),
@@ -157,7 +157,7 @@ class _AddAppointmentDialogWidgetState
           padding: EdgeInsets.only(
             left: 16,
             right: 16,
-            top: 16,
+
             bottom: MediaQuery.of(context).viewInsets.bottom + 16,
           ),
           child: Form(
@@ -168,18 +168,20 @@ class _AddAppointmentDialogWidgetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16,
                 children: [
-                  const SizedBox(height: 16),
                   _buildHeader(),
-                  const Divider(),
                   _buildDoctorSection(),
                   _buildDateSection(),
                   _buildCombinedTimeAndDurationSection(),
 
                   _buildPatientSection(),
-                  _buildTypeSection(),
                   _buildStatusSection(),
 
-                  _buildRoomSection(),
+                  _buildAdvancedOptionsToggle(),
+
+                  if (_showAdvancedOptions) ...[
+                    _buildTypeSection(),
+                    _buildRoomSection(),
+                  ],
                   _buildNotesSection(),
                   const SizedBox(height: 8),
                   _buildSaveButton(),
@@ -200,7 +202,7 @@ class _AddAppointmentDialogWidgetState
         Expanded(
           child: AppText(
             title: LocaleKeys.appointment_new_appointment.tr(),
-            textType: TextType.header,
+            textType: TextType.title,
           ),
         ),
         IconButton.filled(
@@ -215,26 +217,22 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "1",
-          title: LocaleKeys.report_doctor.tr(),
-          isActive: true,
-        ),
-        const SizedBox(height: 8),
-        BlocConsumer<PersonalCubit, PersonalState>(
+        BlocConsumer<DoctorCubit, DoctorState>(
           listener: (context, state) {
-            if (state is PersonalLoaded) {
-              setState(() {
-                _doctorSuggestions.clear();
-                _doctorSuggestions.addAll(state.personalData.content ?? []);
-              });
+            if (state is DoctorError) {
+              // Show error message if needed
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
           },
           builder: (context, state) {
             return DoctorSearchField(
               controller: _doctorController,
               focusNode: _doctorFocusNode,
-              suggestions: _doctorSuggestions,
               doctorId: doctorId,
               onDoctorSelected: (doctor) {
                 setState(() {
@@ -263,12 +261,6 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "4",
-          title: LocaleKeys.appointment_patient.tr(),
-          isActive: doctorId != null,
-        ),
-        const SizedBox(height: 8),
         BlocConsumer<SearchPatientCubit, SearchPatientState>(
           listener: (context, state) {
             if (state is SearchPatientLoaded) {
@@ -280,6 +272,36 @@ class _AddAppointmentDialogWidgetState
 
                 _patientSuggestions.clear();
                 _patientSuggestions.addAll(state.patients);
+
+                // Yeni eklenen patient'i otomatik seç
+                if (_pendingPatientName != null) {
+                  try {
+                    // Eşleşen patient'i bul
+                    PatientShortModel? matchingPatient;
+
+                    for (final patient in state.patients) {
+                      if (patient.fullName != null &&
+                          patient.fullName!.trim().toLowerCase() ==
+                              _pendingPatientName!.trim().toLowerCase()) {
+                        matchingPatient = patient;
+                        break;
+                      }
+                    }
+
+                    if (matchingPatient?.id != null) {
+                      patientId = matchingPatient!.id;
+                      patientName = matchingPatient.fullName;
+                      _patientController.text = matchingPatient.fullName ?? '';
+                      _showNoPatientResults = false;
+                    }
+                  } catch (e) {
+                    // Hata durumunda sadece log'la, kullanıcıya hata gösterme
+                    debugPrint('Auto-select patient error: $e');
+                  }
+
+                  // Pending patient name'i temizle
+                  _pendingPatientName = null;
+                }
               });
             }
           },
@@ -318,8 +340,15 @@ class _AddAppointmentDialogWidgetState
                 );
                 if (result != null) {
                   setState(() {
-                    _patientController.text = result;
-                    context.read<SearchPatientCubit>().searchPatients(result);
+                    final firstWord = result.split(" ")[0];
+
+                    // Yeni eklenen patient'in tam ismini sakla
+                    _pendingPatientName = result;
+
+                    _patientController.text = firstWord;
+                    context.read<SearchPatientCubit>().searchPatients(
+                      firstWord,
+                    );
                   });
                 }
               },
@@ -334,12 +363,6 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "2",
-          title: LocaleKeys.forms_select_date.tr(),
-          isActive: doctorId != null,
-        ),
-        const SizedBox(height: 8),
         InkWell(
           onTap:
               doctorId == null
@@ -373,19 +396,17 @@ class _AddAppointmentDialogWidgetState
                   },
           child: InputDecorator(
             decoration: InputDecoration(
-              labelText: LocaleKeys.forms_select_date.tr(),
+              labelText: "* ${LocaleKeys.forms_select_date.tr()}",
               prefixIcon: const Icon(Icons.calendar_today),
               border: const OutlineInputBorder(),
               enabled: doctorId != null,
             ),
-            child: Text(
-              DateFormat(
+            child: AppText(
+              title: DateFormat(
                 'EEE, MMM d, yyyy',
                 context.locale.languageCode,
               ).format(selectedDate),
-              style: TextStyle(
-                color: doctorId != null ? Colors.black : Colors.grey,
-              ),
+              textType: TextType.body,
             ),
           ),
         ),
@@ -397,12 +418,6 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "3",
-          title: LocaleKeys.appointment_time.tr(),
-          isActive: doctorId != null,
-        ),
-        const SizedBox(height: 8),
         doctorId == null
             ? const SelectDoctorMessage()
             : CombinedTimeDurationSelector(
@@ -434,12 +449,6 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "5",
-          title: LocaleKeys.appointment_appointment_type_label.tr(),
-          isActive: doctorId != null && patientId != null,
-        ),
-        const SizedBox(height: 8),
         DropdownButtonFormField<RecordType>(
           decoration: InputDecoration(
             labelText: LocaleKeys.appointment_appointment_type_label.tr(),
@@ -470,12 +479,6 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "6",
-          title: LocaleKeys.appointment_status_label.tr(),
-          isActive: doctorId != null && patientId != null,
-        ),
-        const SizedBox(height: 8),
         DropdownButtonFormField<AppointmentStatus>(
           decoration: InputDecoration(
             labelText: LocaleKeys.appointment_status_label.tr(),
@@ -504,12 +507,6 @@ class _AddAppointmentDialogWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(
-          number: "7",
-          title: LocaleKeys.appointment_room.tr(),
-          isActive: doctorId != null && patientId != null,
-        ),
-        const SizedBox(height: 8),
         _rooms.isEmpty
             ? DropdownButtonFormField<int>(
               decoration: InputDecoration(
@@ -552,29 +549,60 @@ class _AddAppointmentDialogWidgetState
     );
   }
 
+  Widget _buildAdvancedOptionsToggle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: InkWell(
+        onTap:
+            doctorId != null && patientId != null
+                ? () {
+                  setState(() {
+                    _showAdvancedOptions = !_showAdvancedOptions;
+                  });
+                }
+                : null,
+        child: Row(
+          children: [
+            Icon(
+              _showAdvancedOptions
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
+              color:
+                  doctorId != null && patientId != null
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              _showAdvancedOptions
+                  ? LocaleKeys.appointment_hide_advanced_options.tr()
+                  : LocaleKeys.appointment_show_advanced_options.tr(),
+              style: TextStyle(
+                color:
+                    doctorId != null && patientId != null
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildNotesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionTitle(
-          number: "8",
-          title: LocaleKeys.appointment_notes.tr(),
-          isActive: doctorId != null && patientId != null,
-          isRequired: false,
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: LocaleKeys.appointment_notes.tr(),
-            border: const OutlineInputBorder(),
-            prefixIcon: const Icon(Icons.note),
-            enabled: doctorId != null && patientId != null,
-          ),
-          onTapOutside: (event) => FocusScope.of(context).unfocus(),
-          maxLines: 3,
-          onChanged: (value) => description = value,
-        ),
-      ],
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: LocaleKeys.appointment_notes.tr(),
+        border: const OutlineInputBorder(),
+        prefixIcon: const Icon(Icons.note_add_outlined),
+        enabled: doctorId != null && patientId != null,
+      ),
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
+      maxLines: 3,
+      minLines: 1,
+      onChanged: (value) => description = value,
     );
   }
 

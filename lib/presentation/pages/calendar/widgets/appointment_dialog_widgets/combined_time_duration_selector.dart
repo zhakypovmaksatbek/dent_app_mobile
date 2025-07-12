@@ -148,12 +148,12 @@ class _CombinedTimeDurationSelectorState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      LocaleKeys.notifications_no_data_found.tr(),
+                      LocaleKeys.appointment_not_have_grafic.tr(),
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "Try selecting a different date.",
+                      LocaleKeys.appointment_not_have_grafic_content.tr(),
                       style: TextStyle(color: Colors.grey[600], fontSize: 13),
                     ),
                   ],

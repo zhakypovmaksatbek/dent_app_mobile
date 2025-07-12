@@ -167,8 +167,8 @@ class ToothTypeCard extends StatelessWidget {
                 top: 8,
                 right: 8,
                 child: Container(
-                  width: 20,
-                  height: 20,
+                  width: 24,
+                  height: 24,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -180,7 +180,7 @@ class ToothTypeCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Icon(Icons.check, color: theme.primaryColor, size: 12),
+                  child: Icon(Icons.check, color: theme.primaryColor, size: 16),
                 ),
               ),
           ],

@@ -5,6 +5,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/core/data/teeth_dat
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/condition_card.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -274,30 +275,12 @@ class _DiagnosisContent extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Text(
-          LocaleKeys.diagnosis_select_type.tr(),
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        AppText(
+          title: LocaleKeys.diagnosis_select_type.tr(),
+          textType: TextType.header,
+          fontWeight: FontWeight.w600,
         ),
       ],
-    );
-  }
-
-  void _handleDiagnosisSelection(
-    BuildContext context,
-    ToothDiagnosisCategory category,
-    ValueChanged<ToothStateModel> onSelect,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder:
-          (_) => DiagnosisDetailsModal(
-            conditions: ConditionModel(),
-            onSelect: (diagnosis) {},
-          ),
     );
   }
 }

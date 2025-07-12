@@ -5,6 +5,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/job_card.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/empty/empty_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_warning.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
@@ -34,7 +35,12 @@ class WorkItemsView extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Work Items')),
+        appBar: AppBar(
+          title: AppText(
+            title: LocaleKeys.diagnosis_work_items.tr(),
+            textType: TextType.title,
+          ),
+        ),
         bottomNavigationBar: Padding(
           padding: EdgeInsets.only(
             left: 16,
@@ -42,7 +48,7 @@ class WorkItemsView extends StatelessWidget {
             bottom: MediaQuery.of(context).padding.bottom,
           ),
           child: DefElevatedButton(
-            title: LocaleKeys.buttons_save.tr(),
+            title: LocaleKeys.buttons_complete.tr(),
             onPressed: () {
               context.read<SaveJobsCubit>().saveJobs(
                 appointmentId,
@@ -55,7 +61,10 @@ class WorkItemsView extends StatelessWidget {
           builder: (context, workItemService, child) {
             final jobs = workItemService.jobs;
             if (jobs.isEmpty) {
-              return const EmptyWidget();
+              return EmptyWidget(
+                icon: Icons.work_outline,
+                title: LocaleKeys.diagnosis_no_work_items.tr(),
+              );
             }
             return ListView.builder(
               itemCount: jobs.length,
@@ -126,14 +135,5 @@ class WorkItemsView extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class EmptyWidget extends StatelessWidget {
-  const EmptyWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('No work items'));
   }
 }

@@ -2,6 +2,7 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/tooth_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/tooth_type_card.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -174,22 +175,19 @@ class _SelectToothTypeStepState extends State<SelectToothTypeStep> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+              AppText(
+                title: title,
+                textType: TextType.subtitle,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               const SizedBox(height: 2),
-              Text(
-                description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.7),
-                  height: 1.3,
-                ),
+              AppText(
+                title: description,
+                textType: TextType.description,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ],
           ),
@@ -208,12 +206,10 @@ class _SelectToothTypeStepState extends State<SelectToothTypeStep> {
             // Step Info with Tooltip
             Row(
               children: [
-                Text(
-                  'Выбор области зуба',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+                AppText(
+                  title: LocaleKeys.diagnosis_select_tooth_type.tr(),
+                  textType: TextType.header,
+                  fontWeight: FontWeight.w600,
                 ),
                 const SizedBox(width: 8),
                 GestureDetector(
@@ -249,6 +245,15 @@ class _SelectToothTypeStepState extends State<SelectToothTypeStep> {
     BuildContext context,
     ConditionService conditionService,
   ) {
+    // ALL ve JAW değerlerini filtrele
+    final filteredToothTypes =
+        ToothType.values
+            .where(
+              (toothType) =>
+                  toothType != ToothType.all && toothType != ToothType.jaw,
+            )
+            .toList();
+
     return GridView.builder(
       padding: EdgeInsets.zero,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -257,9 +262,9 @@ class _SelectToothTypeStepState extends State<SelectToothTypeStep> {
         crossAxisSpacing: 12,
         childAspectRatio: 1.4,
       ),
-      itemCount: ToothType.values.length,
+      itemCount: filteredToothTypes.length,
       itemBuilder: (context, index) {
-        final toothType = ToothType.values[index];
+        final toothType = filteredToothTypes[index];
         final isSelected = conditionService.toothType == toothType;
 
         return ToothTypeCard(

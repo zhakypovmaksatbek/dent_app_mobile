@@ -16,7 +16,11 @@ class CreatePatientCubit extends Cubit<CreatePatientState> {
     emit(CreatePatientLoading());
     try {
       await _patientRepository.createPatient(patient);
-      emit(CreatePatientSuccess(lastName: "${patient.lastName}"));
+      emit(
+        CreatePatientSuccess(
+          lastName: "${patient.lastName} ${patient.firstName}",
+        ),
+      );
     } on DioException catch (e) {
       emit(CreatePatientFailure(FormatUtils.formatErrorMessage(e)));
     }

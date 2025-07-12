@@ -6,6 +6,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/condition_card.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/tooth_diagnosis_modal.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,14 +66,11 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        'Как выбрать состояние',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
+                      child: AppText(
+                        title:
+                            LocaleKeys.diagnosis_how_to_select_condition.tr(),
+                        textType: TextType.header,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     IconButton(
@@ -267,14 +265,10 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                     // Step Info with Tooltip
                     Row(
                       children: [
-                        Text(
-                          'Выбор состояния',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
+                        AppText(
+                          title: LocaleKeys.diagnosis_select_condition.tr(),
+                          textType: TextType.header,
+                          fontWeight: FontWeight.w600,
                         ),
                         const SizedBox(width: 8),
                         GestureDetector(
@@ -548,8 +542,8 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
           (_) => DiagnosisDetailsModal(
             conditions: conditions,
             selectedCondition: conditionService.condition,
-            onSelect: (diagnosis) {
-              onSelect(diagnosis);
+            onSelect: (condition) {
+              onSelect(condition);
               router.maybePop();
             },
           ),

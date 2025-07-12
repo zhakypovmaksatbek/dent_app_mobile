@@ -14,6 +14,7 @@ class AddAppointmentService {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      clipBehavior: Clip.antiAlias,
       useRootNavigator: true,
 
       builder: (context) {

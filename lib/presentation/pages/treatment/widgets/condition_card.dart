@@ -33,9 +33,9 @@ class ConditionCard extends StatelessWidget {
             border: Border.all(
               color:
                   isSelected
-                      ? Colors.green
+                      ? AppColors.primary
                       : AppColors.primary.withValues(alpha: 0.5),
-              width: isSelected ? 2 : 1,
+              width: isSelected ? 3 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
           ),
@@ -139,21 +139,38 @@ class ConditionCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: AppText(
-                title: 'ICD: ${category.code ?? "N/A"}',
-                textType: TextType.description,
-                fontWeight: FontWeight.w600,
-                color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Tooltip(
+                  message:
+                      selectedDiagnosis != null && isSelected
+                          ? (selectedDiagnosis!.name ?? "N/A")
+                          : (category.code ?? "N/A"),
+                  child: AppText(
+                    title:
+                        selectedDiagnosis != null && isSelected
+                            ? (selectedDiagnosis!.name ?? "N/A")
+                            : (category.code ?? "N/A"),
+                    textType: TextType.description,
+                    fontWeight: FontWeight.w600,
+                    color: theme.textTheme.bodySmall?.color?.withValues(
+                      alpha: 0.8,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
             ),
-            if (isSelected)
-              Icon(Icons.check_circle, color: Colors.green, size: 18),
+            if (isSelected) ...[
+              const SizedBox(width: 8),
+              Icon(Icons.check_circle, color: AppColors.primary, size: 18),
+            ],
           ],
         ),
       ],

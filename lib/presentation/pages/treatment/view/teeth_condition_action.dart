@@ -7,6 +7,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/view/select_diagnos
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_service_step.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_tooth_type_step.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -243,6 +244,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   Widget _buildStepContent(ConditionService conditionService) {
     return Container(
       padding: const EdgeInsets.all(20),
+      alignment: Alignment.topCenter,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         transitionBuilder: (child, animation) {
@@ -372,6 +374,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   }
 
   void _onStepContinue(BuildContext context) {
+    HapticFeedback.lightImpact();
     if (_currentStep < _totalSteps - 1) {
       setState(() {
         _currentStep++;
@@ -397,7 +400,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
     });
 
     // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 300));
     if (context.mounted) {
       context.read<ConditionService>().addJob();
     }

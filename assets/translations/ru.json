@@ -144,7 +144,9 @@
     "fast_pay": "Быстрая оплата",
     "pay": "Оплатить",
     "continue": "Продолжить",
-    "ok":"Понятно"
+    "ok":"Понятно",
+    "save_jobs":"Сохранить работы",
+    "complete":"Завершить"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -506,7 +508,12 @@
     "start_time":"Время начала",
     "end_time":"Время окончания",
     "select_room":"Выберите кабинет",
-    "no_rooms_available":"Нет доступных кабинетов"
+    "no_rooms_available":"Нет доступных кабинетов",
+    "not_have_grafic":"Нет графика",
+    "not_have_grafic_content":"Пожалуйста, выберите другой врача",
+    "select_doctor_first":"Пожалуйста, выберите врача",
+    "show_advanced_options":"Показать дополнительные опции",
+    "hide_advanced_options":"Скрыть дополнительные опции"
     
   },
   "diagnosis": {
@@ -516,7 +523,12 @@
     "select_this": "Выбрать этот диагноз",
     "no_teeth_selected": "Нет выбранных зубов",
     "select_teeth_prompt": "Пожалуйста, выберите зубы для диагностики",
-    "available_options": "Доступные варианты"
+    "available_options": "Доступные варианты",
+    "how_to_select_condition":"Как выбрать состояние",
+    "select_condition":"Выберите состояние",
+    "select_tooth_type":"Выберите область зуба",
+    "no_work_items":"Нет работ",
+    "work_items":"Работы"
   },
   "currency": {
     "som": "Сом",
