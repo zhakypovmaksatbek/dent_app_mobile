@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
@@ -6,6 +7,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/view/select_conditi
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_diagnosis.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_service_step.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_tooth_type_step.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,7 +94,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
         builder: (context, conditionService, child) {
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.surface,
-            appBar: _buildAppBar(context),
+            appBar: _buildAppBar(context, conditionService),
             bottomNavigationBar: _buildBottomControls(
               context,
               conditionService,
@@ -113,7 +115,10 @@ class _TeethConditionActionState extends State<TeethConditionAction>
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ConditionService conditionService,
+  ) {
     return AppBar(
       elevation: 0,
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -122,7 +127,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Лечение зуба',
+            'Лечение зуба ${conditionService.toothId}',
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -337,10 +342,10 @@ class _TeethConditionActionState extends State<TeethConditionAction>
                         ),
                 label: Text(
                   _isCompleting
-                      ? 'Сохранение...'
+                      ? LocaleKeys.buttons_saving.tr()
                       : _currentStep >= _totalSteps - 1
-                      ? 'Завершить'
-                      : 'Далее',
+                      ? LocaleKeys.buttons_complete.tr()
+                      : LocaleKeys.buttons_next.tr(),
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),

@@ -467,6 +467,7 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
       code: condition.code,
       codeName: condition.name,
       codeDescription: condition.name,
+
       conditions: [condition],
     );
   }

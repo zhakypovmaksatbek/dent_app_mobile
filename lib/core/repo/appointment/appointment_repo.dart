@@ -331,7 +331,7 @@ class AppointmentRepo extends IAppointmentRepo {
   }
 
   @override
-  Future<void> uploadImageToPatient(UploadPatientRontgenModel request) async {
+  Future<void> uploadPatientXRay(UploadXRayModel request) async {
     final int? userId = await AppDataService.instance.getUserId();
     await dio.post(
       'api/images/snapshots/$userId/${request.imageId}',

@@ -1,11 +1,11 @@
-class UploadPatientRontgenModel {
+class UploadXRayModel {
   int? patientId;
   int? imageId;
   int? appointmentId;
   String? description;
   String? teeth;
 
-  UploadPatientRontgenModel({
+  UploadXRayModel({
     this.patientId,
     this.imageId,
     this.appointmentId,
@@ -13,7 +13,7 @@ class UploadPatientRontgenModel {
     this.teeth,
   });
 
-  UploadPatientRontgenModel.fromJson(Map<String, dynamic> json) {
+  UploadXRayModel.fromJson(Map<String, dynamic> json) {
     patientId = json['patientId'];
     imageId = json['imageId'];
     appointmentId = json['appointmentId'];

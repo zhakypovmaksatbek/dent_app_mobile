@@ -66,7 +66,5 @@ abstract class IAppointmentRepo {
   });
   Future<ImageResponseModel> saveImage(XFile image, ImageType type);
   Future<void> deleteImage(String imageId);
-  Future<void> uploadImageToPatient(
-    UploadPatientRontgenModel uploadPatientRontgenModel,
-  );
+  Future<void> uploadPatientXRay(UploadXRayModel uploadPatientRontgenModel);
 }

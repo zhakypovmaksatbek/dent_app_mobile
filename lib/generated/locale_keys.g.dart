@@ -144,6 +144,8 @@ abstract class  LocaleKeys {
   static const buttons_ok = 'buttons.ok';
   static const buttons_save_jobs = 'buttons.save_jobs';
   static const buttons_complete = 'buttons.complete';
+  static const buttons_saving = 'buttons.saving';
+  static const buttons_next = 'buttons.next';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';

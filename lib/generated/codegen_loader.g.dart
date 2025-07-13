@@ -157,7 +157,9 @@ class CodegenLoader extends AssetLoader{
     "continue": "Продолжить",
     "ok": "Понятно",
     "save_jobs": "Сохранить работы",
-    "complete": "Завершить"
+    "complete": "Завершить",
+    "saving": "Сохранение...",
+    "next": "Далее"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",

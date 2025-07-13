@@ -1,6 +1,5 @@
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/speech_to_text_widget.dart';
-import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/def_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -57,60 +56,55 @@ class ExpandableTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCardDecoration(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          spacing: 12.0,
-          children: [
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            Focus(
-              focusNode: focusNode,
-              child: DefTextField(
-                controller: controller,
-                maxLines: maxLines,
-                minLines: 1,
-                onTapOutside: (event) {
-                  focusNode.unfocus();
-                },
-                onChanged: (_) {
-                  // This will trigger the controller listener
-                  // which will in turn call _searchPatterns if the field has focus
-                },
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Speech to Text button
-                      if (enableSpeechToText) ...[
-                        SpeechToTextWidget(onResult: _onSpeechResult, size: 20),
-                        const SizedBox(width: 8),
-                      ],
-                      // Pattern selection button
-                      GestureDetector(
-                        onTap: onPatternTap,
-                        child: const Icon(Icons.keyboard_arrow_down_sharp),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: 12.0,
+      children: [
+        Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        Focus(
+          focusNode: focusNode,
+          child: DefTextField(
+            controller: controller,
+            maxLines: maxLines,
+            minLines: 1,
+            onTapOutside: (event) {
+              focusNode.unfocus();
+            },
+            onChanged: (_) {
+              // This will trigger the controller listener
+              // which will in turn call _searchPatterns if the field has focus
+            },
+            decoration: InputDecoration(
+              hintText: hintText,
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Speech to Text button
+                  if (enableSpeechToText) ...[
+                    SpeechToTextWidget(onResult: _onSpeechResult, size: 20),
+                    const SizedBox(width: 8),
+                  ],
+                  // Pattern selection button
+                  GestureDetector(
+                    onTap: onPatternTap,
+                    child: const Icon(Icons.keyboard_arrow_down_sharp),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                  const SizedBox(width: 8),
+                ],
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -58,7 +58,7 @@ class _TreatmentPageState extends State<TreatmentPage>
             appointmentId: widget.calendarAppointment!.appointmentId!,
           ),
           TreatmentInfoTab(calendarAppointment: widget.calendarAppointment),
-          UploadXRayTab(),
+          UploadXRayTab(calendarAppointment: widget.calendarAppointment!),
         ],
       ),
     );
