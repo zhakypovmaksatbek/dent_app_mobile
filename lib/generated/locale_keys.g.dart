@@ -97,6 +97,14 @@ abstract class  LocaleKeys {
   static const general_card = 'general.card';
   static const general_work_items = 'general.work_items';
   static const general_about_clinic_description = 'general.about_clinic_description';
+  static const general_source = 'general.source';
+  static const general_notes = 'general.notes';
+  static const general_additional_information = 'general.additional_information';
+  static const general_total_visits = 'general.total_visits';
+  static const general_financial_summary = 'general.financial_summary';
+  static const general_since = 'general.since';
+  static const general_registration_date = 'general.registration_date';
+  static const general_personal_information = 'general.personal_information';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -146,6 +154,7 @@ abstract class  LocaleKeys {
   static const buttons_complete = 'buttons.complete';
   static const buttons_saving = 'buttons.saving';
   static const buttons_next = 'buttons.next';
+  static const buttons_call = 'buttons.call';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';

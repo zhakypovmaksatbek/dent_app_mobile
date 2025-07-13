@@ -109,7 +109,15 @@ class CodegenLoader extends AssetLoader{
     "total_services_selected": "{count} услуг выбрано",
     "card": "Карта",
     "work_items": "Работы",
-    "about_clinic_description": "Краткая информация о клинике"
+    "about_clinic_description": "Краткая информация о клинике",
+    "source": "Источник",
+    "notes": "Примечания",
+    "additional_information": "Дополнительная информация",
+    "total_visits": "Всего визитов",
+    "financial_summary": "Финансовый обзор",
+    "since": "С",
+    "registration_date": "Дата регистр.",
+    "personal_information": "Личная информация"
   },
   "buttons": {
     "login": "Войти",
@@ -159,7 +167,8 @@ class CodegenLoader extends AssetLoader{
     "save_jobs": "Сохранить работы",
     "complete": "Завершить",
     "saving": "Сохранение...",
-    "next": "Далее"
+    "next": "Далее",
+    "call": "Позвонить"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",

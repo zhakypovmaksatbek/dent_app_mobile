@@ -59,8 +59,9 @@ final class AppRouteManager {
           routes: [
             const DashboardRoute(),
             const CalendarRoute(),
-            const ReportRoute(),
             const PatientRoute(),
+
+            const ReportRoute(),
             const SettingsRoute(),
           ],
           navigationItems: _buildAdminNavigationItems(),
@@ -131,14 +132,6 @@ final class AppRouteManager {
         ),
       ),
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.schedule.svg, isSvg: true),
-        label: LocaleKeys.routes_report.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aSchedule.svg,
-          isSvg: true,
-        ),
-      ),
-      NavigationItemModel(
         icon: CustomAssetImage(path: AssetConstants.user.svg, isSvg: true),
         label: LocaleKeys.routes_patients.tr(),
         activeIcon: CustomAssetImage(
@@ -146,6 +139,15 @@ final class AppRouteManager {
           isSvg: true,
         ),
       ),
+      NavigationItemModel(
+        icon: CustomAssetImage(path: AssetConstants.schedule.svg, isSvg: true),
+        label: LocaleKeys.routes_report.tr(),
+        activeIcon: CustomAssetImage(
+          path: AssetConstants.aSchedule.svg,
+          isSvg: true,
+        ),
+      ),
+
       NavigationItemModel(
         icon: CustomAssetImage(path: AssetConstants.settings.svg, isSvg: true),
         label: LocaleKeys.routes_settings.tr(),

@@ -4,6 +4,7 @@ import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/phone_number_text.dart';
@@ -187,6 +188,15 @@ class PatientCard extends StatelessWidget {
                     _buildInfoRow(
                       LocaleKeys.forms_payment.tr(),
                       patient.payment?.toString() ?? 'N/A',
+                    ),
+                    const SizedBox(height: 16),
+                    // Detail button
+                    DefElevatedButton(
+                      title: "Подробная информация",
+                      onPressed:
+                          () => router.push(
+                            PatientDetailRoute(id: patient.id ?? 0),
+                          ),
                     ),
                   ],
                 ),
