@@ -1,4 +1,5 @@
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
@@ -11,6 +12,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/widgets/edit_appoint
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
@@ -142,24 +144,25 @@ class AppointmentDialogService {
                   );
                 },
               ),
-              DefElevatedButton(
-                title: LocaleKeys.buttons_fast_pay.tr(),
-                backgroundColor: ColorConstants.optima,
-                onPressed: () {
-                  if (appointmentModel.appointmentId != null) {
-                    router.pop();
-                    FastPaymentService().showServices(
-                      context,
-                      appointmentModel.appointmentId!,
-                    );
-                  } else {
-                    AppSnackBar.showErrorSnackBar(
-                      context,
-                      'Appointment ID not found',
-                    );
-                  }
-                },
-              ),
+              if (_showFastPay(appointmentModel))
+                DefElevatedButton(
+                  title: LocaleKeys.buttons_fast_pay.tr(),
+                  backgroundColor: ColorConstants.optima,
+                  onPressed: () {
+                    if (appointmentModel.appointmentId != null) {
+                      router.pop();
+                      FastPaymentService().showServices(
+                        context,
+                        appointmentModel.appointmentId!,
+                      );
+                    } else {
+                      AppSnackBar.showErrorSnackBar(
+                        context,
+                        'Appointment ID not found',
+                      );
+                    }
+                  },
+                ),
               if (appointmentModel.appointmentStatus !=
                   AppointmentStatus.canceled.key.toUpperCase())
                 BlocListener<AppointmentCubit, AppointmentState>(
@@ -251,15 +254,42 @@ class AppointmentDialogService {
     );
   }
 
+  bool _showFastPay(CalendarAppointmentModel appointmentModel) {
+    print('=== FastPay Debug ===');
+    print('appointmentStatus: "${appointmentModel.appointmentStatus}"');
+
+    final status = AppointmentStatus.fromKey(
+      appointmentModel.appointmentStatus ?? '',
+    );
+
+    print('Parsed status: $status');
+    print('Status key: ${status.key}');
+    print('isFastPay: ${status.isFastPay}');
+
+    final result = !status.isFastPay;
+    print('_showFastPay result: $result');
+    print('=====================');
+
+    return result;
+  }
+
   // Add appointment dialog - now using the extracted widget
-  static void showAddAppointmentDialog(
+  static Future<void> showAddAppointmentDialog(
     BuildContext context, {
     required DateTime initialDate,
-  }) {
-    AddAppointmentService.showAddAppointmentDialog(
-      context,
-      initialDate: initialDate,
-    );
+  }) async {
+    bool isAdmin = false;
+    final Role role = await AppDataService.instance.getRole();
+    if (role == Role.admin) {
+      isAdmin = true;
+    }
+    if (context.mounted) {
+      AddAppointmentService.showAddAppointmentDialog(
+        context,
+        initialDate: initialDate,
+        isAdmin: isAdmin,
+      );
+    }
   }
 
   // Edit appointment dialog

@@ -70,15 +70,6 @@ class ProfileHeaderSection extends StatelessWidget {
               ),
             ),
           ],
-          if (user.id != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              'ID: ${user.id}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
         ],
       ),
     );

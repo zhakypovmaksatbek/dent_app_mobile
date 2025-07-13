@@ -14,6 +14,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/bloc/save_service/sa
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/search_patient/search_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/core/heartbeats/heartbeats_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/get_x_ray/get_x_ray_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_appointments/patient_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_detail.dart/patient_detail_dart_cubit.dart';
@@ -140,5 +141,6 @@ class Initializer {
     BlocProvider(
       create: (_) => UploadImageCubit(appointmentRepo: AppointmentRepo()),
     ),
+    BlocProvider(create: (_) => GetXRayCubit()),
   ];
 }

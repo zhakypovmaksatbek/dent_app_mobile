@@ -50,6 +50,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
               children: [
                 const SizedBox(height: _verticalSpacing),
                 _buildTeethSelector(conditionService),
+                const SizedBox(height: _verticalSpacing),
                 if (conditionService.jobs.isNotEmpty)
                   _buildWorkItemsCard(conditionService),
               ],
@@ -60,22 +61,138 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
     );
   }
 
-  /// Builds the teeth selector widget with professional configuration
+  /// Builds the teeth selector widget with jaw overlay buttons
   Widget _buildTeethSelector(ConditionService conditionService) {
     final theme = Theme.of(context);
 
     return Center(
-      child: TeethSelector(
-        showPrimary: true,
-        multiSelect: false,
-        showPermanent: true,
-        colorized: _buildColorizedMap(conditionService, theme),
-        selectedColor: theme.colorScheme.primary,
-        rightString: LocaleKeys.general_right.tr(),
-        leftString: LocaleKeys.general_left.tr(),
-        initiallySelected: _getInitiallySelectedTeeth(conditionService),
-        onChange:
-            (selected) => _handleTeethSelection(selected, conditionService),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // TeethSelector as base
+          TeethSelector(
+            showPrimary: true,
+            multiSelect: false,
+            showPermanent: true,
+            colorized: _buildColorizedMap(conditionService, theme),
+            selectedColor: theme.colorScheme.primary,
+            rightString: LocaleKeys.general_right.tr(),
+            leftString: LocaleKeys.general_left.tr(),
+            initiallySelected: _getInitiallySelectedTeeth(conditionService),
+            onChange:
+                (selected) => _handleTeethSelection(selected, conditionService),
+          ),
+
+          // Overlay jaw buttons in the center
+          Positioned(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Upper jaw button
+                _buildCompactJawButton(
+                  context: context,
+                  title: "Верхняя\nчелюсть",
+                  toothId: "29",
+                  isUpper: true,
+                  conditionService: conditionService,
+                  theme: theme,
+                ),
+                const SizedBox(height: 12),
+                // Lower jaw button
+                _buildCompactJawButton(
+                  context: context,
+                  title: "Нижняя\nчелюсть",
+                  toothId: "39",
+                  isUpper: false,
+                  conditionService: conditionService,
+                  theme: theme,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds compact jaw button for overlay
+  Widget _buildCompactJawButton({
+    required BuildContext context,
+    required String title,
+    required String toothId,
+    required bool isUpper,
+    required ConditionService conditionService,
+    required ThemeData theme,
+  }) {
+    // Check if this jaw has existing jobs
+    final hasJob = conditionService.jobs.any((job) => job.toothId == toothId);
+    final jawJob =
+        hasJob
+            ? conditionService.jobs.firstWhere((job) => job.toothId == toothId)
+            : null;
+
+    return Material(
+      elevation: hasJob ? 0 : 2,
+      borderRadius: BorderRadius.circular(16),
+      color:
+          hasJob
+              ? theme.colorScheme.primary.withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.95),
+      child: InkWell(
+        onTap: () => _showToothDialog(toothId, conditionService),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color:
+                  hasJob
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.outline.withValues(alpha: 0.3),
+              width: hasJob ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // SVG Icon
+              Icon(
+                isUpper ? Icons.arrow_upward : Icons.arrow_downward,
+                size: 20,
+                color:
+                    hasJob
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface,
+              ),
+              const SizedBox(width: 8),
+
+              // Title
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    title: title,
+                    textType: TextType.body,
+                    fontWeight: FontWeight.w600,
+                    color:
+                        hasJob
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.onSurface,
+                  ),
+                  if (hasJob && jawJob != null)
+                    AppText(
+                      title:
+                          "${jawJob.servicesWithCount.values.fold(0, (sum, count) => sum + count)} услуг",
+                      textType: TextType.subtitle,
+                      color: theme.colorScheme.primary,
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

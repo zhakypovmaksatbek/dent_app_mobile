@@ -7,6 +7,7 @@ class AddAppointmentService {
   static void showAddAppointmentDialog(
     BuildContext context, {
     required DateTime initialDate,
+    required bool isAdmin,
   }) {
     showCupertinoModalBottomSheet(
       context: context,
@@ -19,7 +20,10 @@ class AddAppointmentService {
 
       builder: (context) {
         return Material(
-          child: AddAppointmentDialogWidget(initialDate: initialDate),
+          child: AddAppointmentDialogWidget(
+            initialDate: initialDate,
+            isAdmin: isAdmin,
+          ),
         );
       },
     );

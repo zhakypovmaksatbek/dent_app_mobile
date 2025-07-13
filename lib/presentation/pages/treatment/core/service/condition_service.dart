@@ -189,4 +189,14 @@ class ConditionService extends ChangeNotifier {
     _condition = null;
     notifyListeners();
   }
+
+  void clearAll() {
+    _condition = null;
+    _toothType = null;
+    _toothId = null;
+    _selectedDiagnosis.clear();
+    _selectedServices.clear();
+    _jobs.clear();
+    notifyListeners();
+  }
 }

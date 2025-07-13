@@ -30,10 +30,14 @@ class PersonalActionCubit extends Cubit<PersonalActionState> {
     }
   }
 
-  Future<void> updatePerson(int id, PersonalModel doctor) async {
+  Future<void> updatePerson(
+    int id,
+    PersonalModel doctor, {
+    int? imageId,
+  }) async {
     emit(PersonalActionLoading());
     try {
-      await personalRepo.updatePersonal(id, doctor);
+      await personalRepo.updatePersonal(id, doctor, imageId: imageId);
       emit(PersonalActionSuccess());
     } on DioException catch (e) {
       emit(

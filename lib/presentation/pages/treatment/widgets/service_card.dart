@@ -26,9 +26,9 @@ class ServiceCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color:
                 isSelected
@@ -36,7 +36,7 @@ class ServiceCard extends StatelessWidget {
                       context,
                     ).colorScheme.primary.withValues(alpha: 0.1)
                     : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             border:
                 isSelected
                     ? Border.all(

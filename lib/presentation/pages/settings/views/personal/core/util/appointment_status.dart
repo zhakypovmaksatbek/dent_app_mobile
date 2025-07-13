@@ -50,9 +50,21 @@ enum AppointmentStatus {
   });
 
   static AppointmentStatus fromKey(String key) {
-    return AppointmentStatus.values.firstWhere(
-      (status) => status.key.toUpperCase() == key,
+    print('AppointmentStatus.fromKey called with: "$key"');
+
+    final result = AppointmentStatus.values.firstWhere(
+      (status) => status.key.toUpperCase() == key.toUpperCase(),
       orElse: () => AppointmentStatus.notConfirmed,
     );
+
+    print('Matched status: $result (key: ${result.key})');
+    return result;
+  }
+
+  bool get isFastPay {
+    return this == AppointmentStatus.comeIn ||
+        this == AppointmentStatus.finish ||
+        this == AppointmentStatus.canceled ||
+        this == AppointmentStatus.notCome;
   }
 }

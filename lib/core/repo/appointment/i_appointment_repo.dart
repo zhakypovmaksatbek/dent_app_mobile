@@ -9,6 +9,7 @@ import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/diagnosis/condition_model.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
+import 'package:dent_app_mobile/models/diagnosis/x_ray_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
@@ -67,4 +68,5 @@ abstract class IAppointmentRepo {
   Future<ImageResponseModel> saveImage(XFile image, ImageType type);
   Future<void> deleteImage(String imageId);
   Future<void> uploadPatientXRay(UploadXRayModel uploadPatientRontgenModel);
+  Future<List<XRayModel>> getPatientXRay(int patientId);
 }

@@ -4,12 +4,12 @@ import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dar
 import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/content/patient_info_details_tab.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/content/teeth_page.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_detail.dart/patient_detail_dart_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/tabs/patient_info_details_tab.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/tabs/teeth_info_tab.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/tabs/x_ray_tab.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/appointment_comment_dialog.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/delete_appointment_dialog.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/widgets/placeholder_tab.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/widgets/tabs/modern_tab_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -63,9 +63,6 @@ class _PatientDetailState extends State<PatientDetail>
             (context, state) => Scaffold(
               appBar: AppBar(
                 title: Text(LocaleKeys.routes_appointment_detail.tr()),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                scrolledUnderElevation: 0,
               ),
               body: Column(
                 children: [
@@ -94,17 +91,17 @@ class _PatientDetailState extends State<PatientDetail>
                         ModernTab(
                           icon: Icons.person_outline,
                           activeIcon: Icons.person,
-                          label: 'Details',
+                          label: LocaleKeys.general_detail.tr(),
                         ),
                         ModernTab(
                           icon: Icons.tour_outlined,
                           activeIcon: Icons.tour,
-                          label: 'Teeth',
+                          label: LocaleKeys.forms_tooth.tr(),
                         ),
                         ModernTab(
                           icon: Icons.image_outlined,
                           activeIcon: Icons.image,
-                          label: 'X-Rays',
+                          label: LocaleKeys.general_x_ray.tr(),
                         ),
                       ],
                     ),
@@ -129,54 +126,9 @@ class _PatientDetailState extends State<PatientDetail>
           patientDetail: _patientDetail ?? PatientDetailModel(),
           visits: _visits,
         ),
-        TeethPage(patientId: widget.id),
-        PlaceholderTab(
-          icon: Icons.image,
-          title: 'X-Ray images coming soon',
-          description:
-              'This section will display X-Ray images\nand other dental imagery',
-        ),
+        TeethInfoTab(patientId: widget.id),
+        XRayTab(patientId: widget.id),
       ],
-    );
-  }
-
-  Widget _buildErrorView(String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: A40,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.refresh),
-            label: Text(LocaleKeys.buttons_retry.tr()),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Edit appointment function - You will implement this when you create an edit screen
-  void _editAppointment(
-    BuildContext context,
-    AppointmentDetailModel appointment,
-  ) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Edit appointment functionality coming soon'),
-        duration: Duration(seconds: 2),
-      ),
     );
   }
 

@@ -164,15 +164,16 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
                                   LocaleKeys.notifications_no_data_found.tr(),
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    _removeOverlay();
-                                    widget.focusNode.unfocus();
-                                    widget.onAddPatient?.call();
-                                  },
-                                  icon: const Icon(Icons.add),
-                                  label: Text(LocaleKeys.buttons_add.tr()),
-                                ),
+                                if (widget.onAddPatient != null)
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      _removeOverlay();
+                                      widget.focusNode.unfocus();
+                                      widget.onAddPatient?.call();
+                                    },
+                                    icon: const Icon(Icons.add),
+                                    label: Text(LocaleKeys.buttons_add.tr()),
+                                  ),
                                 const SizedBox.shrink(),
                               ],
                             ),

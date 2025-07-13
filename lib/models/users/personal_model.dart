@@ -59,7 +59,9 @@ class PersonalModel {
     data['phoneNumber'] = phoneNumber;
     data['phoneNumber2'] = phoneNumber2;
     data['email'] = email;
-    data['password'] = password;
+    if (password != null && password!.isNotEmpty) {
+      data['password'] = password;
+    }
     data['role'] = role;
     if (payrollCalculationsRequest != null) {
       data['payrollCalculationsRequest'] = payrollCalculationsRequest!.toJson();

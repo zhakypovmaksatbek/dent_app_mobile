@@ -117,7 +117,9 @@ class CodegenLoader extends AssetLoader{
     "financial_summary": "Финансовый обзор",
     "since": "С",
     "registration_date": "Дата регистр.",
-    "personal_information": "Личная информация"
+    "personal_information": "Личная информация",
+    "detail": "Детали",
+    "x_ray": "Рентген"
   },
   "buttons": {
     "login": "Войти",
@@ -445,7 +447,10 @@ class CodegenLoader extends AssetLoader{
     "unknown_product": "Неизвестный продукт",
     "enter_supplier_name": "Пожалуйста, введите название поставщика",
     "please_add_product": "Пожалуйста, добавьте продукт",
-    "non_working_day": "Не рабочий день"
+    "non_working_day": "Не рабочий день",
+    "enter_phone_number": "Введите номер телефона",
+    "enter_valid_phone_number": "Введите корректный номер телефона",
+    "invalid_phone_number": "Неверный номер телефона"
   },
   "roles": {
     "admin": "Администратор",

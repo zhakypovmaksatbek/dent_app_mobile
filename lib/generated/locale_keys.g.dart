@@ -105,6 +105,8 @@ abstract class  LocaleKeys {
   static const general_since = 'general.since';
   static const general_registration_date = 'general.registration_date';
   static const general_personal_information = 'general.personal_information';
+  static const general_detail = 'general.detail';
+  static const general_x_ray = 'general.x_ray';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -422,6 +424,9 @@ abstract class  LocaleKeys {
   static const validation_enter_supplier_name = 'validation.enter_supplier_name';
   static const validation_please_add_product = 'validation.please_add_product';
   static const validation_non_working_day = 'validation.non_working_day';
+  static const validation_enter_phone_number = 'validation.enter_phone_number';
+  static const validation_enter_valid_phone_number = 'validation.enter_valid_phone_number';
+  static const validation_invalid_phone_number = 'validation.invalid_phone_number';
   static const validation = 'validation';
   static const roles_admin = 'roles.admin';
   static const roles_doctor = 'roles.doctor';

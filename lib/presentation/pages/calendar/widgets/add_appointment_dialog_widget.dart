@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
@@ -28,8 +29,12 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddAppointmentDialogWidget extends StatefulWidget {
   final DateTime? initialDate;
-
-  const AddAppointmentDialogWidget({super.key, this.initialDate});
+  final bool isAdmin;
+  const AddAppointmentDialogWidget({
+    super.key,
+    this.initialDate,
+    required this.isAdmin,
+  });
 
   @override
   State<AddAppointmentDialogWidget> createState() =>
@@ -88,8 +93,8 @@ class _AddAppointmentDialogWidgetState
     _doctorCubit = DoctorCubit();
     _appointmentActionCubit = AppointmentActionCubit();
     _roomCubit = RoomCubit();
-    _doctorCubit.getDoctors();
     _searchPatientCubit.searchPatients(" ");
+    _loadRole();
   }
 
   void _loadRooms() {
@@ -99,6 +104,17 @@ class _AddAppointmentDialogWidgetState
   void _loadFreeTimeSlots() {
     if (doctorId != null) {
       _freeTimeCubit.getFreeTime(doctorId!, selectedDate, minute);
+    }
+  }
+
+  Future<void> _loadRole() async {
+    if (!widget.isAdmin) {
+      final currentUserId = await AppDataService.instance.getUserId();
+      if (currentUserId != null) {
+        doctorId = currentUserId;
+      }
+    } else {
+      _doctorCubit.getDoctors();
     }
   }
 
@@ -169,7 +185,7 @@ class _AddAppointmentDialogWidgetState
                 spacing: 16,
                 children: [
                   _buildHeader(),
-                  _buildDoctorSection(),
+                  if (widget.isAdmin) _buildDoctorSection(),
                   _buildDateSection(),
                   _buildCombinedTimeAndDurationSection(),
 

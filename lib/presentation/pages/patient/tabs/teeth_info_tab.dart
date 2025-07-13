@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Page that displays the dental chart with teeth selection functionality
-class TeethPage extends StatefulWidget {
+class TeethInfoTab extends StatefulWidget {
   final int patientId;
 
-  const TeethPage({super.key, required this.patientId});
+  const TeethInfoTab({super.key, required this.patientId});
 
   @override
-  State<TeethPage> createState() => _TeethPageState();
+  State<TeethInfoTab> createState() => _TeethInfoTabState();
 }
 
-class _TeethPageState extends State<TeethPage> {
+class _TeethInfoTabState extends State<TeethInfoTab> {
   late PatientToothCubit _patientToothCubit;
   List<ToothModel> _teeth = [];
 

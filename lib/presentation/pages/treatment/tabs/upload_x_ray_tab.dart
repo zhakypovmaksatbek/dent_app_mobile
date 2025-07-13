@@ -26,6 +26,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
   final ImagePicker _picker = ImagePicker();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _teethController = TextEditingController();
+  final FocusNode _teethFocusNode = FocusNode();
 
   String? _uploadedImage;
   String? _imageId; // Track image ID for professional deletion
@@ -35,6 +36,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
   void dispose() {
     _descriptionController.dispose();
     _teethController.dispose();
+    _teethFocusNode.dispose();
     super.dispose();
   }
 
@@ -284,11 +286,21 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                       ),
                       const SizedBox(height: 16),
 
-                      // Teeth Field
-                      AppText(title: "Номер зуба", textType: TextType.body),
+                      // Teeth Field (Required)
+                      Row(
+                        children: [
+                          AppText(title: "Номер зуба", textType: TextType.body),
+                          AppText(
+                            title: " *",
+                            textType: TextType.body,
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _teethController,
+                        focusNode: _teethFocusNode,
                         onTapOutside: (event) {
                           FocusScope.of(context).unfocus();
                         },
@@ -307,6 +319,14 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                             borderSide: BorderSide(
                               color: ColorConstants.primary,
                             ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.red),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.red),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12,
@@ -404,6 +424,28 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                     ),
                   ],
                 ),
+
+                // Add Another Image Button (show after saving to appointment)
+                if (_isSavedToAppointment) ...[
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _uploadAnotherImage,
+                      icon: const Icon(Icons.add_photo_alternate, size: 18),
+                      label: const Text("Загрузить еще один рентген"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -541,15 +583,110 @@ class _UploadXRayTabState extends State<UploadXRayTab>
     final description = _descriptionController.text.trim();
     final teeth = _teethController.text.trim();
 
+    // Validate required teeth field
+    if (teeth.isEmpty) {
+      AppSnackBar.showErrorSnackBar(
+        context,
+        "Номер зуба обязателен для заполнения",
+      );
+      // Focus on teeth field to highlight the error
+      _teethFocusNode.requestFocus();
+      return;
+    }
+
     final uploadXRayModel = UploadXRayModel(
       patientId: widget.calendarAppointment.patientId!,
       appointmentId: widget.calendarAppointment.appointmentId!,
       imageId: int.tryParse(_imageId!),
       description: description.isEmpty ? null : description,
-      teeth: teeth.isEmpty ? null : teeth,
+      teeth: teeth,
     );
 
     context.read<UploadXRayCubit>().uploadXRay(uploadXRayModel);
+  }
+
+  void _uploadAnotherImage() {
+    // Reset current image state to allow uploading another image
+    setState(() {
+      _uploadedImage = null;
+      _imageId = null;
+      _isSavedToAppointment = false;
+    });
+
+    // Clear text fields
+    _descriptionController.clear();
+    _teethController.clear();
+
+    // Show upload options dialog
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              AppText(
+                title: "Загрузить новый рентген",
+                textType: TextType.title,
+              ),
+              const SizedBox(height: 20),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _pickImage(ImageSource.camera);
+                      },
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text("Камера"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorConstants.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _pickImage(ImageSource.gallery);
+                      },
+                      icon: const Icon(Icons.photo_library),
+                      label: const Text("Галерея"),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: ColorConstants.primary,
+                        side: BorderSide(color: ColorConstants.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _showImagePreview(String imageUrl) {

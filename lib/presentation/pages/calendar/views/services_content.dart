@@ -25,11 +25,16 @@ class ServicesContent extends StatefulWidget {
 class _ServicesContentState extends State<ServicesContent> {
   late final GetServiceCubit _serviceCubit;
   late final SaveServiceCubit _fastPayCubit;
+  final TextEditingController _searchController = TextEditingController();
 
   final Set<int> _selectedServiceIds = {};
   final Map<int, String> _serviceTypeMap = {};
   final Map<int, double> _servicePriceMap = {};
   final Set<String> _expandedCategories = {};
+
+  String _searchQuery = '';
+  List<ServiceModel> _originalServices = [];
+  List<ServiceModel> _filteredServices = [];
 
   @override
   void initState() {
@@ -43,6 +48,7 @@ class _ServicesContentState extends State<ServicesContent> {
   void dispose() {
     _serviceCubit.close();
     _fastPayCubit.close();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -71,6 +77,65 @@ class _ServicesContentState extends State<ServicesContent> {
     0.0,
     (total, serviceId) => total + (_servicePriceMap[serviceId] ?? 0.0),
   );
+
+  // MARK: - Search Methods
+  void _updateSearchQuery(String query) {
+    setState(() {
+      _searchQuery = query.toLowerCase();
+      _filteredServices = _filterServices();
+    });
+  }
+
+  List<ServiceModel> _filterServices() {
+    if (_searchQuery.isEmpty) {
+      return List.from(_originalServices);
+    }
+
+    return _originalServices
+        .where((service) {
+          // Kategori adına göre arama
+          final categoryName =
+              _formatServiceTypeName(service.serviceType ?? '').toLowerCase();
+          final categoryMatches = categoryName.contains(_searchQuery);
+
+          // Servis adlarına göre arama
+          final hasMatchingService =
+              service.serviceItem?.any((item) {
+                final serviceName = (item.name ?? '').toLowerCase();
+                return serviceName.contains(_searchQuery);
+              }) ??
+              false;
+
+          return categoryMatches || hasMatchingService;
+        })
+        .map((service) {
+          // Eğer kategori adı eşleşmiyorsa, sadece eşleşen servisleri göster
+          final categoryName =
+              _formatServiceTypeName(service.serviceType ?? '').toLowerCase();
+          if (!categoryName.contains(_searchQuery)) {
+            final filteredItems =
+                service.serviceItem?.where((item) {
+                  final serviceName = (item.name ?? '').toLowerCase();
+                  return serviceName.contains(_searchQuery);
+                }).toList() ??
+                [];
+
+            return ServiceModel(
+              serviceType: service.serviceType,
+              serviceItem: filteredItems,
+            );
+          }
+          return service;
+        })
+        .toList();
+  }
+
+  void _updateServicesData(List<ServiceModel> services) {
+    setState(() {
+      _originalServices = services;
+      _filteredServices = _filterServices();
+    });
+  }
 
   // MARK: - Business Logic
   void _processPayment() {
@@ -120,6 +185,48 @@ class _ServicesContentState extends State<ServicesContent> {
             icon: Icon(Icons.close, color: theme.colorScheme.primary),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.lightGrey),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.grey.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchController,
+        onChanged: _updateSearchQuery,
+        decoration: InputDecoration(
+          hintText: 'Поиск услуг...',
+          hintStyle: TextStyle(color: AppColors.grey),
+          prefixIcon: Icon(Icons.search, color: AppColors.grey),
+          suffixIcon:
+              _searchQuery.isNotEmpty
+                  ? IconButton(
+                    icon: Icon(Icons.clear, color: AppColors.grey),
+                    onPressed: () {
+                      _searchController.clear();
+                      _updateSearchQuery('');
+                    },
+                  )
+                  : null,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
+        ),
       ),
     );
   }
@@ -448,6 +555,38 @@ class _ServicesContentState extends State<ServicesContent> {
     );
   }
 
+  Widget _buildNoResultsWidget() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: AppColors.grey.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 16),
+            AppText(
+              title: 'По вашему запросу услуг не найдено',
+              textType: TextType.title,
+              color: AppColors.grey,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            AppText(
+              title: 'Попробуйте изменить поисковый запрос',
+              textType: TextType.body,
+              color: AppColors.grey.withValues(alpha: 0.7),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildErrorState() {
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
@@ -567,6 +706,11 @@ class _ServicesContentState extends State<ServicesContent> {
           }
 
           if (state is GetServiceLoaded) {
+            // Servisleri güncelle
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _updateServicesData(state.services);
+            });
+
             return Container(
               height: MediaQuery.of(context).size.height * 0.9,
               decoration: const BoxDecoration(
@@ -576,15 +720,22 @@ class _ServicesContentState extends State<ServicesContent> {
               child: Column(
                 children: [
                   _buildHeader(),
+                  _buildSearchBar(),
                   _buildTotalAmountCard(),
                   Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: state.services.length,
-                      itemBuilder:
-                          (context, index) =>
-                              _buildCategoryCard(state.services[index]),
-                    ),
+                    child:
+                        _filteredServices.isEmpty && _searchQuery.isNotEmpty
+                            ? _buildNoResultsWidget()
+                            : ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              itemCount: _filteredServices.length,
+                              itemBuilder:
+                                  (context, index) => _buildCategoryCard(
+                                    _filteredServices[index],
+                                  ),
+                            ),
                   ),
                   _buildSaveButton(),
                 ],

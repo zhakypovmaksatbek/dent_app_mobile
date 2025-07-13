@@ -13,6 +13,7 @@ import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/diagnosis/condition_model.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
+import 'package:dent_app_mobile/models/diagnosis/x_ray_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
@@ -341,5 +342,14 @@ class AppointmentRepo extends IAppointmentRepo {
         'teeth': request.teeth,
       },
     );
+  }
+
+  @override
+  Future<List<XRayModel>> getPatientXRay(int patientId) async {
+    final response = await dio.get('api/images/$patientId');
+    List<dynamic> data = response.data as List<dynamic>;
+    return data
+        .map((e) => XRayModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

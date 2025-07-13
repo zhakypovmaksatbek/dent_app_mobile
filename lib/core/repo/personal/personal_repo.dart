@@ -59,7 +59,19 @@ class PersonalRepo extends IPersonalRepo {
   }
 
   @override
-  Future<void> updatePersonal(int id, PersonalModel doctor) async {
-    await dio.put('api/users/$id', data: doctor.toJson());
+  Future<void> updatePersonal(
+    int id,
+    PersonalModel doctor, {
+    int? imageId,
+  }) async {
+    final queryParameters = <String, dynamic>{};
+    if (imageId != null) {
+      queryParameters['imageId'] = imageId;
+    }
+    await dio.put(
+      'api/users/$id',
+      queryParameters: queryParameters,
+      data: doctor.toJson(),
+    );
   }
 }
