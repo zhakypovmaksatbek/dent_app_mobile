@@ -252,32 +252,15 @@ class _ProfileSectionState extends State<ProfileSection> {
                             ),
                             const SizedBox(height: 20),
                             // Action Buttons
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _buildActionButton(
-                                    icon: Icons.edit_outlined,
-                                    label: LocaleKeys.buttons_edit_profile.tr(),
-                                    onPressed: () {
-                                      // Navigate to profile edit page
-                                    },
-                                    isPrimary: false,
+                            _buildActionButton(
+                              icon: Icons.schedule_outlined,
+                              label: LocaleKeys.general_working_schedule.tr(),
+                              onPressed:
+                                  () => _showWorkingScheduleViewer(
+                                    context,
+                                    user.id ?? 0,
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: _buildActionButton(
-                                    icon: Icons.schedule_outlined,
-                                    label: 'Schedule',
-                                    onPressed:
-                                        () => _showWorkingScheduleViewer(
-                                          context,
-                                          user.id ?? 0,
-                                        ),
-                                    isPrimary: true,
-                                  ),
-                                ),
-                              ],
+                              isPrimary: true,
                             ),
                           ],
                         ),
@@ -370,6 +353,7 @@ class _ProfileSectionState extends State<ProfileSection> {
           fontSize: 14,
         ),
       ),
+
       style: ElevatedButton.styleFrom(
         backgroundColor: isPrimary ? AppColors.primary : Colors.white,
         foregroundColor: isPrimary ? Colors.white : AppColors.primary,
@@ -377,6 +361,7 @@ class _ProfileSectionState extends State<ProfileSection> {
         side: isPrimary ? null : BorderSide(color: AppColors.primary),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        minimumSize: const Size(double.infinity, 40),
       ),
     );
   }

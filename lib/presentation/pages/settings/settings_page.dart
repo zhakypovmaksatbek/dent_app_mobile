@@ -2,9 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/widgets/profile_section.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/confirmation_bottom_sheet.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
@@ -29,74 +31,81 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(LocaleKeys.routes_settings.tr()),
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ProfileSection(),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                LocaleKeys.routes_navigation.tr(),
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildNavigationCards(),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                LocaleKeys.routes_account.tr(),
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildAccountCards(),
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: DefElevatedButton(
-                  title: LocaleKeys.buttons_logout.tr(),
-                  onPressed: () async {
-                    AppBottomSheet.showBottomSheet(
-                      context,
-                      ConfirmationBottomSheet(
-                        title: LocaleKeys.notifications_logout_info.tr(),
-                        description:
-                            LocaleKeys.notifications_logout_info_description
-                                .tr(),
-                        confirmButtonText: LocaleKeys.buttons_logout.tr(),
-                        cancelButtonText: LocaleKeys.buttons_cancel.tr(),
-                        onConfirm: () async {
-                          await AppDataService.instance.clearTokens();
-                          router.replaceAll([const LoginRoute()]);
-                        },
-                        onCancel: () => router.maybePop(),
-                      ),
-                    );
-                  },
+      body: FutureBuilder<Role>(
+        future: AppDataService.instance.getRole(),
+        builder: (context, asyncSnapshot) {
+          if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingWidget();
+          }
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ProfileSection(),
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    LocaleKeys.routes_navigation.tr(),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                _buildNavigationCards(asyncSnapshot.data ?? Role.doctor),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                //   child: Text(
+                //     LocaleKeys.routes_account.tr(),
+                //     style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
+                // _buildAccountCards(),
+                const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DefElevatedButton(
+                      title: LocaleKeys.buttons_logout.tr(),
+                      onPressed: () async {
+                        AppBottomSheet.showBottomSheet(
+                          context,
+                          ConfirmationBottomSheet(
+                            title: LocaleKeys.notifications_logout_info.tr(),
+                            description:
+                                LocaleKeys.notifications_logout_info_description
+                                    .tr(),
+                            confirmButtonText: LocaleKeys.buttons_logout.tr(),
+                            cancelButtonText: LocaleKeys.buttons_cancel.tr(),
+                            onConfirm: () async {
+                              await AppDataService.instance.clearTokens();
+                              router.replaceAll([const LoginRoute()]);
+                            },
+                            onCancel: () => router.maybePop(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+              ],
             ),
-            const SizedBox(height: 32),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildNavigationCards() {
+  Widget _buildNavigationCards(Role currentRole) {
     // Define navigation items
-    final navItems = [
+    final adminNavItems = [
       {
         'title': LocaleKeys.routes_services.tr(),
         'icon': Icons.medical_services_outlined,
@@ -137,15 +146,52 @@ class _SettingsPageState extends State<SettingsPage> {
           router.push(const WarehouseRoute());
         },
       },
+      // {
+      //   'title': LocaleKeys.routes_notifications.tr(),
+      //   'icon': Icons.notifications_outlined,
+      //   'description': LocaleKeys.general_notifications_info_description.tr(),
+      //   'onTap': () {
+      //     // Navigate to notifications settings
+      //   },
+      // },
+    ];
+    final doctorNavItems = [
       {
-        'title': LocaleKeys.routes_notifications.tr(),
-        'icon': Icons.notifications_outlined,
-        'description': LocaleKeys.general_notifications_info_description.tr(),
+        'title': LocaleKeys.routes_services.tr(),
+        'icon': Icons.medical_services_outlined,
+        'description': LocaleKeys.general_services_info.tr(),
         'onTap': () {
-          // Navigate to notifications settings
+          router.push(const ServicesRoute());
         },
       },
+      {
+        'title': LocaleKeys.routes_diagnosis.tr(),
+        'icon': Icons.biotech_outlined,
+        'description': LocaleKeys.general_diagnosis_info.tr(),
+        'onTap': () {
+          router.push(const DiagnosisRoute());
+        },
+      },
+
+      {
+        'title': LocaleKeys.routes_about_clinic.tr(),
+        'icon': Icons.business_outlined,
+        'description': LocaleKeys.general_about_clinic_description.tr(),
+        'onTap': () {
+          router.push(const AboutClinicRoute());
+        },
+      },
+
+      // {
+      //   'title': LocaleKeys.routes_notifications.tr(),
+      //   'icon': Icons.notifications_outlined,
+      //   'description': LocaleKeys.general_notifications_info_description.tr(),
+      //   'onTap': () {
+      //     // Navigate to notifications settings
+      //   },
+      // },
     ];
+    final navItems = currentRole == Role.admin ? adminNavItems : doctorNavItems;
 
     return ListView.separated(
       shrinkWrap: true,

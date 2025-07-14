@@ -5,13 +5,18 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/week.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/widgets/create_schedule_content.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorkingScheduleViewer extends StatefulWidget {
-  const WorkingScheduleViewer({super.key, required this.userId});
-
+  const WorkingScheduleViewer({
+    super.key,
+    required this.userId,
+    this.isAdmin = false,
+  });
+  final bool isAdmin;
   final int userId;
 
   @override
@@ -58,7 +63,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
     final currentWeekStart = today.subtract(Duration(days: today.weekday - 1));
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
+      height: MediaQuery.of(context).size.height * 0.93,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -480,7 +485,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
   Widget _buildTotalHoursSummary(double totalHours) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -570,7 +575,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8, top: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -593,7 +598,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(4),
         child: Row(
           children: [
             // Day Indicator
@@ -620,13 +625,12 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    Week.fromString(weekDay).displayName.tr().substring(0, 3),
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                  AppText(
+                    title: Week.fromString(
+                      weekDay,
+                    ).displayName.tr().substring(0, 3),
+                    textType: TextType.description,
+                    color: Colors.white,
                   ),
                   const SizedBox(height: 1),
                   Icon(
@@ -645,13 +649,11 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
                 children: [
                   Row(
                     children: [
-                      Text(
-                        Week.fromString(weekDay).displayName.tr(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: isToday ? AppColors.primary : Colors.grey[800],
-                        ),
+                      AppText(
+                        title: Week.fromString(weekDay).displayName.tr(),
+                        textType: TextType.subtitle,
+                        color: isToday ? AppColors.primary : Colors.grey[800],
+                        fontWeight: FontWeight.bold,
                       ),
                       if (isToday) ...[
                         const SizedBox(width: 6),
@@ -664,26 +666,20 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
                             color: AppColors.primary,
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text(
-                            LocaleKeys.date_range_today.tr(),
-                            style: TextStyle(
-                              fontSize: 8,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+                          child: AppText(
+                            title: LocaleKeys.date_range_today.tr(),
+                            textType: TextType.small,
+                            color: Colors.white,
                           ),
                         ),
                       ],
                     ],
                   ),
                   const SizedBox(height: 2),
-                  Text(
-                    timeString,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: isWorkingDay ? Colors.grey[700] : Colors.grey[500],
-                    ),
+                  AppText(
+                    title: timeString,
+                    textType: TextType.subtitle,
+                    color: isWorkingDay ? Colors.grey[800] : Colors.grey[600],
                   ),
                   if (day.breaks != null && day.breaks!.isNotEmpty) ...[
                     const SizedBox(height: 4),
@@ -691,13 +687,10 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
                       children: [
                         Icon(Icons.coffee, size: 12, color: Colors.brown[600]),
                         const SizedBox(width: 3),
-                        Text(
-                          '${day.breaks!.length} break(s)',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.brown[600],
-                            fontWeight: FontWeight.w500,
-                          ),
+                        AppText(
+                          title: '${day.breaks!.length} break(s)',
+                          textType: TextType.small,
+                          color: Colors.brown[600],
                         ),
                       ],
                     ),
@@ -729,6 +722,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
   Widget _buildActionButtons(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
+      margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         border: Border(top: BorderSide(color: Colors.grey.shade200)),

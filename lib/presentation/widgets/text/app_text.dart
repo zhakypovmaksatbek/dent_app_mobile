@@ -1,7 +1,16 @@
 //ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-enum TextType { header, body, title, subtitle, description, title20, title24 }
+enum TextType {
+  header,
+  body,
+  title,
+  subtitle,
+  description,
+  title20,
+  title24,
+  small,
+}
 
 class AppText extends StatelessWidget {
   const AppText({
@@ -84,6 +93,11 @@ class AppText extends StatelessWidget {
 
       case TextType.description:
         return theme.labelMedium!.copyWith(fontWeight: FontWeight.w400);
+      case TextType.small:
+        return theme.labelSmall!.copyWith(
+          fontWeight: FontWeight.w400,
+          fontSize: 10,
+        );
     }
   }
 }
