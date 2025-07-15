@@ -1,18 +1,22 @@
 import 'package:auto_route/annotations.dart';
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/utils/payment_types.dart';
 import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_receipt/get_receipt_appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/pay_appointment/pay_appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/payment_form_widgets.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/payment_info_widgets.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/payment_summary_widgets.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,6 +71,26 @@ class _PaymentViewState extends State<PaymentView> {
     _calculatedDiscount.dispose();
     _finalAmount.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadAppointmentsForDateRange(BuildContext context) async {
+    final Role role = await AppDataService.instance.getRole();
+    final int? userId = await AppDataService.instance.getUserId();
+    // Determine start and end date based on month view
+    final DateTime today = DateTime.now();
+    final DateTime monthStart = DateTime(today.year, today.month, 1);
+    final DateTime monthEnd = DateTime(today.year, today.month + 1, 0);
+    if (kDebugMode) {
+      print('Loading appointments from $monthStart to $monthEnd');
+    }
+    if (context.mounted) {
+      // Fetch appointments using the cubit
+      context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
+        monthStart,
+        monthEnd,
+        userIds: role == Role.admin ? null : [userId!],
+      );
+    }
   }
 
   @override
@@ -182,16 +206,16 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                     ),
 
-                    // Payment Summary Section
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                      sliver: SliverToBoxAdapter(
-                        child: ReceiptPaymentSummary(
-                          receipt: state.receipt,
-                          formatAmount: _formatAmount,
-                        ),
-                      ),
-                    ),
+                    // // Payment Summary Section
+                    // SliverPadding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                    //   sliver: SliverToBoxAdapter(
+                    //     child: ReceiptPaymentSummary(
+                    //       receipt: state.receipt,
+                    //       formatAmount: _formatAmount,
+                    //     ),
+                    //   ),
+                    // ),
 
                     // Payment Status Section
                     SliverPadding(
@@ -275,6 +299,7 @@ class _PaymentViewState extends State<PaymentView> {
                                 _getReceiptAppointmentCubit.getReceipt(
                                   widget.appointmentId,
                                 );
+                                _loadAppointmentsForDateRange(context);
                                 // Clear form
                                 _clearForm();
                               } else if (state is PayAppointmentError) {

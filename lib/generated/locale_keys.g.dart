@@ -107,6 +107,7 @@ abstract class  LocaleKeys {
   static const general_personal_information = 'general.personal_information';
   static const general_detail = 'general.detail';
   static const general_x_ray = 'general.x_ray';
+  static const general_your_weekly_working_hours = 'general.your_weekly_working_hours';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -268,12 +269,14 @@ abstract class  LocaleKeys {
   static const routes_appointment_detail = 'routes.appointment_detail';
   static const routes_visits = 'routes.visits';
   static const routes_about_clinic = 'routes.about_clinic';
+  static const routes_profile = 'routes.profile';
   static const routes = 'routes';
   static const patients_add_patient = 'patients.add_patient';
   static const patients_search_patient = 'patients.search_patient';
   static const patients_no_patients = 'patients.no_patients';
   static const patients_not_found = 'patients.not_found';
   static const patients_patients = 'patients.patients';
+  static const patients_patients_info = 'patients.patients_info';
   static const patients = 'patients';
   static const notifications_patient_deleted = 'notifications.patient_deleted';
   static const notifications_patient_added = 'notifications.patient_added';

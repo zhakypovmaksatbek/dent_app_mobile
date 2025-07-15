@@ -160,7 +160,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
                           ),
                         ),
                         Text(
-                          'Your weekly working hours',
+                          LocaleKeys.general_your_weekly_working_hours.tr(),
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white.withValues(alpha: 0.9),
@@ -297,8 +297,9 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
             // Week Navigation
             _buildWeekNavigation(context, state),
 
-            // Total Hours Summary
-            _buildTotalHoursSummary(totalHours),
+            /// MARK: Total Hours Summary
+            /// TODO: Implement this
+            // _buildTotalHoursSummary(totalHours),
 
             // Days List
             Expanded(
@@ -727,40 +728,19 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
         color: Colors.grey.shade50,
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.close),
-              label: const Text('Close'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.grey[700],
-                side: BorderSide(color: Colors.grey.shade300),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
+      child: OutlinedButton.icon(
+        onPressed: () => Navigator.pop(context),
+        icon: const Icon(Icons.close),
+        label: Text(LocaleKeys.buttons_close.tr()),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.grey[700],
+          side: BorderSide(color: Colors.grey.shade300),
+          minimumSize: const Size(double.infinity, 48),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: () => _showCreateSchedule(context),
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit Schedule'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

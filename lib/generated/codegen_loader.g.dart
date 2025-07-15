@@ -119,7 +119,8 @@ class CodegenLoader extends AssetLoader{
     "registration_date": "Дата регистр.",
     "personal_information": "Личная информация",
     "detail": "Детали",
-    "x_ray": "Рентген"
+    "x_ray": "Рентген",
+    "your_weekly_working_hours": "Ваши рабочие часы в неделю"
   },
   "buttons": {
     "login": "Войти",
@@ -285,14 +286,16 @@ class CodegenLoader extends AssetLoader{
     "patient_detail": "Информация о пациенте",
     "appointment_detail": "Информация о записи",
     "visits": "Визиты",
-    "about_clinic": "Информация о клинике"
+    "about_clinic": "Информация о клинике",
+    "profile": "Профиль"
   },
   "patients": {
     "add_patient": "Добавить пациента",
     "search_patient": "Поиск пациента",
     "no_patients": "Нет пациентов",
     "not_found": "Пациент не найден",
-    "patients": "Пациенты"
+    "patients": "Пациенты",
+    "patients_info": "Информация о пациенте"
   },
   "notifications": {
     "patient_deleted": "Пациент удален",

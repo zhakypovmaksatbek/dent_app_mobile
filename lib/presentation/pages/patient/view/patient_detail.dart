@@ -62,7 +62,7 @@ class _PatientDetailState extends State<PatientDetail>
         builder:
             (context, state) => Scaffold(
               appBar: AppBar(
-                title: Text(LocaleKeys.routes_appointment_detail.tr()),
+                title: Text(LocaleKeys.patients_patients_info.tr()),
               ),
               body: Column(
                 children: [

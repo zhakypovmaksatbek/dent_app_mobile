@@ -235,7 +235,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                                     icon: Icons.schedule,
                                     label:
                                         LocaleKeys.general_working_hours.tr(),
-                                    value: '8h',
+                                    value: '8',
                                     color: Colors.green,
                                   ),
                                 ),

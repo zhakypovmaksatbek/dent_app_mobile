@@ -635,6 +635,7 @@ class _AddAppointmentDialogWidgetState
     context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
       monthStart,
       monthEnd,
+      userIds: widget.isAdmin ? null : [doctorId!],
     );
   }
 

@@ -26,61 +26,68 @@ class PaymentTypeSelection extends StatelessWidget {
           fontWeight: FontWeight.w500,
           color: AppColors.textPrimary,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         ValueListenableBuilder<PaymentType>(
           valueListenable: selectedPaymentType,
           builder: (context, selectedType, child) {
-            return Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children:
-                  PaymentType.values.map((type) {
-                    final isSelected = selectedType == type;
-                    return GestureDetector(
-                      onTap: () => selectedPaymentType.value = type,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
+            return GridView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 4,
+                childAspectRatio: 2.8, // Wider and shorter cards
+              ),
+              itemCount: PaymentType.values.length,
+              itemBuilder: (context, index) {
+                final type = PaymentType.values[index];
+                final isSelected = selectedType == type;
 
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? type.color.withValues(alpha: 0.1)
-                                  : AppColors.cardBackground,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isSelected ? type.color : AppColors.divider,
-                            width: isSelected ? 2 : 1,
+                return GestureDetector(
+                  onTap: () => selectedPaymentType.value = type,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          isSelected
+                              ? type.color.withValues(alpha: 0.1)
+                              : AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? type.color : AppColors.divider,
+                        width: isSelected ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomAssetImage(
+                          path: type.icon,
+                          height: 24,
+                          width: 24,
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: AppText(
+                            title: type.title,
+                            textType: TextType.description,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400,
+                            color:
+                                isSelected ? type.color : AppColors.textPrimary,
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomAssetImage(
-                              path: type.icon,
-                              height: 44,
-                              width: 44,
-                            ),
-                            const SizedBox(width: 8),
-                            AppText(
-                              title: type.title,
-                              textType: TextType.body,
-                              fontWeight:
-                                  isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.w400,
-                              color:
-                                  isSelected
-                                      ? type.color
-                                      : AppColors.textPrimary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),
@@ -135,11 +142,17 @@ class PaymentAmountInput extends StatelessWidget {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
           decoration: InputDecoration(
             hintText: 'Введите сумму',
             suffix: const CurrencyWidget(),
             border: OutlineInputBorder(),
           ),
+          textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         ),

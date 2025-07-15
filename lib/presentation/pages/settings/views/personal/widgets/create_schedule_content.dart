@@ -35,6 +35,7 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
   final ValueNotifier<String?> _endDateNotifier = ValueNotifier<String?>(null);
   final ValueNotifier<List<DayScheduleRequests>> _daySchedulesNotifier =
       ValueNotifier<List<DayScheduleRequests>>([]);
+  final ValueNotifier<bool> _isLoadingNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -76,6 +77,7 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
     _startDateNotifier.dispose();
     _endDateNotifier.dispose();
     _daySchedulesNotifier.dispose();
+    _isLoadingNotifier.dispose();
     _createScheduleCubit.close();
     super.dispose();
   }
@@ -343,6 +345,12 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                   state.response.message ??
                       LocaleKeys.alerts_operation_successful.tr(),
                 );
+                _isLoadingNotifier.value = false;
+              } else if (state is CreateScheduleLoading) {
+                _isLoadingNotifier.value = true;
+              } else if (state is CreateScheduleError) {
+                _isLoadingNotifier.value = false;
+                AppSnackBar.showErrorSnackBar(context, state.error);
               }
             },
             child: Container(
@@ -804,12 +812,17 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
   }
 
   Widget _buildSaveButton({bool enabled = false}) {
-    return SizedBox(
-      width: double.infinity,
-      child: DefElevatedButton(
-        title: LocaleKeys.buttons_create_schedule.tr(),
-        onPressed: _saveSchedule,
-      ),
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isLoadingNotifier,
+      builder: (context, isLoading, child) {
+        return SizedBox(
+          width: double.infinity,
+          child: DefElevatedButton(
+            title: LocaleKeys.buttons_create_schedule.tr(),
+            onPressed: isLoading ? null : _saveSchedule,
+          ),
+        );
+      },
     );
   }
 

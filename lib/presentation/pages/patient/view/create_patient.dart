@@ -5,8 +5,8 @@ import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/input/custom_phone_input.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/form_text_field.dart';
-import 'package:dent_app_mobile/presentation/widgets/input/phone_input_field.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
@@ -97,6 +97,9 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
     return _formKey.currentState!.validate();
   }
 
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _secondaryPhoneFocusNode = FocusNode();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final router = getIt<AppRouter>();
 
@@ -128,16 +131,19 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
         ),
-        PhoneInputField(
-          hintText: LocaleKeys.forms_phone.tr(),
-          controller: _phoneController,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return LocaleKeys.errors_required_field.tr();
-            }
-            return null;
+        CustomPhoneInput(
+          focusNode: _phoneFocusNode,
+          onChanged: (value) {
+            setState(() {
+              _phoneController.text = value.replaceAll(' ', '');
+            });
           },
+          decoration: InputDecoration(
+            hintText: LocaleKeys.forms_phone.tr(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
         ),
+
         GestureDetector(
           onTap: () => _showGenderPicker(context),
           child: Container(
@@ -197,9 +203,17 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           textInputAction: TextInputAction.next,
         ),
 
-        PhoneInputField(
-          hintText: LocaleKeys.forms_secondary_phone_number.tr(),
-          controller: _secondaryPhoneController,
+        CustomPhoneInput(
+          focusNode: _secondaryPhoneFocusNode,
+          onChanged: (value) {
+            setState(() {
+              _secondaryPhoneController.text = value.replaceAll(' ', '');
+            });
+          },
+          decoration: InputDecoration(
+            hintText: LocaleKeys.forms_phone.tr(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
         ),
         FormTextField(
           hintText: LocaleKeys.forms_email.tr(),

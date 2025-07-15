@@ -27,10 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(LocaleKeys.routes_settings.tr()),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(LocaleKeys.routes_profile.tr()), elevation: 0),
       body: FutureBuilder<Role>(
         future: AppDataService.instance.getRole(),
         builder: (context, asyncSnapshot) {

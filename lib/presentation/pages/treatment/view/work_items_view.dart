@@ -9,6 +9,7 @@ import 'package:dent_app_mobile/presentation/widgets/empty/empty_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_warning.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +25,7 @@ class WorkItemsView extends StatelessWidget {
     return BlocListener<SaveJobsCubit, SaveJobsState>(
       listener: (context, state) {
         if (state is SaveJobsSuccess) {
-          router.pop();
+          router.replace(PaymentViewRoute(appointmentId: appointmentId));
           context.read<ConditionService>().clearJobs();
         } else if (state is SaveJobsError) {
           AppWarning.showToastWarning(
