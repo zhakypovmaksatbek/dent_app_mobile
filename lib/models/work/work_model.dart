@@ -61,7 +61,9 @@ class ToothRequests {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['conditionId'] = conditionId;
-    data['toothType'] = toothType;
+    if (toothType != null) {
+      data['toothType'] = toothType;
+    }
     return data;
   }
 }

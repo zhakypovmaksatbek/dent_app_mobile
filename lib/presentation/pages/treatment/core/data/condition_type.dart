@@ -1,1 +1,1 @@
-enum ConditionType { main, jows, inners }
+enum ConditionType { mains, jows, inners }

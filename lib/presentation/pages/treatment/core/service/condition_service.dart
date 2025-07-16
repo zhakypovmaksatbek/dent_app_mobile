@@ -40,7 +40,7 @@ class ConditionService extends ChangeNotifier {
         toothId: _toothId!,
         servicesWithCount: Map.from(_selectedServices),
         condition: _condition!,
-        toothType: _toothType!,
+        toothType: _toothType,
         diagnosis: List.from(_selectedDiagnosis), // Create a copy of the list
       ),
     );

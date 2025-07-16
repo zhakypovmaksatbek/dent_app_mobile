@@ -126,15 +126,6 @@ class ConditionCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Flexible(
-          child: AppText(
-            title: category.codeDescription ?? "",
-            textType: TextType.body,
-            color: theme.hintColor,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
         const SizedBox(height: 6),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

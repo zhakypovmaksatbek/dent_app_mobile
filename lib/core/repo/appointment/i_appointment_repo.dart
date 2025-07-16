@@ -17,6 +17,7 @@ import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
 import 'package:dent_app_mobile/models/work/image_response_model.dart';
 import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ abstract class IAppointmentRepo {
   });
   Future<List<ToothModel>> getToothList(int patientId);
   Future<PatternModel> getPatternList(PatternType type, {String? search});
-  Future<List<ConditionModel>> getConditionList();
+  Future<List<ConditionModel>> getConditionList({ConditionType? type});
   Future<List<RoomModel>> getRoomListByDate({
     required DateTime date,
     required TimeOfDay startTime,

@@ -244,7 +244,7 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                   ElevatedButton.icon(
                     onPressed: () {
                       context.read<ConditionCubit>().getConditionList(
-                        ConditionType.main,
+                        ConditionType.mains,
                       );
                     },
                     icon: const Icon(Icons.refresh),

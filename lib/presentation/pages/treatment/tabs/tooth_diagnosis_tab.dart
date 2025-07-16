@@ -245,7 +245,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
             toothId: toothId,
             existingJob: existingJob,
             onExamine: () {
-              Navigator.pop(context);
+              router.pop();
               conditionService.setToothId(toothId);
               router.push(const TeethConditionActionRoute());
             },

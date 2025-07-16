@@ -16,7 +16,7 @@ class ConditionCubit extends Cubit<ConditionState> {
   Future<void> getConditionList(ConditionType type) async {
     emit(ConditionLoading());
     try {
-      final conditions = await _appointmentRepo.getConditionList();
+      final conditions = await _appointmentRepo.getConditionList(type: type);
       emit(ConditionLoaded(conditions));
     } on DioException catch (e) {
       emit(ConditionError(FormatUtils.formatErrorMessage(e)));

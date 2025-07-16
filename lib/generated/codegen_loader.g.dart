@@ -120,7 +120,8 @@ class CodegenLoader extends AssetLoader{
     "personal_information": "Личная информация",
     "detail": "Детали",
     "x_ray": "Рентген",
-    "your_weekly_working_hours": "Ваши рабочие часы в неделю"
+    "your_weekly_working_hours": "Ваши рабочие часы в неделю",
+    "warehouse_info": "Информация о складе"
   },
   "buttons": {
     "login": "Войти",

@@ -325,7 +325,7 @@ class _JobCardState extends State<JobCard> {
                       child: _buildInfoSection(
                         context,
                         LocaleKeys.forms_tooth_type.tr(),
-                        widget.job.toothType.title,
+                        widget.job.toothType?.title ?? '',
                         Icons.panorama_fish_eye,
                         widget.job.condition.color?.withValues(alpha: 0.8) ??
                             Colors.blue,

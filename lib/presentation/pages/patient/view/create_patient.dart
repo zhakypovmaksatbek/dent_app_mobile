@@ -4,6 +4,7 @@ import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/gender.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/custom_phone_input.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/form_text_field.dart';
@@ -173,7 +174,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppText(
-                      title: _selectedGender.title.tr(),
+                      title: _selectedGender.displayName.tr(),
                       textType: TextType.body,
                     ),
                     Icon(
@@ -323,7 +324,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
                         const SizedBox(height: 16),
                         ...Gender.values.map(
                           (gender) => ListTile(
-                            title: Text(gender.title.tr()),
+                            title: Text(gender.displayName.tr()),
                             leading: Radio<Gender>(
                               value: gender,
                               groupValue: _selectedGender,
@@ -542,27 +543,6 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           fromWhere: _selectedFromWhere.name.toUpperCase(),
         ),
       );
-    }
-  }
-}
-
-enum Gender {
-  male(LocaleKeys.forms_male_m),
-  female(LocaleKeys.forms_female_f);
-
-  const Gender(this.title);
-
-  final String title;
-
-  // from string
-  static Gender fromString(String value) {
-    switch (value) {
-      case 'MALE':
-        return Gender.male;
-      case 'FEMALE':
-        return Gender.female;
-      default:
-        return Gender.male;
     }
   }
 }

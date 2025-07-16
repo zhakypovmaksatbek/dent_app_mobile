@@ -58,7 +58,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   void initState() {
     super.initState();
     _conditionCubit = ConditionCubit();
-    _conditionCubit.getConditionList(ConditionType.main);
+    _getConditionList();
 
     _progressAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -72,6 +72,15 @@ class _TeethConditionActionState extends State<TeethConditionAction>
     );
 
     _updateProgress();
+  }
+
+  Future<void> _getConditionList() async {
+    final conditionType =
+        context.read<ConditionService>().toothId == "29" ||
+                context.read<ConditionService>().toothId == "39"
+            ? ConditionType.jows
+            : ConditionType.mains;
+    await _conditionCubit.getConditionList(conditionType);
   }
 
   @override
@@ -306,7 +315,9 @@ class _TeethConditionActionState extends State<TeethConditionAction>
                 child: OutlinedButton.icon(
                   onPressed: _onStepCancel,
                   icon: const Icon(Icons.arrow_back),
-                  label: const Text('Назад'),
+                  label: Text(
+                    MaterialLocalizations.of(context).backButtonTooltip,
+                  ),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -379,10 +390,13 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   }
 
   void _onStepContinue(BuildContext context) {
+    final toothId = context.read<ConditionService>().toothId;
+    final bool stepJump = (toothId == "29" || toothId == "39");
+
     HapticFeedback.lightImpact();
     if (_currentStep < _totalSteps - 1) {
       setState(() {
-        _currentStep++;
+        _currentStep == 0 && stepJump ? _currentStep += 2 : _currentStep += 1;
       });
       _updateProgress();
     } else {
@@ -391,9 +405,12 @@ class _TeethConditionActionState extends State<TeethConditionAction>
   }
 
   void _onStepCancel() {
-    if (_currentStep > 0) {
+    final toothId = context.read<ConditionService>().toothId;
+    final bool stepJump = (toothId == "29" || toothId == "39");
+
+    if (_currentStep >= 1) {
       setState(() {
-        _currentStep--;
+        _currentStep == 2 && stepJump ? _currentStep -= 2 : _currentStep -= 1;
       });
       _updateProgress();
     }

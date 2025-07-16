@@ -3,7 +3,7 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';
 import 'package:dent_app_mobile/presentation/constants/asset_constants.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/util/patient_info_util.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/view/create_patient.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/gender.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
@@ -113,7 +113,9 @@ class PersonalInfoCard extends StatelessWidget {
                       iconColor: Colors.purple,
                       label: LocaleKeys.general_gender.tr(),
                       value:
-                          Gender.fromString(patientDetail.gender!).title.tr(),
+                          Gender.fromString(
+                            patientDetail.gender!,
+                          ).displayName.tr(),
                     ),
                   ),
                 if (patientDetail.gender != null &&

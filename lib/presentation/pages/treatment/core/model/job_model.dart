@@ -8,7 +8,7 @@ class JobModel {
   final String toothId;
   final Map<ServiceItem, int> servicesWithCount;
   final Conditions condition;
-  final ToothType toothType;
+  final ToothType? toothType;
   final List<DiagnosisModel> diagnosis;
   final String? surveyPlan;
   final String? recommendation;
@@ -19,7 +19,7 @@ class JobModel {
     required this.toothId,
     required this.servicesWithCount,
     required this.condition,
-    required this.toothType,
+    this.toothType,
     required this.diagnosis,
     this.surveyPlan,
     this.recommendation,

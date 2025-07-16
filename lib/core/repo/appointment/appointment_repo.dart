@@ -22,6 +22,7 @@ import 'package:dent_app_mobile/models/payment/receipt_model.dart';
 import 'package:dent_app_mobile/models/work/image_response_model.dart';
 import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
 import 'package:dent_app_mobile/models/work/work_model.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:dio/dio.dart';
@@ -210,8 +211,8 @@ class AppointmentRepo extends IAppointmentRepo {
   }
 
   @override
-  Future<List<ConditionModel>> getConditionList() async {
-    final response = await dio.get('api/conditions/grouped');
+  Future<List<ConditionModel>> getConditionList({ConditionType? type}) async {
+    final response = await dio.get('api/conditions/grouped/${type?.name}');
     List<dynamic> data = response.data as List<dynamic>;
     return data
         .map((e) => ConditionModel.fromJson(e as Map<String, dynamic>))
@@ -293,7 +294,7 @@ class AppointmentRepo extends IAppointmentRepo {
             toothRequests: [
               ToothRequests(
                 conditionId: job.condition.id!,
-                toothType: job.toothType.key,
+                toothType: job.toothType?.key,
               ),
             ],
           ).toJson(); // Convert to JSON immediately

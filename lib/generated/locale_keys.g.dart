@@ -108,6 +108,7 @@ abstract class  LocaleKeys {
   static const general_detail = 'general.detail';
   static const general_x_ray = 'general.x_ray';
   static const general_your_weekly_working_hours = 'general.your_weekly_working_hours';
+  static const general_warehouse_info = 'general.warehouse_info';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
