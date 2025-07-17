@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/personal_patient/personal_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/widgets/personal_patient_item.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -77,7 +79,7 @@ class _PersonalPatientsPageState extends State<PersonalPatientsPage> {
             ),
             slivers: [
               SliverAppBar(
-                title: Text('Personal Patients'),
+                title: Text(LocaleKeys.patients_patients.tr()),
                 centerTitle: true,
                 floating: true,
                 pinned: true,

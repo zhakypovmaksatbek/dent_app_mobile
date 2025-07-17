@@ -295,7 +295,7 @@ class _CalendarPageState extends State<CalendarPage> {
         },
         child:
             BlocBuilder<CalendarAppointmentsCubit, CalendarAppointmentsState>(
-              buildWhen: (previous, current) => previous != current,
+              // buildWhen: (previous, current) => previous != current,
               builder: (context, state) {
                 // Create data source from loaded appointments
                 final calendarDataSource =
@@ -360,6 +360,14 @@ class _CalendarPageState extends State<CalendarPage> {
                     (appointment) => _deleteAppointment(appointment),
                 onCreateAppointment:
                     (date) => _createAppointment(context, date),
+                onClose: () {
+                  _draggableController.animateTo(
+                    initialChildSize,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                  _loadAppointmentsForDateRange();
+                },
               ),
             );
           },

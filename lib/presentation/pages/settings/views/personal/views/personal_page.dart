@@ -152,7 +152,11 @@ class _PersonalPageState extends State<PersonalPage> {
                         !isLoading &&
                         state is! PersonalLoading) {
                       return SliverFillRemaining(
-                        child: Center(child: Text("No personal found")),
+                        child: Center(
+                          child: Text(
+                            LocaleKeys.notifications_no_personal_found.tr(),
+                          ),
+                        ),
                       );
                     }
                     return SliverPadding(
@@ -219,7 +223,7 @@ class _PersonalPageState extends State<PersonalPage> {
   void personalActionListener(BuildContext context, PersonalActionState state) {
     if (state is PersonalActionSuccess) {
       CherryToast.success(
-        title: Text("Operation successful"),
+        title: Text(LocaleKeys.notifications_operation_successful.tr()),
         animationType: AnimationType.fromTop,
       ).show(context);
       _fetchPersonals(isRefresh: true); // Refresh list on success

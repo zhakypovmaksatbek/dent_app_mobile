@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -168,7 +170,7 @@ class _PatternSelectionBottomSheetState
     ScrollController? scrollController,
   }) {
     if (state is PatternInitial) {
-      return const Center(child: Text('Select pattern type'));
+      return Center(child: Text(LocaleKeys.diagnosis_select_pattern_type.tr()));
     } else if (state is PatternLoading) {
       return const Center(child: LoadingWidget());
     } else if (state is PatternError) {
@@ -177,7 +179,9 @@ class _PatternSelectionBottomSheetState
       final List<String> patterns = state.pattern.values ?? [];
 
       if (patterns.isEmpty) {
-        return const Center(child: Text('No data available'));
+        return Center(
+          child: Text(LocaleKeys.notifications_no_data_available.tr()),
+        );
       }
 
       return ListView.separated(
@@ -200,7 +204,7 @@ class _PatternSelectionBottomSheetState
         },
       );
     } else {
-      return const Center(child: Text('Unknown state'));
+      return Center(child: Text(LocaleKeys.notifications_unknown_state.tr()));
     }
   }
 }

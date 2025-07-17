@@ -91,7 +91,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                 // Upper jaw button
                 _buildCompactJawButton(
                   context: context,
-                  title: "Верхняя\nчелюсть",
+                  title: LocaleKeys.tooth_upper_jaw.tr(),
                   toothId: "29",
                   isUpper: true,
                   conditionService: conditionService,
@@ -101,7 +101,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                 // Lower jaw button
                 _buildCompactJawButton(
                   context: context,
-                  title: "Нижняя\nчелюсть",
+                  title: LocaleKeys.tooth_lower_jaw.tr(),
                   toothId: "39",
                   isUpper: false,
                   conditionService: conditionService,

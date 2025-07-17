@@ -441,7 +441,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
             child: Column(
               children: [
                 Text(
-                  'Current Week',
+                  LocaleKeys.general_current_week.tr(),
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.grey[600],
@@ -513,7 +513,7 @@ class _WorkingScheduleViewerState extends State<WorkingScheduleViewer>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Total Working Hours',
+                  LocaleKeys.general_total_working_hours.tr(),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],

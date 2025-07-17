@@ -594,7 +594,7 @@ class _DiagnosisSearchBottomSheetState
                                   context
                                       .read<AllDiagnosisCubit>()
                                       .getDiagnosisList(),
-                          child: const Text('Повторить'),
+                          child: Text(LocaleKeys.buttons_repeat.tr()),
                         ),
                       ],
                     ),
@@ -615,12 +615,12 @@ class _DiagnosisSearchBottomSheetState
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Ничего не найдено',
+                          LocaleKeys.patients_not_found.tr(),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Попробуйте изменить поисковый запрос',
+                          LocaleKeys.notifications_no_search_results.tr(),
                           style: Theme.of(
                             context,
                           ).textTheme.bodySmall?.copyWith(

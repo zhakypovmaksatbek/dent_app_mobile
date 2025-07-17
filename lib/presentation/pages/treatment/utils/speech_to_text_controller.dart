@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -56,7 +58,7 @@ class SpeechToTextController extends ChangeNotifier {
         return true;
       } else {
         _updateState(SpeechState.notAvailable);
-        _errorMessage = 'Speech recognition not available or permission denied';
+        _errorMessage = LocaleKeys.errors_speech_recognition_not_available.tr();
         return false;
       }
     } catch (e) {

@@ -267,7 +267,7 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('Фото профиля'),
+        _buildSectionHeader(LocaleKeys.general_profile_photo.tr()),
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -309,8 +309,8 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
                 ),
                 label: Text(
                   _uploadedImageUrl != null
-                      ? 'Изменить фото'
-                      : 'Загрузить фото',
+                      ? LocaleKeys.general_change_photo.tr()
+                      : LocaleKeys.general_upload_photo.tr(),
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -416,7 +416,7 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
           (isRequired
               ? (value) {
                 if (value == null || value.isEmpty) {
-                  return '$label is required';
+                  return '$label ${LocaleKeys.forms_is_required.tr()}';
                 }
                 return null;
               }
@@ -500,7 +500,9 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
                     _isImageUploaded = true;
                   });
                   CherryToast.success(
-                    title: Text('Фото успешно загружено'),
+                    title: Text(
+                      LocaleKeys.notifications_photo_successfully_uploaded.tr(),
+                    ),
                   ).show(context);
                 } else if (state is UploadImageError) {
                   CherryToast.error(title: Text(state.message)).show(context);
@@ -511,7 +513,9 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
                     _isImageUploaded = false;
                   });
                   CherryToast.success(
-                    title: Text('Фото успешно удалено'),
+                    title: Text(
+                      LocaleKeys.notifications_photo_successfully_deleted.tr(),
+                    ),
                   ).show(context);
                 }
               },

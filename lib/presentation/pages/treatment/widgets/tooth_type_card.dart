@@ -1,5 +1,7 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/tooth_type.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ToothTypeCard extends StatelessWidget {
@@ -215,23 +217,23 @@ class ToothTypeCard extends StatelessWidget {
   String _getToothTypeSubtitle(ToothType toothType) {
     switch (toothType) {
       case ToothType.main:
-        return 'Основное лечение зубов';
+        return LocaleKeys.tooth_main_treatment.tr();
       case ToothType.right:
-        return 'Лечение правой области';
+        return LocaleKeys.tooth_right_treatment.tr();
       case ToothType.left:
-        return 'Лечение левой области';
+        return LocaleKeys.tooth_left_treatment.tr();
       case ToothType.top:
-        return 'Лечение верхней области';
+        return LocaleKeys.tooth_top_treatment.tr();
       case ToothType.bottom:
-        return 'Лечение нижней области';
+        return LocaleKeys.tooth_bottom_treatment.tr();
       case ToothType.jaw:
-        return 'Лечение области челюсти';
+        return LocaleKeys.tooth_jaw_treatment.tr();
       case ToothType.centerRight:
-        return 'Центральная правая область';
+        return LocaleKeys.tooth_center_right_treatment.tr();
       case ToothType.centerLeft:
-        return 'Центральная левая область';
+        return LocaleKeys.tooth_center_left_treatment.tr();
       case ToothType.all:
-        return 'Все области';
+        return LocaleKeys.tooth_all_treatment.tr();
     }
   }
 }

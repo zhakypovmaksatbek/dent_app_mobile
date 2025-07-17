@@ -182,7 +182,7 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          'Выберите диагноз и продолжайте',
+          LocaleKeys.diagnosis_select_diagnosis_and_continue.tr(),
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
             fontWeight: FontWeight.w400,

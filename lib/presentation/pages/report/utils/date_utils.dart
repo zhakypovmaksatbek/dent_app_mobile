@@ -1,3 +1,4 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ReportDateUtils {
@@ -21,7 +22,7 @@ class ReportDateUtils {
       final dateTime = DateTime.parse(dateTimeString);
       return DateFormat(format).format(dateTime);
     } catch (e) {
-      return 'Invalid date';
+      return LocaleKeys.diagnosis_invalid_date.tr();
     }
   }
 }

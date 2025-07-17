@@ -494,7 +494,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('Готово'),
+                    child: Text(LocaleKeys.buttons_done.tr()),
                   ),
                 ),
               ],
@@ -511,13 +511,13 @@ class _TeethConditionActionState extends State<TeethConditionAction>
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            title: const Text('Помощь'),
+            title: Text(LocaleKeys.buttons_help.tr()),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Процесс настройки лечения:',
+                  LocaleKeys.diagnosis_treatment_setup_process.tr(),
                   style: Theme.of(
                     context,
                   ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
@@ -581,7 +581,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Понятно'),
+                child: Text(LocaleKeys.buttons_ok.tr()),
               ),
             ],
           ),

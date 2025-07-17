@@ -5,6 +5,7 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/fast_payment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
@@ -24,7 +25,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppointmentDialogService {
   // Show appointment details dialog
-  void showAppointmentDetails(BuildContext context, Appointment appointment) {
+  void showAppointmentDetails(
+    BuildContext context,
+    Appointment appointment,
+    VoidCallback onClose,
+  ) {
     // Extract the CalendarAppointmentModel from resourceIds
     CalendarAppointmentModel? calendarAppointment;
 
@@ -79,14 +84,14 @@ class AppointmentDialogService {
                       IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
-                          Navigator.pop(context);
+                          router.pop();
                           showEditAppointmentDialog(context, appointmentModel);
                         },
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          Navigator.pop(context);
+                          router.pop();
                           showDeleteConfirmationDialog(
                             context,
                             appointmentModel,
@@ -174,14 +179,20 @@ class AppointmentDialogService {
                   child: DefElevatedButton(
                     title: LocaleKeys.buttons_cancel.tr(),
                     backgroundColor: Theme.of(context).colorScheme.error,
-                    onPressed: () {
-                      context.read<AppointmentCubit>().updateAppointmentComment(
-                        appointmentModel.appointmentId!,
-                        AppointmentCommentModel(
-                          appointmentStatus:
-                              AppointmentStatus.canceled.key.toUpperCase(),
-                        ),
-                      );
+                    onPressed: () async {
+                      await context
+                          .read<AppointmentCubit>()
+                          .updateAppointmentComment(
+                            appointmentModel.appointmentId!,
+                            AppointmentCommentModel(
+                              appointmentStatus:
+                                  AppointmentStatus.canceled.key.toUpperCase(),
+                            ),
+                          );
+                      if (context.mounted) {
+                        router.maybePop();
+                        onClose.call();
+                      }
                     },
                   ),
                 ),
@@ -194,7 +205,7 @@ class AppointmentDialogService {
                       onPressed: () async {
                         try {
                           // Add call functionality
-                          Navigator.pop(context);
+                          router.pop();
                           await LauncherRepo().call(
                             appointmentModel.patientPhoneNumber ?? '',
                           );
@@ -227,7 +238,7 @@ class AppointmentDialogService {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pop(context);
+                        router.pop();
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
@@ -331,9 +342,9 @@ class AppointmentDialogService {
               onPressed: () {
                 Navigator.of(context).pop(true);
                 if (appointment.appointmentId != null) {
-                  // context.read<AppointmentActionCubit>().deleteAppointment(
-                  //   appointment.appointmentId!,
-                  // );
+                  context.read<AppointmentActionCubit>().deleteAppointment(
+                    appointment.appointmentId!,
+                  );
                 } else {
                   AppSnackBar.showErrorSnackBar(
                     context,

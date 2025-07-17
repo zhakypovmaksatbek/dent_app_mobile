@@ -18,6 +18,7 @@ class CalendarBottomSheet extends StatelessWidget {
   final Function(DoctorModel) onDoctorChanged;
   final Function(CalendarAppointmentModel) onDeleteAppointment;
   final Function(DateTime) onCreateAppointment;
+  final VoidCallback onClose;
 
   const CalendarBottomSheet({
     super.key,
@@ -29,6 +30,7 @@ class CalendarBottomSheet extends StatelessWidget {
     required this.onDoctorChanged,
     required this.onDeleteAppointment,
     required this.onCreateAppointment,
+    required this.onClose,
   });
 
   @override
@@ -296,7 +298,9 @@ class CalendarBottomSheet extends StatelessWidget {
             onEdit: AppointmentDialogService().showEditAppointmentDialog,
             onDelete:
                 (context, appointment) => onDeleteAppointment(appointment),
-            onTap: AppointmentDialogService().showAppointmentDetails,
+            onTap:
+                (context, appointment) => AppointmentDialogService()
+                    .showAppointmentDetails(context, appointment, onClose),
           ),
         );
       }, childCount: appointments.length),

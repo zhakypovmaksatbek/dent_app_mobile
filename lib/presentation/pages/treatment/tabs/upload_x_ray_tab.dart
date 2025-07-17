@@ -576,7 +576,10 @@ class _UploadXRayTabState extends State<UploadXRayTab>
     if (_imageId == null ||
         widget.calendarAppointment.appointmentId == null ||
         widget.calendarAppointment.patientId == null) {
-      AppSnackBar.showErrorSnackBar(context, "Недостаточно данных");
+      AppSnackBar.showErrorSnackBar(
+        context,
+        LocaleKeys.errors_not_enough_data.tr(),
+      );
       return;
     }
 
@@ -587,7 +590,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
     if (teeth.isEmpty) {
       AppSnackBar.showErrorSnackBar(
         context,
-        "Номер зуба обязателен для заполнения",
+        LocaleKeys.errors_tooth_number_required.tr(),
       );
       // Focus on teeth field to highlight the error
       _teethFocusNode.requestFocus();
@@ -641,7 +644,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
               const SizedBox(height: 20),
 
               AppText(
-                title: "Загрузить новый рентген",
+                title: LocaleKeys.buttons_load_new_x_ray.tr(),
                 textType: TextType.title,
               ),
               const SizedBox(height: 20),
@@ -655,7 +658,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                         _pickImage(ImageSource.camera);
                       },
                       icon: const Icon(Icons.camera_alt),
-                      label: const Text("Камера"),
+                      label: Text(LocaleKeys.buttons_camera.tr()),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorConstants.primary,
                         foregroundColor: Colors.white,
@@ -671,7 +674,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                         _pickImage(ImageSource.gallery);
                       },
                       icon: const Icon(Icons.photo_library),
-                      label: const Text("Галерея"),
+                      label: Text(LocaleKeys.buttons_gallery.tr()),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: ColorConstants.primary,
                         side: BorderSide(color: ColorConstants.primary),

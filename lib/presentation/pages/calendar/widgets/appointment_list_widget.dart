@@ -59,7 +59,7 @@ class AppointmentListWidget extends StatelessWidget {
                         isExpanded: true,
                         underline: const SizedBox(),
                         hint: Text(
-                          'Select Doctor',
+                          LocaleKeys.buttons_select_doctor.tr(),
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                         value: null,
@@ -116,7 +116,7 @@ class AppointmentListWidget extends StatelessWidget {
                     color: Colors.red,
                   ),
                   onPressed: () => onDoctorChanged(context, DoctorModel()),
-                  tooltip: 'Clear All Filters',
+                  tooltip: LocaleKeys.buttons_clear_all_filters.tr(),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),

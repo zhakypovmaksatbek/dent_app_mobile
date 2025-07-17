@@ -668,12 +668,13 @@ class _ServiceSearchBottomSheetState extends State<_ServiceSearchBottomSheet>
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Услуги не найдены',
+                          LocaleKeys.notifications_services_not_found.tr(),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Попробуйте изменить поисковый запрос',
+                          LocaleKeys.notifications_try_changing_search_query
+                              .tr(),
                           style: Theme.of(
                             context,
                           ).textTheme.bodySmall?.copyWith(
@@ -716,7 +717,7 @@ class _ServiceSearchBottomSheetState extends State<_ServiceSearchBottomSheet>
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'Поиск: "$_currentSearchQuery" (${_filteredServices.length} результатов)',
+                                  '${LocaleKeys.diagnosis_search_services.tr()}: "$_currentSearchQuery" (${_filteredServices.length} ${LocaleKeys.notifications_results.tr()})',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodySmall?.copyWith(

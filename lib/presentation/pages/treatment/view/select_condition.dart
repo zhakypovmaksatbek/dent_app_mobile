@@ -102,24 +102,24 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                       _buildInstructionStep(
                         context,
                         '1',
-                        'Просмотр категорий',
-                        'Выберите категорию состояния зуба из доступных вариантов',
+                        LocaleKeys.diagnosis_view_categories.tr(),
+                        LocaleKeys.diagnosis_select_category.tr(),
                         Icons.category,
                       ),
                       const SizedBox(height: 12),
                       _buildInstructionStep(
                         context,
                         '2',
-                        'Поиск состояния',
-                        'Используйте поле поиска для быстрого нахождения конкретного состояния',
+                        LocaleKeys.diagnosis_search_condition.tr(),
+                        LocaleKeys.diagnosis_search_condition_description.tr(),
                         Icons.search,
                       ),
                       const SizedBox(height: 12),
                       _buildInstructionStep(
                         context,
                         '3',
-                        'Выбор состояния',
-                        'Нажмите на карточку состояния или выберите из детального списка',
+                        LocaleKeys.diagnosis_select_condition.tr(),
+                        LocaleKeys.diagnosis_select_condition_description.tr(),
                         Icons.touch_app,
                       ),
                     ],
@@ -339,7 +339,7 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
           FocusScope.of(context).unfocus();
         },
         decoration: InputDecoration(
-          hintText: 'Поиск состояний...',
+          hintText: LocaleKeys.diagnosis_search_condition.tr(),
           prefixIcon: Icon(
             Icons.search,
             color: _isSearchActive ? theme.primaryColor : theme.hintColor,
@@ -502,7 +502,7 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Состояния не найдены',
+                LocaleKeys.diagnosis_no_conditions_found.tr(),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(
                     context,
@@ -511,7 +511,7 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Попробуйте изменить поисковый запрос',
+                LocaleKeys.diagnosis_try_changing_search_query.tr(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(
                     context,

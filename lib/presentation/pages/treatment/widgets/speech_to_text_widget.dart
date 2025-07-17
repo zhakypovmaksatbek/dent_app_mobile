@@ -1,5 +1,7 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/speech_to_text_controller.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class SpeechToTextWidget extends StatefulWidget {
@@ -122,15 +124,14 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
     List<Widget> actions = [];
 
     if (speechState == SpeechState.permissionDenied) {
-      title = 'Microphone Permission Required';
+      title = LocaleKeys.diagnosis_microphone_permission_required.tr();
       content =
-          'This app needs microphone access to use voice input. '
-          'Please enable microphone permission in your device settings.';
+          LocaleKeys.diagnosis_microphone_permission_required_description.tr();
 
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(LocaleKeys.buttons_cancel.tr()),
         ),
         TextButton(
           onPressed: () {
@@ -138,36 +139,36 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
             // Try to reinitialize which will show system permission dialog
             _speechController.initialize();
           },
-          child: const Text('Try Again'),
+          child: Text(LocaleKeys.buttons_try_again.tr()),
         ),
       ];
     } else if (speechState == SpeechState.notAvailable) {
-      title = 'Speech Recognition Not Available';
+      title = LocaleKeys.diagnosis_speech_recognition_not_available.tr();
       content =
-          'Speech recognition is not available on this device or '
-          'microphone permission was denied.';
+          LocaleKeys.diagnosis_speech_recognition_not_available_description
+              .tr();
 
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('OK'),
+          child: Text(LocaleKeys.buttons_ok.tr()),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
             _speechController.initialize();
           },
-          child: const Text('Retry'),
+          child: Text(LocaleKeys.buttons_retry.tr()),
         ),
       ];
     } else {
-      title = 'Speech Recognition Error';
+      title = LocaleKeys.diagnosis_speech_recognition_error.tr();
       content = _speechController.errorMessage;
 
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('OK'),
+          child: Text(LocaleKeys.buttons_ok.tr()),
         ),
       ];
     }
@@ -219,8 +220,8 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
         return Tooltip(
           message:
               _speechController.isListening
-                  ? 'Stop recording'
-                  : 'Start voice input',
+                  ? LocaleKeys.diagnosis_stop_recording.tr()
+                  : LocaleKeys.diagnosis_start_voice_input.tr(),
           child: GestureDetector(
             onTap: () {
               if (speechState == SpeechState.error ||
@@ -246,8 +247,8 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
                       shape: BoxShape.circle,
                       color:
                           _speechController.isListening
-                              ? buttonColor.withOpacity(
-                                0.1 * _pulseAnimation.value,
+                              ? buttonColor.withValues(
+                                alpha: 0.1 * _pulseAnimation.value,
                               )
                               : Colors.transparent,
                     ),

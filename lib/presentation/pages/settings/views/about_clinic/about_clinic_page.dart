@@ -115,7 +115,7 @@ class _LoadingView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           AppText(
-            title: "Загрузка информации о клинике...",
+            title: LocaleKeys.general_loading_clinic_info.tr(),
             textType: TextType.body,
             color: ColorConstants.textSecondary,
           ),
@@ -141,7 +141,7 @@ class _ErrorView extends StatelessWidget {
             Icon(Icons.error_outline, size: 64, color: ColorConstants.error),
             const SizedBox(height: 16),
             AppText(
-              title: "Ошибка загрузки",
+              title: LocaleKeys.notifications_error_loading.tr(),
               textType: TextType.header,
               color: ColorConstants.textPrimary,
               textAlign: TextAlign.center,
@@ -158,7 +158,7 @@ class _ErrorView extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back),
-              label: const Text("Вернуться"),
+              label: Text(MaterialLocalizations.of(context).backButtonTooltip),
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstants.primary,
                 foregroundColor: Colors.white,
@@ -342,7 +342,7 @@ class _InfoCardsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppText(
-          title: "Информация",
+          title: LocaleKeys.general_information.tr(),
           textType: TextType.title20,
           fontWeight: FontWeight.w600,
           color: ColorConstants.textPrimary,
@@ -356,7 +356,7 @@ class _InfoCardsSection extends StatelessWidget {
             Expanded(
               child: _InfoCard(
                 icon: Icons.location_on,
-                title: "Адрес",
+                title: LocaleKeys.forms_address.tr(),
                 value: clinic.address ?? "Не указан",
                 color: ColorConstants.error,
               ),
@@ -368,8 +368,8 @@ class _InfoCardsSection extends StatelessWidget {
             Expanded(
               child: _InfoCard(
                 icon: Icons.currency_exchange,
-                title: "Валюта",
-                value: Currency.fromCode(clinic.currency ?? "SOM").name.tr(),
+                title: LocaleKeys.general_currency.tr(),
+                value: Currency.fromCode(clinic.currency ?? "KGS").name.tr(),
                 color: ColorConstants.success,
               ),
             ),
@@ -497,7 +497,7 @@ class _WorkingHoursSection extends StatelessWidget {
               const SizedBox(height: 16),
 
               AppText(
-                title: "Время работы",
+                title: LocaleKeys.general_working_hours.tr(),
                 textType: TextType.body,
                 color: ColorConstants.textSecondary,
               ),
@@ -509,7 +509,7 @@ class _WorkingHoursSection extends StatelessWidget {
                 children: [
                   _TimeChip(
                     time: clinic.startWorkTime ?? "09:00",
-                    label: "Открытие",
+                    label: LocaleKeys.general_opening.tr(),
                     color: ColorConstants.success,
                   ),
 
@@ -528,7 +528,7 @@ class _WorkingHoursSection extends StatelessWidget {
 
                   _TimeChip(
                     time: clinic.endWorkTime ?? "18:00",
-                    label: "Закрытие",
+                    label: LocaleKeys.general_closing.tr(),
                     color: ColorConstants.error,
                   ),
                 ],
@@ -594,7 +594,7 @@ class _ContactSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppText(
-          title: "Контакты",
+          title: LocaleKeys.forms_contact_info.tr(),
           textType: TextType.title20,
           fontWeight: FontWeight.w600,
           color: ColorConstants.textPrimary,
@@ -605,7 +605,7 @@ class _ContactSection extends StatelessWidget {
         if (clinic.phoneNumber != null)
           _ContactCard(
             icon: Icons.phone,
-            title: "Телефон",
+            title: LocaleKeys.forms_phone.tr(),
             value: clinic.phoneNumber!,
             color: ColorConstants.primary,
             onTap: () => _makePhoneCall(clinic.phoneNumber!),
@@ -616,7 +616,7 @@ class _ContactSection extends StatelessWidget {
 
           _ContactCard(
             icon: Icons.location_on,
-            title: "Адрес",
+            title: LocaleKeys.forms_address.tr(),
             value: clinic.address!,
             color: ColorConstants.error,
             onTap: () => _openMap(clinic.address!),

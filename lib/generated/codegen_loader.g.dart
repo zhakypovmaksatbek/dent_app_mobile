@@ -121,7 +121,17 @@ class CodegenLoader extends AssetLoader{
     "detail": "Детали",
     "x_ray": "Рентген",
     "your_weekly_working_hours": "Ваши рабочие часы в неделю",
-    "warehouse_info": "Информация о складе"
+    "warehouse_info": "Информация о складе",
+    "current_week": "Текущая неделя",
+    "total_working_hours": "Всего рабочих часов",
+    "loading_clinic_info": "Загрузка информации о клинике...",
+    "information": "Информация",
+    "currency": "Валюта",
+    "opening": "Открытие",
+    "closing": "Закрытие",
+    "profile_photo": "Фото профиля",
+    "change_photo": "Изменить фото",
+    "upload_photo": "Загрузить фото"
   },
   "buttons": {
     "login": "Войти",
@@ -172,14 +182,26 @@ class CodegenLoader extends AssetLoader{
     "complete": "Завершить",
     "saving": "Сохранение...",
     "next": "Далее",
-    "call": "Позвонить"
+    "call": "Позвонить",
+    "camera": "Камера",
+    "gallery": "Галерея",
+    "load_new_x_ray": "Загрузить новый рентген",
+    "repeat": "Повторить",
+    "done": "Готово",
+    "help": "Помощь",
+    "try_again": "Попробовать снова",
+    "start_voice_input": "Начать голосовой ввод",
+    "clear_all_filters": "Очистить все фильтры"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
     "invalid_password": "Неверный пароль",
     "required_field": "Обязательное поле",
     "something_went_wrong": "Что-то пошло не так",
-    "login_failed": "Не удалось войти"
+    "login_failed": "Не удалось войти",
+    "speech_recognition_not_available": "Синтезатор речи не доступен или отключен",
+    "not_enough_data": "Недостаточно данных",
+    "tooth_number_required": "Номер зуба обязателен для заполнения"
   },
   "forms": {
     "enter_email": "Введите эл. почту",
@@ -258,7 +280,8 @@ class CodegenLoader extends AssetLoader{
     "enter_product_description": "Введите описание продукта",
     "product_name": "Название продукта",
     "edit_product": "Редактировать продукт",
-    "add_new_product": "Добавить новый продукт"
+    "add_new_product": "Добавить новый продукт",
+    "is_required": "обязательное поле"
   },
   "routes": {
     "dashboard": "Главная",
@@ -336,7 +359,18 @@ class CodegenLoader extends AssetLoader{
     "payment_error": "Ошибка при оплате",
     "please_select_at_least_one_service": "Пожалуйста, выберите хотя бы одну услугу",
     "logout_info": "Вы уверены, что хотите выйти из аккаунта?",
-    "logout_info_description": "Вы уверены, что хотите выйти из аккаунта? Вы будете перенаправлены на страницу входа."
+    "logout_info_description": "Вы уверены, что хотите выйти из аккаунта? Вы будете перенаправлены на страницу входа.",
+    "error_loading": "Ошибка загрузкa",
+    "photo_successfully_uploaded": "Фото успешно загружено",
+    "photo_successfully_deleted": "Фото успешно удалено",
+    "no_personal_found": "Нет персонала",
+    "operation_successful": "Операция успешно завершена",
+    "no_search_results_found": "Ничего не найдено",
+    "services_not_found": "Услуги не найдены",
+    "try_changing_search_query": "Попробуйте изменить поисковый запрос",
+    "results": "результатов",
+    "no_data_available": "Нет данных",
+    "unknown_state": "Неизвестное состояние"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -554,7 +588,29 @@ class CodegenLoader extends AssetLoader{
     "select_condition": "Выберите состояние",
     "select_tooth_type": "Выберите область зуба",
     "no_work_items": "Нет работ",
-    "work_items": "Работы"
+    "work_items": "Работы",
+    "view_categories": "Просмотр категорий",
+    "select_category": "Выберите категорию",
+    "search_condition": "Поиск состояния",
+    "search_condition_description": "Используйте поле поиска для быстрого нахождения конкретного состояния",
+    "search_condition_hint": "Поиск состояний...",
+    "select_condition_description": "Нажмите на карточку состояния или выберите из детального списка",
+    "no_conditions_found": "Состояния не найдены",
+    "try_changing_search_query": "Попробуйте изменить поисковый запрос",
+    "search_services": "Поиск услуг",
+    "treatment_setup_process": "Процесс настройки лечения:",
+    "select_pattern_type": "Выберите тип шаблона",
+    "microphone_permission_required": "Необходимо разрешение на использование микрофона",
+    "microphone_permission_required_description": "Это приложение требует доступ к микрофону для использования голосового ввода. Пожалуйста, разрешите доступ к микрофону в настройках устройства.",
+    "speech_recognition_not_available": "Голосовое распознавание не доступно",
+    "speech_recognition_not_available_description": "Голосовое распознавание не доступно на этом устройстве или доступ к микрофону был запрещен.",
+    "speech_recognition_error": "Ошибка голосового распознавания",
+    "stop_recording": "Остановить запись",
+    "start_voice_input": "Начать голосовой ввод",
+    "select_diagnosis_and_continue": "Выберите диагноз и продолжайте",
+    "date_not_available": "Дата не доступна",
+    "time_not_available": "Время не доступно",
+    "invalid_date": "Неверная дата"
   },
   "currency": {
     "som": "Сом",
@@ -562,6 +618,28 @@ class CodegenLoader extends AssetLoader{
     "rub": "Рубль",
     "kzt": "Тенге",
     "eur": "Евро"
+  },
+  "tooth": {
+    "upper_jaw": "Верхняя\nчелюсть",
+    "lower_jaw": "Нижняя\nчелюсть",
+    "main": "Основной",
+    "right": "Правая",
+    "left": "Левая",
+    "top": "Верхняя",
+    "bottom": "Нижняя",
+    "jaw": "Челюсть",
+    "center_right": "Центр справа",
+    "center_left": "Центр слева",
+    "all": "Все",
+    "main_treatment": "Основное лечение зубов",
+    "right_treatment": "Лечение правой области",
+    "left_treatment": "Лечение левой области",
+    "top_treatment": "Лечение верхней области",
+    "bottom_treatment": "Лечение нижней области",
+    "jaw_treatment": "Лечение области челюсти",
+    "center_right_treatment": "Центральная правая область",
+    "center_left_treatment": "Центральная левая область",
+    "all_treatment": "Все области"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": _ru};

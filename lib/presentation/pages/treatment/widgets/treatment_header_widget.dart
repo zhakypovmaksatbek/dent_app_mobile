@@ -1,3 +1,4 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
@@ -56,7 +57,7 @@ class TreatmentHeaderWidget extends StatelessWidget {
                 Text(
                   appointmentStartTime != null
                       ? dateFormat.format(appointmentStartTime)
-                      : 'Date not available',
+                      : LocaleKeys.diagnosis_date_not_available.tr(),
                   style: const TextStyle(color: Colors.black87),
                 ),
                 const SizedBox(width: 16),
@@ -67,7 +68,7 @@ class TreatmentHeaderWidget extends StatelessWidget {
                       ? '${timeFormat.format(appointmentStartTime)} - ${timeFormat.format(appointmentEndTime)}'
                       : appointmentStartTime != null
                       ? timeFormat.format(appointmentStartTime)
-                      : 'Time not available',
+                      : LocaleKeys.diagnosis_time_not_available.tr(),
                   style: const TextStyle(color: Colors.black87),
                 ),
               ],
