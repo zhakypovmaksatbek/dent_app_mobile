@@ -16,6 +16,7 @@ class ServicesBarChart extends StatefulWidget {
 class _ServicesBarChartState extends State<ServicesBarChart> {
   late TooltipBehavior _tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -23,7 +24,15 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
     _initializeChartBehaviors();
   }
 
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
   void _initializeChartBehaviors() {
+    if (_isDisposed) return;
+
     _tooltipBehavior = TooltipBehavior(
       enable: true,
       format:
@@ -47,13 +56,14 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isDisposed) return const SizedBox.shrink();
+
     final theme = Theme.of(context);
     final sortedData = [...widget.data]
       ..sort((a, b) => (b.value ?? 0).compareTo(a.value ?? 0));
 
     return SizedBox(
       height: 400,
-      // padding: const EdgeInsets.all(16),
       child: SfCartesianChart(
         legend: Legend(
           isVisible: false,

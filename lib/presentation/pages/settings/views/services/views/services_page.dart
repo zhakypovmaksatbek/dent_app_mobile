@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/service/save_service_model.dart';
 import 'package:dent_app_mobile/models/service/service_model.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/get_service/get_service_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/get_service_item/get_service_item_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service/service_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service_type/service_type_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/widgets/debounced_serach_field.dart'; // Corrected import if necessary
@@ -40,7 +40,7 @@ class _ServicesView extends StatefulWidget {
 
 class _ServicesViewState extends State<_ServicesView> {
   // Cubit instances are held within the state.
-  late final GetServiceCubit getServiceCubit;
+  late final GetServiceItemCubit getServiceItemCubit;
   late final ServiceTypeCubit serviceTypeCubit;
   late final ServiceCubit serviceCubit;
 
@@ -48,21 +48,18 @@ class _ServicesViewState extends State<_ServicesView> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  // Cache to map service type ID to its name.
-  final Map<int, String> _serviceTypeMap = {};
-
   @override
   void initState() {
     super.initState();
     // IMPORTANT: If Cubit constructors take dependencies (e.g., a Repository),
     // you need to provide them here. E.g.: getServiceCubit = GetServiceCubit(context.read<ServiceRepository>());
     // The current code assumes they take no dependencies.
-    getServiceCubit = GetServiceCubit();
+    getServiceItemCubit = GetServiceItemCubit();
     serviceTypeCubit = ServiceTypeCubit();
     serviceCubit = ServiceCubit();
 
     // Initiate initial data loads after Cubits are created.
-    getServiceCubit.getServices();
+    getServiceItemCubit.getServiceItems();
     serviceTypeCubit.getServiceTypes();
   }
 
@@ -73,7 +70,7 @@ class _ServicesViewState extends State<_ServicesView> {
     _scrollController.dispose();
 
     // Close manually created Cubits (release resources).
-    getServiceCubit.close();
+    getServiceItemCubit.close();
     serviceTypeCubit.close();
     serviceCubit.close(); // Ensure serviceCubit is closed.
 
@@ -84,12 +81,12 @@ class _ServicesViewState extends State<_ServicesView> {
   void _handleSearchQuery(String query) {
     final trimmedQuery = query.trim();
     print("Performing search: '$trimmedQuery'");
-    // Access the provided GetServiceCubit and perform search.
+    // Access the provided GetServiceItemCubit and perform search.
     // Using context.read works because it's provided via BlocProvider.value.
-    context.read<GetServiceCubit>().getServices(
+    context.read<GetServiceItemCubit>().getServiceItems(
       search: trimmedQuery.isNotEmpty ? trimmedQuery : null,
     );
-    // Alternative (direct instance): getServiceCubit.getServices(...)
+    // Alternative (direct instance): getServiceItemCubit.getServiceItems(...)
   }
 
   // Shows the modal for adding a new service.
@@ -120,8 +117,6 @@ class _ServicesViewState extends State<_ServicesView> {
 
   // Shows the modal for editing an existing service.
   void _showEditServiceDialog(ServiceItem item) {
-    final serviceType = _serviceTypeMap[item.id]; // Get cached type
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -133,14 +128,16 @@ class _ServicesViewState extends State<_ServicesView> {
               BlocProvider.value(value: serviceCubit),
             ],
             child: ServiceFormModal(
-              formatServiceTypeName: formatServiceTypeName,
               initialService: SaveServiceModel(
-                name: item.name,
-                price: item.price?.toInt(),
-                serviceType: serviceType,
+                name: item.name ?? '',
+                price: (item.price ?? 0).toInt(),
+                serviceType: 'GENERAL', // Default service type
               ),
+              formatServiceTypeName: formatServiceTypeName,
               onSubmit: (service) {
-                serviceCubit.updateService(item.id!, service);
+                if (item.id != null) {
+                  serviceCubit.updateService(item.id!, service);
+                }
                 Navigator.pop(modalContext);
               },
             ),
@@ -148,31 +145,29 @@ class _ServicesViewState extends State<_ServicesView> {
     );
   }
 
-  // Shows the confirmation dialog for deleting a service.
+  // Confirms deletion of a service.
   void _confirmDelete(ServiceItem item) {
     showDialog(
       context: context,
       builder:
-          (dialogContext) => AlertDialog(
+          (context) => AlertDialog(
             title: Text(LocaleKeys.buttons_delete.tr()),
             content: Text(
               LocaleKeys.alerts_confirm_delete_service.tr(
-                namedArgs: {'name': item.name ?? ''},
+                namedArgs: {'name': item.name ?? 'Unknown Service'},
               ),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
+                onPressed: () => Navigator.pop(context),
                 child: Text(LocaleKeys.buttons_cancel.tr()),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(dialogContext);
-                  // Call deleteService using the direct instance or context.read.
-                  serviceCubit.deleteService(item.id!);
+                  if (item.id != null) {
+                    serviceCubit.deleteService(item.id!);
+                  }
+                  Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(foregroundColor: Colors.red),
                 child: Text(LocaleKeys.buttons_delete.tr()),
@@ -182,93 +177,10 @@ class _ServicesViewState extends State<_ServicesView> {
     );
   }
 
-  // Converts a service type code into a human-readable string.
-  String formatServiceTypeName(String type) {
-    // The content of this method can remain the same.
-    switch (type) {
-      case 'NO_CATEGORY':
-        return 'No Category';
-      case 'CONSULTATION':
-        return 'Consultation';
-      case 'X_RAY':
-        return 'X-Ray';
-      case 'ORTHOPEDICS':
-        return 'Orthopedics';
-      case 'SURGERY_CHILD':
-        return 'Child Surgery';
-      case 'THERAPY':
-        return 'Therapy';
-      case 'SURGERY':
-        return 'Surgery';
-      case 'IMPLANTATION':
-        return 'Implantation';
-      case 'ORTHODONTICS':
-        return 'Orthodontics';
-      case 'ANESTHESIA':
-        return 'Anesthesia';
-      case 'HYGIENE':
-        return 'Hygiene';
-      case 'PREPS_AND_MATERIALS':
-        return 'Preparations & Materials';
-      case 'CHILD_DENTISTRY':
-        return 'Child Dentistry';
-      case 'LABORATORY':
-        return 'Laboratory';
-      case 'BONE_SOFT':
-        return 'Bone Soft';
-      case 'COSMETOLOGY':
-        return 'Cosmetology';
-      case 'PEDIATRIC_DENTISTRY':
-        return 'Pediatric Dentistry';
-      case 'TECHNICAL_WORKS':
-        return 'Technical Works';
-      case 'FUNCTIONAL_DIAGNOSTICS':
-        return 'Functional Diagnostics';
-      case 'DIAGNOSTICS':
-        return 'Diagnostics';
-      case 'GENERAL_EVENTS':
-        return 'General Events';
-      case 'MAXILLOFACIAL_SURGERY':
-        return 'Maxillofacial Surgery';
-      case 'PREVENTION':
-        return 'Preventive Care';
-      case 'SERVICE':
-        return 'Service';
-      default:
-        if (type.isEmpty) return 'Unknown';
-        return type
-            .replaceAll('_', ' ')
-            .toLowerCase()
-            .split(' ')
-            .map(
-              (word) =>
-                  word.isEmpty
-                      ? ''
-                      : '${word[0].toUpperCase()}${word.substring(1)}',
-            )
-            .join(' ');
-    }
-  }
-
-  // Extracts a list of ServiceItem from the API models and caches their types.
-  List<ServiceItem> _extractAndCacheServiceItems(List<ServiceModel> services) {
-    final allServices = <ServiceItem>[];
-    _serviceTypeMap.clear(); // Clear previous cache
-
-    for (final serviceModel in services) {
-      if (serviceModel.serviceItem != null) {
-        for (final item in serviceModel.serviceItem!) {
-          if (item.id != null) {
-            _serviceTypeMap[item.id!] =
-                serviceModel.serviceType ?? 'NO_CATEGORY';
-            allServices.add(item);
-          }
-        }
-      }
-    }
-    // Optional: Sorting can be added here
-    // allServices.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
-    return allServices;
+  // Helper function to format service type names (you can customize this).
+  String formatServiceTypeName(String rawName) {
+    // You can add custom formatting logic here if needed.
+    return rawName;
   }
 
   @override
@@ -276,7 +188,7 @@ class _ServicesViewState extends State<_ServicesView> {
     // Provide Cubit instances to the widget tree using MultiBlocProvider.
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: getServiceCubit),
+        BlocProvider.value(value: getServiceItemCubit),
         BlocProvider.value(value: serviceTypeCubit),
         BlocProvider.value(value: serviceCubit),
       ],
@@ -288,7 +200,7 @@ class _ServicesViewState extends State<_ServicesView> {
               if (state is ServiceActionSuccess) {
                 AppSnackBar.showSuccessSnackBar(context, state.message);
                 // Refresh the list if an action was successful.
-                context.read<GetServiceCubit>().getServices(
+                context.read<GetServiceItemCubit>().getServiceItems(
                   search:
                       _searchController.text.isNotEmpty
                           ? _searchController.text.trim()
@@ -354,15 +266,15 @@ class _ServicesViewState extends State<_ServicesView> {
 
   // Sliver widget that builds the service list or shows the relevant state (loading, error, empty).
   Widget _buildSliverServiceList() {
-    // Build the UI based on the state of GetServiceCubit.
-    return BlocBuilder<GetServiceCubit, GetServiceState>(
+    // Build the UI based on the state of GetServiceItemCubit.
+    return BlocBuilder<GetServiceItemCubit, GetServiceItemState>(
       builder: (context, state) {
-        if (state is GetServiceLoading) {
+        if (state is GetServiceItemLoading) {
           return const SliverFillRemaining(child: Center(child: AppLoader()));
-        } else if (state is GetServiceLoaded) {
-          final allServices = _extractAndCacheServiceItems(state.services);
+        } else if (state is GetServiceItemLoaded) {
+          final serviceItems = state.serviceItems;
 
-          if (allServices.isEmpty) {
+          if (serviceItems.isEmpty) {
             // Message shown if there are no services initially or after a search.
             return SliverFillRemaining(
               child: Center(
@@ -392,16 +304,16 @@ class _ServicesViewState extends State<_ServicesView> {
             ), // Top and side padding.
             sliver: SliverList.separated(
               itemBuilder: (context, index) {
-                final item = allServices[index];
+                final item = serviceItems[index];
                 return _buildServiceItemCard(item);
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 12);
               },
-              itemCount: allServices.length,
+              itemCount: serviceItems.length,
             ),
           );
-        } else if (state is GetServiceError) {
+        } else if (state is GetServiceItemError) {
           return SliverFillRemaining(
             child: Center(
               child: Padding(
@@ -442,12 +354,6 @@ class _ServicesViewState extends State<_ServicesView> {
             ).format(DateTime.parse(item.createdAt!))
             : 'N/A';
 
-    final serviceTypeRaw =
-        item.id != null ? _serviceTypeMap[item.id] : 'NO_CATEGORY';
-    final serviceTypeName = formatServiceTypeName(
-      serviceTypeRaw ?? 'NO_CATEGORY',
-    );
-
     return Container(
       // No margin here, spacing is handled by Padding in SliverList delegate
       decoration: theme.extension<CardStyleExtension>()?.customCardDecoration,
@@ -471,7 +377,7 @@ class _ServicesViewState extends State<_ServicesView> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '$serviceTypeName • ${LocaleKeys.forms_created_on.tr()}: $formattedDate',
+                    '${LocaleKeys.forms_created_on.tr()}: $formattedDate',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: Colors.grey.shade600,
                     ),

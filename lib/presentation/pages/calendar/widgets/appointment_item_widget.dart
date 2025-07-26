@@ -90,9 +90,10 @@ class AppointmentItemWidget extends StatelessWidget {
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
+          spacing: 8,
           children: [
             IconButton(
-              icon: const Icon(Icons.edit, size: 16),
+              icon: const Icon(Icons.edit),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               onPressed: () => onEdit(context, appointment),
@@ -111,7 +112,7 @@ class AppointmentItemWidget extends StatelessWidget {
               child: CustomAssetImage(
                 path: AssetConstants.whatsapp.svg,
                 isSvg: true,
-                height: 20,
+                height: 26,
               ),
             ),
           ],
