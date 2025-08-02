@@ -13,7 +13,8 @@ class ServicesPieChart extends StatefulWidget {
   State<ServicesPieChart> createState() => _ServicesPieChartState();
 }
 
-class _ServicesPieChartState extends State<ServicesPieChart> {
+class _ServicesPieChartState extends State<ServicesPieChart>
+    with AutomaticKeepAliveClientMixin {
   late List<QuantityServiceByUserResponses> chartData;
   late TooltipBehavior tooltipBehavior;
 
@@ -41,7 +42,7 @@ class _ServicesPieChartState extends State<ServicesPieChart> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    super.build(context);
     return SizedBox(
       height: 400, // Adjust based on your needs
       child: SfCircularChart(
@@ -113,4 +114,7 @@ class _ServicesPieChartState extends State<ServicesPieChart> {
 
     return maxIndex;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

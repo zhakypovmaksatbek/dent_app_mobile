@@ -13,7 +13,8 @@ class MonthlyStatisticsChart extends StatefulWidget {
   State<MonthlyStatisticsChart> createState() => _MonthlyStatisticsChartState();
 }
 
-class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
+class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart>
+    with AutomaticKeepAliveClientMixin {
   late TooltipBehavior _tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
 
@@ -47,7 +48,7 @@ class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    super.build(context);
     return SizedBox(
       height: 400,
       // padding: const EdgeInsets.all(8),
@@ -131,4 +132,7 @@ class _MonthlyStatisticsChartState extends State<MonthlyStatisticsChart> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

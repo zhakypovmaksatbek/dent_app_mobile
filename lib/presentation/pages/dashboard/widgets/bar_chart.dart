@@ -13,7 +13,8 @@ class ServicesBarChart extends StatefulWidget {
   State<ServicesBarChart> createState() => _ServicesBarChartState();
 }
 
-class _ServicesBarChartState extends State<ServicesBarChart> {
+class _ServicesBarChartState extends State<ServicesBarChart>
+    with AutomaticKeepAliveClientMixin {
   late TooltipBehavior _tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
   bool _isDisposed = false;
@@ -151,4 +152,7 @@ class _ServicesBarChartState extends State<ServicesBarChart> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
