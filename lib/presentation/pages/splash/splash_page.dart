@@ -66,7 +66,6 @@ class _SplashPageState extends State<SplashPage> {
                 height: 150,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  // color: const Color(0xFF6770CC).withOpacity(0.1),
                   color: const Color.fromARGB(
                     255,
                     255,
@@ -86,28 +85,9 @@ class _SplashPageState extends State<SplashPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 130,
                             height: 130,
-                            decoration: BoxDecoration(
-                              // color: const Color(0xFF6770CC),
-                              // // color: Colors.white,
-                              // shape: BoxShape.circle,
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     // color:
-                              //     //     const Color(0xFF6770CC).withOpacity(0.3),
-                              //     color: const Color.fromARGB(
-                              //       255,
-                              //       255,
-                              //       255,
-                              //       255,
-                              //     ).withValues(alpha: .4),
-                              //     blurRadius: 30,
-                              //     spreadRadius: 5,
-                              //   ),
-                              // ],
-                            ),
                             child: Center(
                               child: Image.asset(
                                 AssetConstants.toothLogo.png,
@@ -128,21 +108,6 @@ class _SplashPageState extends State<SplashPage> {
                             ),
                           ),
                           SizedBox(height: 15),
-                          // Container(
-                          //   padding: EdgeInsets.symmetric(
-                          //     horizontal: 20,
-                          //     vertical: 10,
-                          //   ),
-                          //   decoration: BoxDecoration(
-                          //     color: ColorConstants.white.withValues(alpha: .1),
-                          //     borderRadius: BorderRadius.circular(30),
-                          //   ),
-                          //   child: AppText(
-                          //     title: LocaleKeys.general_splash.tr(),
-                          //     textType: TextType.body,
-                          //     color: ColorConstants.white,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
