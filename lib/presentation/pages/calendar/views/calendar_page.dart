@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
@@ -181,10 +182,18 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   // Delete appointment with confirmation
-  Future<void> _deleteAppointment(CalendarAppointmentModel appointment) async {
+  Future<void> _deleteAppointment(
+    BuildContext context,
+    CalendarAppointmentModel appointment,
+  ) async {
+    router.pop();
     final result = await AppointmentDialogService()
-        .showDeleteConfirmationDialog(context, appointment);
-    if (result) {
+        .showDeleteConfirmationDialog(
+          context,
+          appointment,
+          _appointmentActionCubit,
+        );
+    if (result && context.mounted) {
       _appointmentActionCubit.deleteAppointment(appointment.appointmentId!);
     }
   }
@@ -211,6 +220,7 @@ class _CalendarPageState extends State<CalendarPage> {
       value: _doctorCubit,
       child: BlocProvider.value(
         value: _appointmentActionCubit,
+
         child: BlocListener<AppointmentCubit, AppointmentState>(
           listenWhen: (previous, current) => previous != current,
           listener: (context, state) {
@@ -282,6 +292,7 @@ class _CalendarPageState extends State<CalendarPage> {
         }
       },
       child: BlocListener<AppointmentActionCubit, AppointmentActionState>(
+        bloc: _appointmentActionCubit,
         listener: (context, state) {
           if (state is AppointmentActionSuccess) {
             _loadAppointmentsForDateRange();
@@ -352,12 +363,13 @@ class _CalendarPageState extends State<CalendarPage> {
               child: CalendarBottomSheet(
                 scrollController: scrollController,
                 selectedDoctors: _selectedDoctors,
+                actionCubit: _appointmentActionCubit,
                 doctors: _doctors,
                 appointments: _selectedDayAppointments,
                 selectedDate: _selectedDate,
                 onDoctorChanged: _handleDoctorSelection,
                 onDeleteAppointment:
-                    (appointment) => _deleteAppointment(appointment),
+                    (appointment) => _deleteAppointment(context, appointment),
                 onCreateAppointment:
                     (date) => _createAppointment(context, date),
                 onClose: () {

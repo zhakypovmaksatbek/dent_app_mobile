@@ -14,14 +14,12 @@ import 'package:flutter/material.dart';
 class AppointmentItemWidget extends StatelessWidget {
   final CalendarAppointmentModel appointment;
   final Function(BuildContext, CalendarAppointmentModel) onEdit;
-  final Function(BuildContext, CalendarAppointmentModel) onDelete;
   final Function(BuildContext, Appointment) onTap;
 
   const AppointmentItemWidget({
     super.key,
     required this.appointment,
     required this.onEdit,
-    required this.onDelete,
     required this.onTap,
   });
 

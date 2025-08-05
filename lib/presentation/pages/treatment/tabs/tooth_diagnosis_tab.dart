@@ -1,6 +1,8 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/presentation/constants/asset_constants.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
+import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -450,10 +452,9 @@ class _ToothExaminationDialog extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.biotech_outlined,
-                    color: theme.colorScheme.primary,
-                    size: 32,
+                  CustomAssetImage(
+                    path: AssetConstants.toothLogo.png,
+                    height: 30,
                   ),
                   AppText(
                     title: toothId,

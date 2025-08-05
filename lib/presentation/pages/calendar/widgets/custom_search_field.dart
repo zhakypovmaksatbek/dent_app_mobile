@@ -16,6 +16,7 @@ class CustomSearchField<T> extends StatefulWidget {
   final bool readOnly;
   final bool enabled;
   final Function()? onAddPatient;
+  final ScrollController? scrollController; // Yeni parametre
 
   const CustomSearchField({
     super.key,
@@ -30,6 +31,7 @@ class CustomSearchField<T> extends StatefulWidget {
     this.readOnly = false,
     this.enabled = true,
     this.onAddPatient,
+    this.scrollController, // Yeni parametre
   });
 
   @override
@@ -83,6 +85,50 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
     });
   }
 
+  // Overlay yüksekliğini hesapla
+  double _calculateOverlayHeight() {
+    if (widget.suggestions.isEmpty) {
+      return 120; // Sonuç yok durumu
+    } else {
+      const double itemHeight = 60;
+      const double padding = 16;
+      return (widget.suggestions.length * itemHeight + padding).clamp(80, 200);
+    }
+  }
+
+  // Scroll pozisyonunu ayarla
+  void _adjustScrollPosition() {
+    if (widget.scrollController == null) return;
+
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final Offset position = renderBox.localToGlobal(Offset.zero);
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final double overlayHeight = _calculateOverlayHeight();
+
+    // TextField'in alt kısmının ekran pozisyonu
+    final double fieldBottom = position.dy + renderBox.size.height;
+
+    // Klavye üstündeki kullanılabilir alan
+    final double availableSpace = screenHeight - keyboardHeight - fieldBottom;
+
+    // Eğer overlay için yeterli alan yoksa scroll yap
+    if (availableSpace < overlayHeight && keyboardHeight > 0) {
+      final double scrollOffset =
+          overlayHeight - availableSpace + 20; // 20px ekstra boşluk
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && widget.scrollController != null) {
+          widget.scrollController!.animateTo(
+            widget.scrollController!.offset + scrollOffset,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
+  }
+
   void _showOverlay() {
     if (_overlayEntry != null) {
       _removeOverlay();
@@ -90,51 +136,10 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
 
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final Size size = renderBox.size;
-    final Offset position = renderBox.localToGlobal(Offset.zero);
+    final double overlayHeight = _calculateOverlayHeight();
 
-    // Klavye yüksekliğini al
-    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    // İçeriğe göre dinamik overlay yüksekliği hesapla
-    double dynamicOverlayHeight;
-    if (widget.suggestions.isEmpty) {
-      // Sonuç yok durumu: text + button + padding
-      dynamicOverlayHeight = 120;
-    } else {
-      // Her item için yaklaşık 60px + padding
-      const double itemHeight = 60;
-      const double padding = 16;
-      dynamicOverlayHeight = (widget.suggestions.length * itemHeight + padding)
-          .clamp(80, 200);
-    }
-
-    // TextFormField'in alt kısmının ekran pozisyonu
-    final double fieldBottom = position.dy + size.height;
-
-    // Kullanılabilir alan (klavye üstü)
-    final double availableSpace = screenHeight - keyboardHeight - fieldBottom;
-
-    // Eğer kullanılabilir alan overlay için yeterli değilse, yukarı kaydır
-    double offsetY = size.height;
-    double maxHeight = dynamicOverlayHeight;
-
-    if (availableSpace < dynamicOverlayHeight && keyboardHeight > 0) {
-      // Yukarıdaki kullanılabilir alanı hesapla
-      final double spaceAbove = position.dy;
-
-      // Eğer dinamik yükseklik küçükse, TextField'e yakın konumlandır
-      if (dynamicOverlayHeight <= 120) {
-        offsetY = -dynamicOverlayHeight - 8; // Küçük gap
-        maxHeight = dynamicOverlayHeight;
-      } else {
-        maxHeight = (spaceAbove - 20).clamp(100, dynamicOverlayHeight);
-        offsetY = -maxHeight;
-      }
-    } else if (availableSpace < dynamicOverlayHeight) {
-      // Aşağıdaki alan sınırlıysa, yüksekliği sınırla
-      maxHeight = (availableSpace - 20).clamp(80, dynamicOverlayHeight);
-    }
+    // Scroll pozisyonunu ayarla
+    _adjustScrollPosition();
 
     _overlayEntry = OverlayEntry(
       builder:
@@ -143,14 +148,14 @@ class _CustomSearchFieldState<T> extends State<CustomSearchField<T>> {
             child: CompositedTransformFollower(
               link: _layerLink,
               showWhenUnlinked: false,
-              offset: Offset(0, offsetY),
+              offset: Offset(0, size.height + 4), // 4px gap
               child: Material(
                 elevation: 4,
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 child: Container(
                   constraints: BoxConstraints(
-                    maxHeight: maxHeight,
+                    maxHeight: overlayHeight,
                     minHeight: 50,
                   ),
                   child:

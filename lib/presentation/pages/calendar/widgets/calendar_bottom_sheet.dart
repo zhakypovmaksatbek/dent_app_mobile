@@ -2,6 +2,7 @@ import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/appointment_dialog_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_item_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
@@ -19,6 +20,7 @@ class CalendarBottomSheet extends StatelessWidget {
   final Function(CalendarAppointmentModel) onDeleteAppointment;
   final Function(DateTime) onCreateAppointment;
   final VoidCallback onClose;
+  final AppointmentActionCubit actionCubit;
 
   const CalendarBottomSheet({
     super.key,
@@ -31,6 +33,7 @@ class CalendarBottomSheet extends StatelessWidget {
     required this.onDeleteAppointment,
     required this.onCreateAppointment,
     required this.onClose,
+    required this.actionCubit,
   });
 
   @override
@@ -296,11 +299,15 @@ class CalendarBottomSheet extends StatelessWidget {
           child: AppointmentItemWidget(
             appointment: appointment,
             onEdit: AppointmentDialogService().showEditAppointmentDialog,
-            onDelete:
-                (context, appointment) => onDeleteAppointment(appointment),
+
             onTap:
-                (context, appointment) => AppointmentDialogService()
-                    .showAppointmentDetails(context, appointment, onClose),
+                (context, appointment) =>
+                    AppointmentDialogService().showAppointmentDetails(
+                      context,
+                      appointment,
+                      onClose,
+                      actionCubit,
+                    ),
           ),
         );
       }, childCount: appointments.length),

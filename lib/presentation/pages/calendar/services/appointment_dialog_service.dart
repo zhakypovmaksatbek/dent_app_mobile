@@ -29,6 +29,7 @@ class AppointmentDialogService {
     BuildContext context,
     Appointment appointment,
     VoidCallback onClose,
+    AppointmentActionCubit actionCubit,
   ) {
     // Extract the CalendarAppointmentModel from resourceIds
     CalendarAppointmentModel? calendarAppointment;
@@ -95,6 +96,7 @@ class AppointmentDialogService {
                           showDeleteConfirmationDialog(
                             context,
                             appointmentModel,
+                            actionCubit,
                           );
                         },
                       ),
@@ -326,6 +328,7 @@ class AppointmentDialogService {
   Future<bool> showDeleteConfirmationDialog(
     BuildContext context,
     CalendarAppointmentModel appointment,
+    AppointmentActionCubit actionCubit,
   ) async {
     final result = await showDialog<bool>(
       context: context,
@@ -340,17 +343,15 @@ class AppointmentDialogService {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true);
                 if (appointment.appointmentId != null) {
-                  context.read<AppointmentActionCubit>().deleteAppointment(
-                    appointment.appointmentId!,
-                  );
+                  actionCubit.deleteAppointment(appointment.appointmentId!);
                 } else {
                   AppSnackBar.showErrorSnackBar(
                     context,
                     'Could not delete appointment (missing ID)',
                   );
                 }
+                Navigator.of(context).pop(true);
               },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: Text(LocaleKeys.buttons_delete.tr()),

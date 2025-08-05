@@ -201,7 +201,6 @@ class AppointmentListWidget extends StatelessWidget {
                       return AppointmentItemWidget(
                         appointment: appointment,
                         onEdit: onEdit,
-                        onDelete: onDelete,
                         onTap: onTap,
                       );
                     },
