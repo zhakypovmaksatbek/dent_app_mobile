@@ -116,45 +116,30 @@ final class AppRouteManager {
   static List<BottomNavigationBarItem> _buildAdminNavigationItems() {
     return [
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.chart.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.chart.svg),
         label: LocaleKeys.routes_dashboard.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aChart.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aChart.svg),
       ),
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.calendar.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.calendar.svg),
         label: LocaleKeys.routes_calendar.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aCalendar.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aCalendar.svg),
       ),
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.user.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.user.svg),
         label: LocaleKeys.routes_patients.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aUser.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aUser.svg),
       ),
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.schedule.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.schedule.svg),
         label: LocaleKeys.routes_report.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aSchedule.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aSchedule.svg),
       ),
 
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.settings.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.settings.svg),
         label: LocaleKeys.routes_settings.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aSettings.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aSettings.svg),
       ),
     ];
   }
@@ -163,12 +148,9 @@ final class AppRouteManager {
   static List<BottomNavigationBarItem> _buildDoctorNavigationItems() {
     return [
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.calendar.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.calendar.svg),
         label: LocaleKeys.routes_calendar.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aCalendar.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aCalendar.svg),
       ),
       // NavigationItemModel(
       //   icon: CustomAssetImage(path: AssetConstants.schedule.svg, isSvg: true),
@@ -179,20 +161,14 @@ final class AppRouteManager {
       //   ),
       // ),
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.user.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.user.svg),
         label: LocaleKeys.routes_patients.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aUser.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aUser.svg),
       ),
       NavigationItemModel(
-        icon: CustomAssetImage(path: AssetConstants.settings.svg, isSvg: true),
+        icon: CustomAssetImage(path: AssetConstants.settings.svg),
         label: LocaleKeys.routes_settings.tr(),
-        activeIcon: CustomAssetImage(
-          path: AssetConstants.aSettings.svg,
-          isSvg: true,
-        ),
+        activeIcon: CustomAssetImage(path: AssetConstants.aSettings.svg),
       ),
     ];
   }

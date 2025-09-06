@@ -50,62 +50,72 @@ class _CombinedTimeDurationSelectorState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          // Left side - Time slots
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    LocaleKeys.appointment_time.tr(),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildTimeSlotsList(),
-                ],
-              ),
-            ),
+    return BlocConsumer<FreeTimeCubit, FreeTimeState>(
+      listener: (context, state) {
+        if (state is FreeTimeLoaded) {
+          /// burada gelen bos vakitleri burada gosterilecek ve
+          /// secilen bos vakit disariya aktarilmasi lazim mesela onChanged gibi methodlari burada kullanacagiz
+        }
+      },
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8),
           ),
-
-          // Divider
-          Container(width: 1, height: 200, color: Colors.grey[300]),
-
-          // Right side - Duration picker
-          Expanded(
-            flex: 1,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Text(
-                    LocaleKeys.general_minutes.tr(),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[700],
-                    ),
+          child: Row(
+            children: [
+              // Left side - Time slots
+              Expanded(
+                flex: 3,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        LocaleKeys.appointment_time.tr(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTimeSlotsList(),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  _buildDurationPicker(),
-                ],
+                ),
               ),
-            ),
+
+              // Divider
+              Container(width: 1, height: 200, color: Colors.grey[300]),
+
+              // Right side - Duration picker
+              Expanded(
+                flex: 1,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(
+                        LocaleKeys.general_minutes.tr(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildDurationPicker(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -294,22 +304,6 @@ class _CombinedTimeDurationSelectorState
       ),
       child: Column(
         children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.timer, size: 16, color: Colors.grey[600]),
-                const SizedBox(width: 4),
-                Text(
-                  LocaleKeys.general_minutes.tr(),
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ),
-
           // Picker
           Expanded(
             child: NotificationListener<ScrollNotification>(

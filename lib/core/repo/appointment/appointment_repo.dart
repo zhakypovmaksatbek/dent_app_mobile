@@ -108,10 +108,10 @@ class AppointmentRepo extends IAppointmentRepo {
   }
 
   @override
-  Future<List<PatientShortModel>> getPatientShortList(String query) async {
+  Future<List<PatientShortModel>> getPatientShortList(String? query) async {
     final response = await dio.get(
       'api/calendars/patients',
-      queryParameters: {'search': query},
+      queryParameters: query != null ? {'search': query} : null,
     );
     List<dynamic> data = response.data as List<dynamic>;
     return data

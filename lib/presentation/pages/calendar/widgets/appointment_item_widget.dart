@@ -109,7 +109,6 @@ class AppointmentItemWidget extends StatelessWidget {
               },
               child: CustomAssetImage(
                 path: AssetConstants.whatsapp.svg,
-                isSvg: true,
                 height: 26,
               ),
             ),

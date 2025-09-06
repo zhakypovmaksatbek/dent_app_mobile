@@ -10,7 +10,6 @@ class CustomAssetImage extends StatelessWidget {
     this.height,
     this.width,
     required this.path,
-    this.isSvg = false,
     this.svgColor,
   });
   final BoxFit? fit;
@@ -18,15 +17,15 @@ class CustomAssetImage extends StatelessWidget {
   final double? height;
   final double? width;
   final String path;
-  final bool? isSvg;
   final Color? svgColor;
   @override
   Widget build(BuildContext context) {
+    final isSvg = path.endsWith(".svg");
     final theme = Theme.of(context);
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child:
-          isSvg!
+          isSvg
               ? SvgPicture.asset(
                 path,
 

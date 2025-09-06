@@ -1,4 +1,4 @@
-package com.aksoft.dent_app_mobile
+package com.aksoft.dentapp_aksoft
 
 import io.flutter.embedding.android.FlutterActivity
 

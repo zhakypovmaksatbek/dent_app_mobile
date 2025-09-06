@@ -117,7 +117,6 @@ class ToothTypeCard extends StatelessWidget {
                       padding: const EdgeInsets.all(6),
                       child: CustomAssetImage(
                         path: _getToothTypeSvgPath(toothType),
-                        isSvg: true,
                       ),
                     ),
                   ),

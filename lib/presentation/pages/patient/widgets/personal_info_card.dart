@@ -418,7 +418,6 @@ class PersonalInfoCard extends StatelessWidget {
                 onPressed: () => _openWhatsApp(context, phoneNumber),
                 icon: CustomAssetImage(
                   path: AssetConstants.whatsapp.svg,
-                  isSvg: true,
                   height: 20,
                 ),
                 style: IconButton.styleFrom(

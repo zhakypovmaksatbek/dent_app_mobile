@@ -9,6 +9,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/appointment_dialog_service.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/views/create_appointment_view.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_datasource_util.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_fixed_section.dart';
@@ -201,9 +202,13 @@ class _CalendarPageState extends State<CalendarPage> {
   // Create a new appointment
   void _createAppointment(BuildContext context, DateTime currentDate) {
     if (currentDate.isAfter(DateTime.now().subtract(const Duration(days: 1)))) {
-      AppointmentDialogService.showAddAppointmentDialog(
-        context,
-        initialDate: currentDate,
+      // AppointmentDialogService.showAddAppointmentDialog(
+      //   context,
+      //   initialDate: currentDate,
+      // );
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => CreateAppointmentView(selectedDate: currentDate),
       );
     } else {
       AppSnackBar.showErrorSnackBar(

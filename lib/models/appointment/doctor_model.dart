@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class DoctorModel {
   int? id;
   String? fullName;
@@ -20,5 +21,10 @@ class DoctorModel {
     data['specialities'] = specialities;
     data['table'] = table;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'DoctorModel(id: $id, fullName: $fullName, specialities: $specialities, table: $table)';
   }
 }

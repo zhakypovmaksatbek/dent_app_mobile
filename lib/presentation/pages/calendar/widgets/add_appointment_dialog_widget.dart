@@ -472,7 +472,6 @@ class _AddAppointmentDialogWidgetState
             border: const OutlineInputBorder(),
             enabled: doctorId != null && patientId != null,
           ),
-          value: recordType,
           items:
               RecordType.values
                   .map(
@@ -502,7 +501,7 @@ class _AddAppointmentDialogWidgetState
             border: const OutlineInputBorder(),
             enabled: doctorId != null && patientId != null,
           ),
-          value: appointmentStatus,
+          initialValue: appointmentStatus,
           items:
               AppointmentStatus.values
                   .map(
@@ -532,7 +531,7 @@ class _AddAppointmentDialogWidgetState
                 border: const OutlineInputBorder(),
                 enabled: doctorId != null && patientId != null,
               ),
-              value: roomId,
+              initialValue: roomId,
               items: const [],
 
               onChanged:
@@ -548,7 +547,7 @@ class _AddAppointmentDialogWidgetState
                 border: const OutlineInputBorder(),
                 enabled: doctorId != null && patientId != null,
               ),
-              value: roomId,
+              initialValue: roomId,
               items:
                   _rooms.map((room) {
                     return DropdownMenuItem<int>(

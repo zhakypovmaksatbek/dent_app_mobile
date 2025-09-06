@@ -12,13 +12,21 @@ class SearchPatientCubit extends Cubit<SearchPatientState> {
 
   final AppointmentRepo _appointmentRepo = AppointmentRepo();
 
-  Future<void> searchPatients(String query) async {
+  Future<List<PatientShortModel>> searchPatients(String? query) async {
+    if (query == null || query.trim().isEmpty) {
+      emit(SearchPatientLoaded([]));
+      return [];
+    }
+
     emit(SearchPatientLoading());
     try {
       final patients = await _appointmentRepo.getPatientShortList(query);
       emit(SearchPatientLoaded(patients));
+      return patients;
     } on DioException catch (e) {
-      emit(SearchPatientError(FormatUtils.formatErrorMessage(e)));
+      final errorMessage = FormatUtils.formatErrorMessage(e);
+      emit(SearchPatientError(errorMessage));
+      return [];
     }
   }
 }
