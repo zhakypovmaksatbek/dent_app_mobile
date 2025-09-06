@@ -38,6 +38,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   Timer? _roomLoadDebounceTimer;
   AppointmentStatus _selectedAppointmentStatus = AppointmentStatus.notConfirmed;
   RecordType? _selectedRecordType;
+  int? _selectedRoomId;
 
   bool get _isStep1Complete => _selectedDoctor != null;
 
@@ -154,14 +155,12 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                                     _selectedDate ?? widget.selectedDate,
                                 onTimeSlotChanged: (timeSlot) {
                                   _roomLoadDebounceTimer?.cancel();
+                                  _selectedRoomId = null;
                                   _selectedTimeSlot = timeSlot;
                                   if (timeSlot != null) {
                                     _roomLoadDebounceTimer = Timer(
                                       const Duration(seconds: 1),
                                       () {
-                                        log(
-                                          "Debounce süresi doldu, odalar yükleniyor...",
-                                        );
                                         _loadRooms();
                                       },
                                     );
@@ -208,7 +207,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                             SelectionRoomWidget(
                               enabled: _selectedTimeSlot != null,
                               onRoomSelected: (room) {
-                                log('Seçilen oda: $room');
+                                _selectedRoomId = room;
                               },
                             ),
                             AppointmentNoteWidget(),
