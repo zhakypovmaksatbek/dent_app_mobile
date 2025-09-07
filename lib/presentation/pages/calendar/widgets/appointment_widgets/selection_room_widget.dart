@@ -8,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectionRoomWidget extends StatelessWidget {
-  final int? selectedRoomId;
   final bool enabled;
-  final Function(int?) onRoomSelected;
-
+  final Function(RoomModel?) onRoomSelected;
+  final RoomModel? initialValue;
   const SelectionRoomWidget({
     super.key,
     required this.enabled,
-    this.selectedRoomId,
     required this.onRoomSelected,
+    this.initialValue,
   });
 
   @override
@@ -33,16 +32,16 @@ class SelectionRoomWidget extends StatelessWidget {
         }
 
         if (state is RoomLoaded) {
-          return DropdownButtonFormField<int>(
-            initialValue: _getValidSelectedValue(state.rooms),
+          return DropdownButtonFormField<RoomModel>(
+            initialValue: initialValue,
             items:
                 state.rooms.map((room) {
-                  return DropdownMenuItem<int>(
-                    value: room.id,
+                  return DropdownMenuItem<RoomModel>(
+                    value: room,
                     child: Text(room.name ?? 'Unknown Room'),
                   );
                 }).toList(),
-            onChanged: enabled ? onRoomSelected : null,
+            onChanged: enabled ? (room) => onRoomSelected(room) : null,
             decoration: InputDecoration(
               labelText: LocaleKeys.appointment_room.tr(),
               prefixIcon: const Icon(Icons.meeting_room),
@@ -60,13 +59,6 @@ class SelectionRoomWidget extends StatelessWidget {
         return _buildDropdownWrapper(context: context, hintText: "Select Room");
       },
     );
-  }
-
-  int? _getValidSelectedValue(List<RoomModel> rooms) {
-    if (selectedRoomId == null) return null;
-    return rooms.any((room) => room.id == selectedRoomId)
-        ? selectedRoomId
-        : null;
   }
 
   Widget _buildDropdownWrapper({

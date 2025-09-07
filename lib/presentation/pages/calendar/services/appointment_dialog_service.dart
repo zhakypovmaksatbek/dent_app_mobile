@@ -8,8 +8,8 @@ import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.da
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/fast_payment_service.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/views/edit_appointment_view.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
-import 'package:dent_app_mobile/presentation/pages/calendar/widgets/edit_appointment_dialog_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
@@ -22,6 +22,7 @@ import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AppointmentDialogService {
   // Show appointment details dialog
@@ -310,16 +311,13 @@ class AppointmentDialogService {
     BuildContext context,
     CalendarAppointmentModel appointment,
   ) {
-    showModalBottomSheet(
+    showCupertinoModalBottomSheet(
       context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (context) {
-        return Material(
-          child: EditAppointmentDialogWidget(appointment: appointment),
-        );
+        return EditAppointmentView(appointment: appointment);
+        // return Material(
+        //   child: EditAppointmentDialogWidget(appointment: appointment),
+        // );
       },
     );
   }

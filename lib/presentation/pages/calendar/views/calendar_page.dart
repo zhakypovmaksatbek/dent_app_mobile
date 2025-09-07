@@ -200,16 +200,22 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   // Create a new appointment
-  void _createAppointment(BuildContext context, DateTime currentDate) {
+  Future<void> _createAppointment(
+    BuildContext context,
+    DateTime currentDate,
+  ) async {
     if (currentDate.isAfter(DateTime.now().subtract(const Duration(days: 1)))) {
       // AppointmentDialogService.showAddAppointmentDialog(
       //   context,
       //   initialDate: currentDate,
       // );
-      showCupertinoModalBottomSheet(
+      final result = await showCupertinoModalBottomSheet(
         context: context,
         builder: (context) => CreateAppointmentView(selectedDate: currentDate),
       );
+      if (result == true) {
+        _loadAppointmentsForDateRange();
+      }
     } else {
       AppSnackBar.showErrorSnackBar(
         context,

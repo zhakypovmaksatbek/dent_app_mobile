@@ -38,8 +38,12 @@ class CreateAppointmentModel {
     data['userId'] = userId;
     data['patientId'] = patientId;
     data['startDate'] = startDate;
-    data['startTime'] = startTime;
-    data['endTime'] = endTime;
+    if (startTime != null) {
+      data['startTime'] = startTime;
+    }
+    if (endTime != null) {
+      data['endTime'] = endTime;
+    }
     data['recordType'] = recordType;
     data['appointmentStatus'] = appointmentStatus;
     data['description'] = description;

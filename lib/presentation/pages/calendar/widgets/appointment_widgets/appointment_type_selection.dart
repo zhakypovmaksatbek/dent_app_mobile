@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 class AppointmentTypeSelection extends StatelessWidget {
   const AppointmentTypeSelection({
     super.key,
+    this.initialValue,
     required this.enabled,
     required this.onRecordTypeSelected,
   });
+  final RecordType? initialValue;
   final bool enabled;
   final Function(RecordType?) onRecordTypeSelected;
 
@@ -18,6 +20,7 @@ class AppointmentTypeSelection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DropdownButtonFormField<RecordType>(
+          initialValue: initialValue,
           decoration: InputDecoration(
             labelText: LocaleKeys.appointment_appointment_type_label.tr(),
             hintText: LocaleKeys.appointment_appointment_type_label.tr(),

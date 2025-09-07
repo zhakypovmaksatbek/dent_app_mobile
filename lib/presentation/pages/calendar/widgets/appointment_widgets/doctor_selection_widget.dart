@@ -11,13 +11,14 @@ class DoctorSelectionWidget extends StatefulWidget {
   final DoctorModel? initialValue;
   final Function(DoctorModel doctor) onDoctorSelected;
   final VoidCallback onSelectionCleared;
-
+  final bool enabled;
   const DoctorSelectionWidget({
     super.key,
     this.scrollController,
     this.initialValue,
     required this.onDoctorSelected,
     required this.onSelectionCleared,
+    this.enabled = true,
   });
   @override
   State<DoctorSelectionWidget> createState() => _DoctorSelectionWidgetState();
@@ -64,9 +65,8 @@ class _DoctorSelectionWidgetState extends State<DoctorSelectionWidget> {
           },
           hintText: LocaleKeys.report_doctor.tr(),
           initialValue: widget.initialValue,
-          onSelectionCleared: () {
-            widget.onSelectionCleared();
-          },
+          enabled: widget.enabled,
+          onSelectionCleared: widget.onSelectionCleared,
         );
       },
     );

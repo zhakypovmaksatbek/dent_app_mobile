@@ -3,8 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentNoteWidget extends StatefulWidget {
-  const AppointmentNoteWidget({super.key});
-
+  const AppointmentNoteWidget({super.key, required this.onNoteChanged});
+  final ValueChanged<String> onNoteChanged;
   @override
   State<AppointmentNoteWidget> createState() => _AppointmentNoteWidgetState();
 }
@@ -26,9 +26,14 @@ class _AppointmentNoteWidgetState extends State<AppointmentNoteWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: widget.onNoteChanged,
       controller: _noteController,
       minLines: 1,
       maxLines: 2,
+      onTapOutside: (event) {
+        FocusScope.of(context).unfocus();
+      },
+      textInputAction: TextInputAction.done,
       decoration: InputDecoration(
         labelText: LocaleKeys.appointment_notes.tr(),
         prefixIcon: const Icon(Icons.note_alt_outlined),

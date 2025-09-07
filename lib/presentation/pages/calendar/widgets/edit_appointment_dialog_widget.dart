@@ -48,7 +48,7 @@ class _EditAppointmentDialogWidgetState
   RecordType? recordType;
   AppointmentStatus? appointmentStatus;
   int? roomId;
-  int minute = 30; // Default duration for appointments
+  int minute = 10; // Default duration for appointments
 
   TimeModel? _selectedTimeSlot;
   final List<RoomModel> _rooms = [];
@@ -106,8 +106,8 @@ class _EditAppointmentDialogWidgetState
       // Round to nearest 10 minutes
       minute = ((minute + 5) ~/ 10) * 10;
 
-      // Ensure minute is between 30 and 60
-      minute = minute.clamp(30, 60);
+      // Ensure minute is between 10 and 60
+      minute = minute.clamp(10, 60);
     }
 
     // Initialize appointment data
@@ -312,7 +312,7 @@ class _EditAppointmentDialogWidgetState
   }
 
   Widget _buildDurationSection() {
-    final List<int> minuteOptions = [30, 40, 50, 60];
+    final List<int> minuteOptions = [10, 20, 30, 40, 50, 60];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,7 +459,7 @@ class _EditAppointmentDialogWidgetState
             prefixIcon: const Icon(Icons.category),
             border: const OutlineInputBorder(),
           ),
-          value: recordType,
+          initialValue: recordType,
           items:
               RecordType.values
                   .map(
@@ -491,7 +491,7 @@ class _EditAppointmentDialogWidgetState
             prefixIcon: const Icon(Icons.flag),
             border: const OutlineInputBorder(),
           ),
-          value: appointmentStatus,
+          initialValue: appointmentStatus,
           items:
               AppointmentStatus.values
                   .map(
@@ -522,7 +522,7 @@ class _EditAppointmentDialogWidgetState
                 prefixIcon: const Icon(Icons.meeting_room),
                 border: const OutlineInputBorder(),
               ),
-              value: roomId,
+              initialValue: roomId,
               items: const [
                 DropdownMenuItem(value: 1, child: Text('Room 1')),
                 DropdownMenuItem(value: 2, child: Text('Room 2')),
@@ -535,7 +535,7 @@ class _EditAppointmentDialogWidgetState
                 prefixIcon: const Icon(Icons.meeting_room),
                 border: const OutlineInputBorder(),
               ),
-              value: roomId,
+              initialValue: roomId,
               items:
                   _rooms.map((room) {
                     return DropdownMenuItem<int>(

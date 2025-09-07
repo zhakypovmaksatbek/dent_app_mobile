@@ -3,14 +3,16 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class NewCustomSearchInput<T> extends StatefulWidget {
   final Future<List<T>> Function(String query) onSearch;
   final Widget Function(T item) resultBuilder;
   final void Function(T item) onItemSelected;
-  final String hintText;
+  final String? hintText;
   final ScrollController? scrollController;
   final Widget Function(String query)? noResultsFoundBuilder;
 
@@ -18,7 +20,7 @@ class NewCustomSearchInput<T> extends StatefulWidget {
   final String prefixIconPath;
   final String Function(T item) displayStringForItem;
   final Duration debounceDuration;
-
+  final bool enabled;
   final VoidCallback? onSelectionCleared;
 
   final T? initialValue;
@@ -28,10 +30,11 @@ class NewCustomSearchInput<T> extends StatefulWidget {
     required this.onSearch,
     required this.resultBuilder,
     required this.onItemSelected,
-    this.hintText = 'Ara...',
+    this.hintText,
     this.scrollController,
     required this.prefixIconPath,
     required this.displayStringForItem,
+    this.enabled = true,
     this.onSelectionCleared,
     this.initialValue,
     this.debounceDuration = const Duration(milliseconds: 300),
@@ -40,10 +43,10 @@ class NewCustomSearchInput<T> extends StatefulWidget {
 
   @override
   State<NewCustomSearchInput<T>> createState() =>
-      _NewCustomSearchInputState<T>();
+      NewCustomSearchInputState<T>();
 }
 
-class _NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
+class NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
   final LayerLink _layerLink = LayerLink();
@@ -90,6 +93,10 @@ class _NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
         );
       }
     });
+  }
+
+  void selectItemProgrammatically(T item) {
+    _selectItem(item);
   }
 
   void _selectItem(T item, {bool isInitial = false}) {
@@ -207,9 +214,9 @@ class _NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
       if (widget.noResultsFoundBuilder != null) {
         return widget.noResultsFoundBuilder!(_controller.text);
       } else {
-        return const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text('Sonuç bulunamadı.'),
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(LocaleKeys.notifications_no_search_results_found.tr()),
         );
       }
     }
@@ -243,12 +250,15 @@ class _NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
         isSelectionLocked
             ? IconButton(
               icon: const Icon(Icons.close),
-              onPressed: () => _clearSelection(notifyParent: true),
+              onPressed:
+                  widget.enabled
+                      ? () => _clearSelection(notifyParent: true)
+                      : null,
             )
             : _controller.text.isNotEmpty
             ? IconButton(
               icon: const Icon(Icons.close),
-              onPressed: _controller.clear,
+              onPressed: widget.enabled ? _controller.clear : null,
             )
             : null;
     return CompositedTransformTarget(
@@ -261,8 +271,9 @@ class _NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
         focusNode: _focusNode,
         showCursor: !isSelectionLocked,
         enableInteractiveSelection: !isSelectionLocked,
+        enabled: widget.enabled,
         decoration: InputDecoration(
-          labelText: widget.hintText,
+          labelText: widget.hintText ?? LocaleKeys.buttons_search.tr(),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(8.0),
             child: CustomAssetImage(

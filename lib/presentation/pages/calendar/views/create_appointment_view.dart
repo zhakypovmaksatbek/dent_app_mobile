@@ -2,9 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
+import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_widgets/appointment_date_selection_widget.dart';
@@ -17,6 +21,8 @@ import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_widgets/time_selector_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
+import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
+import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,30 +36,30 @@ class CreateAppointmentView extends StatefulWidget {
 
 class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   final ScrollController _scrollController = ScrollController();
-
+  late final AppointmentActionCubit _appointmentActionCubit;
   DoctorModel? _selectedDoctor;
   PatientShortModel? _selectedPatient;
   DateTime? _selectedDate;
   TimeModel? _selectedTimeSlot;
   Timer? _roomLoadDebounceTimer;
   AppointmentStatus _selectedAppointmentStatus = AppointmentStatus.notConfirmed;
-  RecordType? _selectedRecordType;
-  int? _selectedRoomId;
+  RecordType? _selectedRecordType = RecordType.treatment;
+  RoomModel? _selectedRoomId;
+  String? _description;
 
   bool get _isStep1Complete => _selectedDoctor != null;
 
-  /// Adım 2'nin tamamlandığını belirtir: Tarih, Saat ve Hasta seçilmiş.
   bool get _isStep2Complete =>
       _selectedDate != null &&
       _selectedTimeSlot != null &&
       _selectedPatient != null;
 
-  /// Tüm zorunlu alanların doldurulduğunu ve kaydedilebileceğini belirtir.
   bool get _canSave => _isStep1Complete && _isStep2Complete;
   @override
   void initState() {
     super.initState();
     _selectedDate = widget.selectedDate;
+    _appointmentActionCubit = AppointmentActionCubit();
   }
 
   void _clearSelection() {
@@ -91,6 +97,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   void dispose() {
     _roomLoadDebounceTimer?.cancel();
     _scrollController.dispose();
+    _appointmentActionCubit.close();
     super.dispose();
   }
 
@@ -98,8 +105,15 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   Widget build(BuildContext context) {
     log('Doctor ID: ${_selectedDoctor?.id}');
     log('Selected Date: $_selectedDate');
+    log('Selected Patient: ${_selectedPatient?.fullName}');
+    log('Selected Patient ID: ${_selectedPatient?.id}');
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(LocaleKeys.appointment_new_appointment.tr())),
+      bottomNavigationBar: BottomAppBar(
+        color: theme.scaffoldBackgroundColor,
+        child: _createButton(),
+      ),
       body: BlocProvider(
         create: (context) => FreeTimeCubit(),
         child: SafeArea(
@@ -119,9 +133,8 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                         onDoctorSelected: (doctor) {
                           setState(() {
                             _selectedDoctor = doctor;
-
                             _selectedTimeSlot = null;
-                            log('Seçilen doktor: ${doctor.fullName}');
+                            _selectedRoomId = null;
                           });
                           _loadFreeTimeSlots();
                         },
@@ -188,6 +201,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                           spacing: 12,
                           children: [
                             SelectionAppointmentStatus(
+                              initialValue: _selectedAppointmentStatus,
                               enabled:
                                   _selectedDoctor != null &&
                                   _selectedPatient != null,
@@ -196,6 +210,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                               },
                             ),
                             AppointmentTypeSelection(
+                              initialValue: _selectedRecordType,
                               enabled:
                                   _selectedDoctor != null &&
                                   _selectedPatient != null,
@@ -210,32 +225,12 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                                 _selectedRoomId = room;
                               },
                             ),
-                            AppointmentNoteWidget(),
+                            AppointmentNoteWidget(
+                              onNoteChanged: (note) {
+                                _description = note;
+                              },
+                            ),
                           ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed:
-                              (_selectedDoctor != null &&
-                                      _selectedDate != null &&
-                                      _selectedTimeSlot != null)
-                                  ? () {
-                                    log('KAYDET BUTONUNA BASILDI:');
-                                    log('Doktor: ${_selectedDoctor?.fullName}');
-                                    log('Tarih: $_selectedDate');
-                                    log(
-                                      'Saat: ${_selectedTimeSlot?.startTime}',
-                                    );
-                                  }
-                                  : null,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: Text(LocaleKeys.buttons_save.tr()),
                         ),
                       ),
                     ],
@@ -245,6 +240,55 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox _createButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: BlocConsumer<AppointmentActionCubit, AppointmentActionState>(
+        bloc: _appointmentActionCubit,
+        listener: (context, state) {
+          if (state is AppointmentActionSuccess) {
+            router.pop(true);
+            AppSnackBar.showSuccessSnackBar(
+              context,
+              LocaleKeys.alerts_operation_successful.tr(),
+            );
+          } else if (state is AppointmentActionFailure) {
+            AppSnackBar.showErrorSnackBar(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          if (state is AppointmentActionLoading) {
+            return const LoadingWidget();
+          }
+          return ElevatedButton(
+            onPressed:
+                _canSave
+                    ? () {
+                      _appointmentActionCubit.createAppointment(
+                        CreateAppointmentModel(
+                          appointmentStatus:
+                              _selectedAppointmentStatus.key.toUpperCase(),
+                          recordType: _selectedRecordType?.key,
+                          roomId: _selectedRoomId?.id,
+                          description: _description,
+                          userId: _selectedDoctor!.id!,
+                          patientId: _selectedPatient!.id!,
+                          startTime: _selectedTimeSlot!.startTime,
+                          endTime: _selectedTimeSlot!.endTime,
+                          startDate: DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(_selectedDate!),
+                        ),
+                      );
+                    }
+                    : null,
+            child: Text(LocaleKeys.buttons_save.tr()),
+          );
+        },
       ),
     );
   }

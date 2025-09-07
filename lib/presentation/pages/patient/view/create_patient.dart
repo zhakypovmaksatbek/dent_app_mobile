@@ -442,7 +442,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
             context.read<PatientBloc>().add(
               GetPatients(page: 1, isRefresh: true),
             );
-            router.maybePop<String>(state.lastName);
+            router.maybePop<PatientModel>(state.patientModel);
           }
         },
         builder: (context, state) {

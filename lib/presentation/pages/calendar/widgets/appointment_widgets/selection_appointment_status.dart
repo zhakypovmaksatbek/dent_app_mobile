@@ -8,9 +8,11 @@ class SelectionAppointmentStatus extends StatelessWidget {
     super.key,
     required this.enabled,
     required this.onAppointmentStatusSelected,
+    this.initialValue,
   });
   final bool enabled;
   final Function(AppointmentStatus?) onAppointmentStatusSelected;
+  final AppointmentStatus? initialValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,7 +25,7 @@ class SelectionAppointmentStatus extends StatelessWidget {
             border: const OutlineInputBorder(),
             enabled: enabled,
           ),
-          initialValue: AppointmentStatus.notConfirmed,
+          initialValue: initialValue,
           items:
               AppointmentStatus.values
                   .map(

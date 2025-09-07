@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/search_patient/search_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/new_custom_search_field.dart';
@@ -14,21 +15,26 @@ class PatientSelectionWidget extends StatefulWidget {
     required this.onPatientSelected,
     required this.onSelectionCleared,
     required this.scrollController,
+    this.initialValue,
+    this.enabled = true,
   });
   final Function(PatientShortModel) onPatientSelected;
   final Function() onSelectionCleared;
   final ScrollController scrollController;
+  final PatientShortModel? initialValue;
+  final bool enabled;
   @override
   State<PatientSelectionWidget> createState() => _PatientSelectionWidgetState();
 }
 
 class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
   String? _pendingSearchAndSelect;
+  final GlobalKey<NewCustomSearchInputState<PatientShortModel>>
+  _searchInputKey = GlobalKey<NewCustomSearchInputState<PatientShortModel>>();
 
   void _onAddPatient(BuildContext context, String patientName) async {
-    final searchCubit = context.read<SearchPatientCubit>();
-
-    final result = await showCupertinoModalBottomSheet<String>(
+    FocusScope.of(context).unfocus();
+    final result = await showCupertinoModalBottomSheet<PatientModel>(
       context: context,
       builder:
           (context) =>
@@ -36,17 +42,16 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
     );
 
     if (result != null && mounted) {
-      setState(() {
-        _pendingSearchAndSelect = result;
-      });
-
-      searchCubit.searchPatients(result);
+      final patientShortModel = PatientShortModel(
+        dateOfBirthday: result.birthDate,
+        fullName: result.fullName,
+        id: result.id,
+      );
+      widget.onPatientSelected(patientShortModel);
+      _searchInputKey.currentState?.selectItemProgrammatically(
+        patientShortModel,
+      );
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   Future<List<PatientShortModel>> _searchUsers(String query) async {
@@ -73,6 +78,7 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
         }
       },
       child: NewCustomSearchInput<PatientShortModel>(
+        key: _searchInputKey,
         onSearch: _searchUsers,
         debounceDuration: const Duration(milliseconds: 500),
         resultBuilder: (item) => ListTile(title: Text(item.fullName ?? '')),
@@ -81,15 +87,17 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
         hintText: LocaleKeys.patients_search_patient.tr(),
         onSelectionCleared: widget.onSelectionCleared,
         scrollController: widget.scrollController,
+        initialValue: widget.initialValue,
         prefixIconPath: 'user',
+        enabled: widget.enabled,
         noResultsFoundBuilder:
             (query) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Sonuç bulunamadı: $query'),
+                Text(LocaleKeys.notifications_no_search_results_found.tr()),
                 TextButton(
                   onPressed: () => _onAddPatient(context, query),
-                  child: Text('Yeni hasta ekle'),
+                  child: Text(LocaleKeys.patients_add_patient.tr()),
                 ),
               ],
             ),
