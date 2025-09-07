@@ -116,22 +116,17 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
 
   int calculateDurationInMinutes(String startTimeStr, String endTimeStr) {
     try {
-      // String'leri doğrudan DateTime nesnelerine dönüştür
       final DateTime startDateTime = DateTime.parse(startTimeStr);
       final DateTime endDateTime = DateTime.parse(endTimeStr);
 
-      // İki tarih arasındaki farkı hesapla
       final Duration duration = endDateTime.difference(startDateTime);
 
-      // Eğer süre negatifse (bitiş başlangıçtan önceyse), 0 döndür
       if (duration.isNegative) {
         return 0;
       }
 
-      // Farkı dakika olarak döndür
       return duration.inMinutes;
     } catch (e) {
-      log('Süre hesaplama hatası: $e');
       return 0;
     }
   }
@@ -146,16 +141,11 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
 
   @override
   Widget build(BuildContext context) {
-    log('Doctor ID: ${_selectedDoctor.id}');
-    log('Selected Date: $_selectedDate');
-    log('Start Time: ${widget.appointment.startTime}');
-    log('End Time: ${widget.appointment.endTime}');
     final duration = calculateDurationInMinutes(
       widget.appointment.startTime ?? '',
       widget.appointment.endTime ?? '',
     );
-    log('Start Time: ${_selectedTimeSlot?.startTime}');
-    log('Duration: $duration');
+
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(LocaleKeys.buttons_update.tr())),
@@ -335,7 +325,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
 
       return TimeOfDay(hour: hour, minute: minute);
     } catch (e) {
-      log('Zaman ayrıştırma hatası: $e');
+      log('Time parsing error: $e');
       return null;
     }
   }
@@ -350,7 +340,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
 
       return '$hour:$minute:$second';
     } catch (e) {
-      log('Zaman ayrıştırma hatası: $e');
+      log('Time parsing error: $e');
       return '';
     }
   }
