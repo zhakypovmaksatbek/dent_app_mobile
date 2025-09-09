@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
@@ -21,6 +22,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_widgets/time_selector_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
+import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -28,8 +30,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateAppointmentView extends StatefulWidget {
-  const CreateAppointmentView({super.key, required this.selectedDate});
+  const CreateAppointmentView({
+    super.key,
+    required this.selectedDate,
+    required this.isAdmin,
+  });
   final DateTime selectedDate;
+  final bool isAdmin;
   @override
   State<CreateAppointmentView> createState() => _CreateAppointmentViewState();
 }
@@ -47,7 +54,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   RoomModel? _selectedRoomId;
   String? _description;
 
-  bool get _isStep1Complete => _selectedDoctor != null;
+  bool get _isStep1Complete => widget.isAdmin ? true : _selectedDoctor != null;
 
   bool get _isStep2Complete =>
       _selectedDate != null &&
@@ -60,6 +67,17 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
     super.initState();
     _selectedDate = widget.selectedDate;
     _appointmentActionCubit = AppointmentActionCubit();
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    if (!widget.isAdmin) {
+      final currentUserId = await AppDataService.instance.getUserId();
+      if (currentUserId != null) {
+        _selectedDoctor = DoctorModel(id: currentUserId, fullName: '');
+        setState(() {});
+      }
+    }
   }
 
   void _clearSelection() {
@@ -127,19 +145,39 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 12,
                     children: [
-                      DoctorSelectionWidget(
-                        scrollController: _scrollController,
-                        initialValue: _selectedDoctor,
-                        onDoctorSelected: (doctor) {
-                          setState(() {
-                            _selectedDoctor = doctor;
-                            _selectedTimeSlot = null;
-                            _selectedRoomId = null;
-                          });
-                          _loadFreeTimeSlots();
-                        },
-                        onSelectionCleared: () {
-                          _clearSelection();
+                      FutureBuilder<Role>(
+                        future: AppDataService.instance.getRole(),
+                        builder: (context, asyncSnapshot) {
+                          if (asyncSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (asyncSnapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${asyncSnapshot.error}'),
+                            );
+                          }
+                          final role = asyncSnapshot.data;
+                          if (role == Role.admin) {
+                            return DoctorSelectionWidget(
+                              scrollController: _scrollController,
+                              initialValue: _selectedDoctor,
+                              onDoctorSelected: (doctor) {
+                                setState(() {
+                                  _selectedDoctor = doctor;
+                                  _selectedTimeSlot = null;
+                                  _selectedRoomId = null;
+                                });
+                                _loadFreeTimeSlots();
+                              },
+                              onSelectionCleared: () {
+                                _clearSelection();
+                              },
+                            );
+                          }
+                          return const SizedBox.shrink();
                         },
                       ),
 

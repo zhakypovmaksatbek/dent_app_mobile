@@ -205,16 +205,20 @@ class _CalendarPageState extends State<CalendarPage> {
     DateTime currentDate,
   ) async {
     if (currentDate.isAfter(DateTime.now().subtract(const Duration(days: 1)))) {
-      // AppointmentDialogService.showAddAppointmentDialog(
-      //   context,
-      //   initialDate: currentDate,
-      // );
-      final result = await showCupertinoModalBottomSheet(
-        context: context,
-        builder: (context) => CreateAppointmentView(selectedDate: currentDate),
-      );
-      if (result == true) {
-        _loadAppointmentsForDateRange();
+      final Role role = await AppDataService.instance.getRole();
+      if (context.mounted) {
+        final result = await showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return CreateAppointmentView(
+              selectedDate: currentDate,
+              isAdmin: role == Role.admin,
+            );
+          },
+        );
+        if (result == true) {
+          _loadAppointmentsForDateRange();
+        }
       }
     } else {
       AppSnackBar.showErrorSnackBar(

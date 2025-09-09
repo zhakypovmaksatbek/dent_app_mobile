@@ -15,7 +15,7 @@ class DioService {
 
     final tokenDio = Dio(
       BaseOptions(
-        baseUrl: AppConstants.instance.baseUrlTest,
+        baseUrl: AppConstants.instance.baseUrlProd,
         contentType: "application/json",
         headers: {"Accept": "application/json"},
         connectTimeout: const Duration(seconds: 20),
@@ -32,7 +32,7 @@ class DioService {
 
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: AppConstants.instance.baseUrlTest,
+      baseUrl: AppConstants.instance.baseUrlProd,
       contentType: "application/json",
       headers: {"Accept": "application/json"},
       connectTimeout: const Duration(seconds: 20),
@@ -174,7 +174,7 @@ class AuthDioSettings {
   }
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: AppConstants.instance.baseUrlTest,
+      baseUrl: AppConstants.instance.baseUrlProd,
       contentType: "application/json",
       headers: {"Accept": "application/json"},
       connectTimeout: const Duration(seconds: 20),
