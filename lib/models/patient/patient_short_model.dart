@@ -1,4 +1,6 @@
-class PatientShortModel {
+import 'package:equatable/equatable.dart';
+
+class PatientShortModel extends Equatable {
   int? id;
   String? fullName;
   String? dateOfBirthday;
@@ -18,4 +20,23 @@ class PatientShortModel {
     data['dateOfBirthday'] = dateOfBirthday;
     return data;
   }
+
+  @override
+  List<Object?> get props => [id, fullName, dateOfBirthday];
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is PatientShortModel &&
+        other.id == id &&
+        other.fullName == fullName &&
+        other.dateOfBirthday == dateOfBirthday;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, fullName, dateOfBirthday);
+
+  @override
+  String toString() =>
+      'PatientShortModel(id: $id, fullName: $fullName, dateOfBirthday: $dateOfBirthday)';
 }

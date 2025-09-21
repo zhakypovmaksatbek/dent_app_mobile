@@ -31,6 +31,7 @@ class TimeAndDurationPicker extends StatefulWidget {
 class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
   late int _selectedMinute;
   TimeModel? _selectedTimeSlot;
+  Timer? _durationDebounceTimer;
   Timer? _debounceTimer;
   late FixedExtentScrollController _durationScrollController;
   late FixedExtentScrollController _timeScrollController;
@@ -56,6 +57,7 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
     _durationScrollController.dispose();
     _timeScrollController.dispose();
     _debounceTimer?.cancel();
+    _durationDebounceTimer?.cancel();
     super.dispose();
   }
 
@@ -66,6 +68,34 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
         widget.selectedDate != oldWidget.selectedDate) {
       _resetAndLoad();
     }
+  }
+
+  void _onDurationChanged(int newDuration) {
+    _durationDebounceTimer?.cancel();
+
+    setState(() {
+      _selectedMinute = newDuration;
+      _selectedTimeSlot = null;
+    });
+
+    widget.onTimeSlotChanged(null);
+
+    _durationDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _loadFreeTimeSlots();
+    });
+  }
+
+  void _handleTimeSelection(TimeModel? timeSlot) {
+    // Debounce timer'ı sıfırla
+    _durationDebounceTimer?.cancel();
+
+    // Kullanıcı kaydırmayı bıraktığında ana widget'ı güncellemek için yeni bir timer başlat.
+    _durationDebounceTimer = Timer(const Duration(milliseconds: 400), () {
+      // Timer tetiklendiğinde, en son seçilen değeri ana widget'a gönder.
+      if (timeSlot != null) {
+        widget.onTimeSlotChanged(timeSlot);
+      }
+    });
   }
 
   void _loadFreeTimeSlots() {
@@ -93,21 +123,6 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
     });
     widget.onTimeSlotChanged(null);
     _loadFreeTimeSlots();
-  }
-
-  void _onDurationChanged(int newDuration) {
-    _debounceTimer?.cancel();
-
-    setState(() {
-      _selectedMinute = newDuration;
-      _selectedTimeSlot = null;
-    });
-
-    widget.onTimeSlotChanged(null);
-
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      _loadFreeTimeSlots();
-    });
   }
 
   void _onTimeSlotSelected(TimeModel timeSlot, {int? index}) {
@@ -202,7 +217,7 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
                 if (state.times.isEmpty) {
                   return Center(
                     child: Text(
-                      LocaleKeys.appointment_not_have_grafic.tr(),
+                      LocaleKeys.forms_no_free_time_available.tr(),
                       style: Theme.of(context).textTheme.bodySmall,
                       textAlign: TextAlign.center,
                     ),
@@ -212,8 +227,8 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
                   scrollController: _timeScrollController,
                   itemExtent: 40,
                   onSelectedItemChanged: (index) {
-                    _selectedTimeSlot = state.times[index];
-                    _onTimeSlotSelected(_selectedTimeSlot!);
+                    final selectedValue = state.times[index];
+                    _handleTimeSelection(selectedValue);
                   },
 
                   children:

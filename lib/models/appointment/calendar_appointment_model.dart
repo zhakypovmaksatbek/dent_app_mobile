@@ -1,4 +1,6 @@
-class CalendarAppointmentModel {
+import 'package:equatable/equatable.dart';
+
+class CalendarAppointmentModel extends Equatable {
   int? appointmentId;
   String? startTime;
   String? endTime;
@@ -78,4 +80,41 @@ class CalendarAppointmentModel {
     data['room'] = room;
     return data;
   }
+
+  @override
+  List<Object?> get props => [
+    appointmentId,
+    startTime,
+    endTime,
+    patientId,
+    patientFirsName,
+    patientLastName,
+    patientPhoneNumber,
+    patientPhoneNumber2,
+    patientAttention,
+    doctorId,
+    doctorFirsName,
+    doctorLastName,
+    appointmentStatus,
+    recordType,
+    description,
+    roomId,
+    room,
+  ];
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is CalendarAppointmentModel &&
+        other.appointmentId == appointmentId &&
+        other.startTime == startTime &&
+        other.endTime == endTime;
+  }
+
+  @override
+  int get hashCode => Object.hash(appointmentId, startTime, endTime);
+
+  @override
+  String toString() =>
+      'CalendarAppointmentModel(appointmentId: $appointmentId, startTime: $startTime, endTime: $endTime)';
 }

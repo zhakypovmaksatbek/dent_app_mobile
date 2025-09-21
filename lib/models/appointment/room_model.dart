@@ -1,4 +1,6 @@
-class RoomModel {
+import 'package:equatable/equatable.dart';
+
+class RoomModel extends Equatable {
   int? id;
   String? name;
 
@@ -15,4 +17,19 @@ class RoomModel {
     data['name'] = name;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is RoomModel && other.id == id && other.name == name;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name);
+
+  @override
+  String toString() => 'RoomModel(id: $id, name: $name)';
+
+  @override
+  List<Object?> get props => [id, name];
 }

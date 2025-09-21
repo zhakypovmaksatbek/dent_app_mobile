@@ -281,7 +281,11 @@ class CodegenLoader extends AssetLoader{
     "product_name": "Название продукта",
     "edit_product": "Редактировать продукт",
     "add_new_product": "Добавить новый продукт",
-    "is_required": "обязательное поле"
+    "is_required": "обязательное поле",
+    "no_free_time_available": "Нет свободного времени или врач не работает в это время",
+    "select_time_first": "Пожалуйста, сначала выберите время",
+    "prompt_select_another_time": "Чтобы подобрать другое время, нажмите 'Обновить'.",
+    "selected_time": "Выбранное время"
   },
   "routes": {
     "dashboard": "Главная",

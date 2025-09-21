@@ -16,7 +16,7 @@
     
     </queries>
     <application
-        android:label="dent_app_mobile"
+        android:label="DentApp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

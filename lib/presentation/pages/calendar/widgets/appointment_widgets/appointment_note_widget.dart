@@ -3,8 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentNoteWidget extends StatefulWidget {
-  const AppointmentNoteWidget({super.key, required this.onNoteChanged});
+  const AppointmentNoteWidget({
+    super.key,
+    required this.onNoteChanged,
+    this.initialValue,
+  });
   final ValueChanged<String> onNoteChanged;
+  final String? initialValue;
   @override
   State<AppointmentNoteWidget> createState() => _AppointmentNoteWidgetState();
 }
@@ -15,6 +20,7 @@ class _AppointmentNoteWidgetState extends State<AppointmentNoteWidget> {
   void initState() {
     super.initState();
     _noteController = TextEditingController();
+    _noteController.text = widget.initialValue ?? '';
   }
 
   @override

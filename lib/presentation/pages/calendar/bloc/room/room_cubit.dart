@@ -40,4 +40,8 @@ class RoomCubit extends Cubit<RoomState> {
       emit(RoomFailure(message: FormatUtils.formatErrorMessage(e)));
     }
   }
+
+  void clearRooms() {
+    emit(RoomInitial());
+  }
 }

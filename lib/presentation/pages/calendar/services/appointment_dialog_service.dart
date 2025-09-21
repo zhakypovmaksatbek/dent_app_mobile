@@ -1,19 +1,16 @@
 import 'package:cherry_toast/cherry_toast.dart';
-import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/repo/url_launcher_repo/launcher_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/calendar/services/add_appointment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/services/fast_payment_service.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/views/edit_appointment_view.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/calendar_view_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/bloc/appointment/appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/appointment_status.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/record_type.dart';
-import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/roles.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart';
@@ -285,25 +282,6 @@ class AppointmentDialogService {
     print('=====================');
 
     return result;
-  }
-
-  // Add appointment dialog - now using the extracted widget
-  static Future<void> showAddAppointmentDialog(
-    BuildContext context, {
-    required DateTime initialDate,
-  }) async {
-    bool isAdmin = false;
-    final Role role = await AppDataService.instance.getRole();
-    if (role == Role.admin) {
-      isAdmin = true;
-    }
-    if (context.mounted) {
-      AddAppointmentService.showAddAppointmentDialog(
-        context,
-        initialDate: initialDate,
-        isAdmin: isAdmin,
-      );
-    }
   }
 
   // Edit appointment dialog

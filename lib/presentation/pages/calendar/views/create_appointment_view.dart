@@ -83,8 +83,9 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   void _clearSelection() {
     setState(() {
       _selectedDoctor = null;
-      _selectedPatient = null;
+      // _selectedPatient = null;
       _selectedTimeSlot = null;
+      // _selectedRoomId = null;
     });
   }
 
@@ -148,12 +149,6 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                       FutureBuilder<Role>(
                         future: AppDataService.instance.getRole(),
                         builder: (context, asyncSnapshot) {
-                          if (asyncSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
                           if (asyncSnapshot.hasError) {
                             return Center(
                               child: Text('Error: ${asyncSnapshot.error}'),
@@ -168,7 +163,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                                 setState(() {
                                   _selectedDoctor = doctor;
                                   _selectedTimeSlot = null;
-                                  _selectedRoomId = null;
+                                  // _selectedRoomId = null;
                                 });
                                 _loadFreeTimeSlots();
                               },
@@ -205,19 +200,37 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                                 selectedDate:
                                     _selectedDate ?? widget.selectedDate,
                                 onTimeSlotChanged: (timeSlot) {
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) {
+                                    if (mounted) {
+                                      // Widget'ın hala ekranda olduğundan emin ol
+                                      setState(() {
+                                        _selectedTimeSlot = timeSlot;
+                                        _selectedRoomId =
+                                            null; // Zaman değiştiği için oda seçimi sıfırlanmalı
+                                      });
+                                    }
+                                  });
+
                                   _roomLoadDebounceTimer?.cancel();
-                                  _selectedRoomId = null;
-                                  _selectedTimeSlot = timeSlot;
                                   if (timeSlot != null) {
                                     _roomLoadDebounceTimer = Timer(
                                       const Duration(seconds: 1),
                                       () {
-                                        _loadRooms();
+                                        if (mounted) {
+                                          _loadRooms();
+                                        }
                                       },
                                     );
+                                  } else {
+                                    if (mounted) {
+                                      context.read<RoomCubit>().clearRooms();
+                                    }
                                   }
                                 },
                               ),
+
                               PatientSelectionWidget(
                                 onPatientSelected: (patient) {
                                   _selectedPatient = patient;

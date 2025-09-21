@@ -54,6 +54,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
   @override
   void initState() {
     super.initState();
+    context.read<RoomCubit>().getRoomList();
     _appointmentActionCubit = AppointmentActionCubit();
 
     _selectedDoctor = DoctorModel(
@@ -131,20 +132,24 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
     }
   }
 
+  String _parseTime(String time) {
+    return DateFormat('HH:mm').format(DateTime.parse(time));
+  }
+
   @override
   void dispose() {
     _roomLoadDebounceTimer?.cancel();
     _scrollController.dispose();
     _appointmentActionCubit.close();
+    _isTimeChanged.dispose();
     super.dispose();
   }
 
+  final ValueNotifier<bool> _isTimeChanged = ValueNotifier(false);
+
   @override
   Widget build(BuildContext context) {
-    final duration = calculateDurationInMinutes(
-      widget.appointment.startTime ?? '',
-      widget.appointment.endTime ?? '',
-    );
+    log("${_selectedDate.toLocal()}");
 
     final theme = Theme.of(context);
     return Scaffold(
@@ -190,25 +195,8 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
                                 _loadFreeTimeSlots();
                               },
                             ),
+                            _buildSelectionTime(theme),
 
-                            TimeAndDurationPicker(
-                              doctorId: _selectedDoctor.id ?? 0,
-                              selectedDate: _selectedDate,
-                              initialMinute: duration,
-                              onTimeSlotChanged: (timeSlot) {
-                                _roomLoadDebounceTimer?.cancel();
-                                _selectedRoom = null;
-                                _selectedTimeSlot = timeSlot;
-                                if (timeSlot != null) {
-                                  _roomLoadDebounceTimer = Timer(
-                                    const Duration(seconds: 1),
-                                    () {
-                                      _loadRooms();
-                                    },
-                                  );
-                                }
-                              },
-                            ),
                             PatientSelectionWidget(
                               initialValue: _selectedPatient,
                               onPatientSelected: (patient) {
@@ -243,7 +231,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
 
                           SelectionRoomWidget(
                             enabled: true,
-                            // initialValue: _selectedRoom,
+                            initialValue: _selectedRoom,
                             onRoomSelected: (room) {
                               _selectedRoom = room;
                             },
@@ -263,6 +251,111 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
           ),
         ),
       ),
+    );
+  }
+
+  ValueListenableBuilder<bool> _buildSelectionTime(ThemeData theme) {
+    return ValueListenableBuilder(
+      valueListenable: _isTimeChanged,
+      builder: (context, timeChanged, child) {
+        final duration = calculateDurationInMinutes(
+          widget.appointment.startTime ?? '',
+          widget.appointment.endTime ?? '',
+        );
+        if (!timeChanged) {
+          return Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.3,
+              ),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.access_time,
+                  size: 20,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        LocaleKeys.forms_selected_time.tr(),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "${_parseTime(widget.appointment.startTime ?? '')} - ${_parseTime(widget.appointment.endTime ?? '')}",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(LocaleKeys.forms_prompt_select_another_time.tr()),
+                      TextButton(
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        onPressed: () {
+                          _isTimeChanged.value = true;
+                          context.read<FreeTimeCubit>().getFreeTime(
+                            _selectedDoctor.id ?? 0,
+                            _selectedDate,
+                            duration,
+                          );
+                        },
+                        child: Text(LocaleKeys.buttons_update.tr()),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 6,
+            children: [
+              TimeAndDurationPicker(
+                doctorId: _selectedDoctor.id ?? 0,
+                selectedDate: _selectedDate,
+                initialMinute: duration,
+                onTimeSlotChanged: (timeSlot) {
+                  _roomLoadDebounceTimer?.cancel();
+                  _selectedRoom = null;
+                  _selectedTimeSlot = timeSlot;
+                  if (timeSlot != null) {
+                    _roomLoadDebounceTimer = Timer(
+                      const Duration(seconds: 1),
+                      () {
+                        _loadRooms();
+                      },
+                    );
+                  }
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                onPressed: () {
+                  _selectedTimeSlot = TimeModel(
+                    startTime: parseTime(widget.appointment.startTime ?? ''),
+                    endTime: parseTime(widget.appointment.endTime ?? ''),
+                  );
+                  _isTimeChanged.value = false;
+                },
+                child: Text(LocaleKeys.buttons_cancel.tr()),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -288,7 +381,8 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
           }
           return ElevatedButton(
             onPressed: () {
-              _appointmentActionCubit.createAppointment(
+              _appointmentActionCubit.updateAppointment(
+                widget.appointment.appointmentId!,
                 CreateAppointmentModel(
                   appointmentStatus:
                       _selectedAppointmentStatus.key.toUpperCase(),

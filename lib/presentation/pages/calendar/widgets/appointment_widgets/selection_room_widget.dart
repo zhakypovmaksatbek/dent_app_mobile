@@ -1,8 +1,12 @@
 // lib/presentation/pages/calendar/widgets/selection_room_widget.dart
 
+// collection paketini kullanmıyorsanız, 'package:collection/collection.dart'; importunu ekleyebilirsiniz.
+// Alternatif olarak, try-catch bloğu da kalabilir.
+import 'package:collection/collection.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +24,29 @@ class SelectionRoomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // buildWhen, widget'ın ne zaman yeniden çizileceğini kontrol eder.
+    // Sadece RoomState gerçekten değiştiğinde (örneğin, Yükleniyordan Yüklendi'ye geçtiğinde
+    // veya odaların listesi güncellendiğinde) build metodu tekrar çalışır.
+    // Parent widget'taki alakasız setState çağrıları bu widget'ı etkilemez.
     return BlocBuilder<RoomCubit, RoomState>(
+      buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
+        // 1. Yüklenme Durumu (Loading State)
+        // Kullanıcıya odaların yüklendiğini göstermek için.
+        if (state is RoomLoading) {
+          return _buildDropdownWrapper(
+            context: context,
+            child: const Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          );
+        }
+
+        // 2. Hata Durumu (Failure State)
         if (state is RoomFailure) {
           return _buildDropdownWrapper(
             context: context,
@@ -31,36 +56,61 @@ class SelectionRoomWidget extends StatelessWidget {
           );
         }
 
+        // 3. Başarılı Durum (Loaded State)
         if (state is RoomLoaded) {
+          // Gelen listede initialValue'ya karşılık gelen RoomModel'i bulalım.
+          // Bu, nesnelerin referansları farklı olsa bile ID'ye göre doğru eşleşmeyi sağlar.
+          final selectedRoom =
+              initialValue == null
+                  ? null
+                  : state.rooms.firstWhereOrNull(
+                    (room) => room.id == initialValue!.id,
+                  );
+
           return DropdownButtonFormField<RoomModel>(
-            initialValue: initialValue,
+            // key: Dropdown'ın iç state'ini doğru yönetmesi için önemlidir.
+            // Oda listesi değiştiğinde, Flutter'a bunun yeni bir dropdown olduğunu söyler.
+            key: ValueKey(state.rooms),
+            initialValue: selectedRoom,
             items:
                 state.rooms.map((room) {
                   return DropdownMenuItem<RoomModel>(
                     value: room,
-                    child: Text(room.name ?? 'Unknown Room'),
+                    child: AppText(
+                      title:
+                          room.name ??
+                          'Bilinmeyen Oda', // Yerelleştirme anahtarı kullanmak daha iyi
+                      textType: TextType.body,
+                    ),
                   );
                 }).toList(),
             onChanged: enabled ? (room) => onRoomSelected(room) : null,
             decoration: InputDecoration(
               labelText: LocaleKeys.appointment_room.tr(),
               prefixIcon: const Icon(Icons.meeting_room),
-              hint: Text(
-                state.rooms.isEmpty
-                    ? LocaleKeys.appointment_no_rooms_available.tr()
-                    : LocaleKeys.appointment_select_room.tr(),
-              ),
+              // Hint artık dinamik olarak boş olup olmamasına göre ayarlanıyor.
+              hintText:
+                  state.rooms.isEmpty
+                      ? LocaleKeys.appointment_no_rooms_available.tr()
+                      : LocaleKeys.appointment_select_room.tr(),
               border: const OutlineInputBorder(),
-              enabled: enabled,
+              // enabled: `onChanged: null` zaten dropdown'ı devre dışı bırakır.
+              // Bu yüzden buradaki enabled estetik bir kontrol sağlar.
+              enabled: enabled && state.rooms.isNotEmpty,
             ),
           );
         }
 
-        return _buildDropdownWrapper(context: context, hintText: "Select Room");
+        // 4. Başlangıç veya Tanımsız Durum (Initial State)
+        return _buildDropdownWrapper(
+          context: context,
+          hintText: LocaleKeys.forms_select_time_first.tr(),
+        );
       },
     );
   }
 
+  // Bu yardımcı metodda değişiklik yapmaya gerek yok.
   Widget _buildDropdownWrapper({
     required BuildContext context,
     String? hintText,
@@ -77,9 +127,15 @@ class SelectionRoomWidget extends StatelessWidget {
       ),
       child:
           child ??
-          Text(
-            hintText ?? '',
-            style: TextStyle(color: Theme.of(context).disabledColor),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+            ), // Hizalama için padding
+            child: AppText(
+              title: hintText ?? '',
+              textType: TextType.body,
+              color: Theme.of(context).disabledColor,
+            ),
           ),
     );
   }

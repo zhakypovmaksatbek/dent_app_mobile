@@ -265,6 +265,10 @@ abstract class  LocaleKeys {
   static const forms_edit_product = 'forms.edit_product';
   static const forms_add_new_product = 'forms.add_new_product';
   static const forms_is_required = 'forms.is_required';
+  static const forms_no_free_time_available = 'forms.no_free_time_available';
+  static const forms_select_time_first = 'forms.select_time_first';
+  static const forms_prompt_select_another_time = 'forms.prompt_select_another_time';
+  static const forms_selected_time = 'forms.selected_time';
   static const forms = 'forms';
   static const routes_dashboard = 'routes.dashboard';
   static const routes_calendar = 'routes.calendar';
