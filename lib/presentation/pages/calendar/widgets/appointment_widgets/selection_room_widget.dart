@@ -93,7 +93,7 @@ class SelectionRoomWidget extends StatelessWidget {
                   state.rooms.isEmpty
                       ? LocaleKeys.appointment_no_rooms_available.tr()
                       : LocaleKeys.appointment_select_room.tr(),
-              border: const OutlineInputBorder(),
+
               // enabled: `onChanged: null` zaten dropdown'ı devre dışı bırakır.
               // Bu yüzden buradaki enabled estetik bir kontrol sağlar.
               enabled: enabled && state.rooms.isNotEmpty,
@@ -122,7 +122,7 @@ class SelectionRoomWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: LocaleKeys.appointment_room.tr(),
         prefixIcon: Icon(prefixIcon, color: prefixIconColor),
-        border: const OutlineInputBorder(),
+
         enabled: false,
       ),
       child:

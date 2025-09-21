@@ -159,7 +159,7 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color: Theme.of(context).dividerColor),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

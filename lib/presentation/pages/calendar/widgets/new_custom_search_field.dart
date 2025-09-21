@@ -282,7 +282,6 @@ class NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
               width: 20,
             ),
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
           suffixIcon: suffixIcon,
         ),
       ),

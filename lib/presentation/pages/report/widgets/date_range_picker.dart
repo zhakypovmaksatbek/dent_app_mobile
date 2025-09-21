@@ -246,7 +246,7 @@ class DateRangePickerState extends State<DateRangePicker> {
           onPressed: () => _showMenu(context),
           icon: const Icon(Icons.calendar_today, size: 18),
           label: Text(
-            '${DateFormat('d MMM yyyy').format(widget.startDate)} - ${DateFormat('d MMM yyyy').format(widget.endDate)}',
+            '${_formatDate(widget.startDate)} - ${_formatDate(widget.endDate)}',
             style: const TextStyle(fontSize: 14),
           ),
           style: TextButton.styleFrom(
@@ -255,5 +255,9 @@ class DateRangePickerState extends State<DateRangePicker> {
         ),
       ],
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return DateFormat('d MMM yyyy', context.locale.toString()).format(date);
   }
 }

@@ -315,6 +315,7 @@ class _CalendarPageState extends State<CalendarPage> {
               context,
               LocaleKeys.notifications_appointment_updated_successfully.tr(),
             );
+            context.read<CalendarAppointmentsCubit>().refreshAppointments();
           } else if (state is AppointmentActionFailure) {
             AppSnackBar.showErrorSnackBar(context, state.message);
           }

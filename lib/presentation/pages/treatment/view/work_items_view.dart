@@ -6,6 +6,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condit
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/job_card.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/empty/empty_widget.dart';
+import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_warning.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
@@ -48,12 +49,23 @@ class WorkItemsView extends StatelessWidget {
             right: 16,
             bottom: MediaQuery.of(context).padding.bottom,
           ),
-          child: DefElevatedButton(
-            title: LocaleKeys.buttons_complete.tr(),
-            onPressed: () {
-              context.read<SaveJobsCubit>().saveJobs(
-                appointmentId,
-                context.read<ConditionService>().jobs,
+          child: BlocBuilder<SaveJobsCubit, SaveJobsState>(
+            builder: (context, state) {
+              if (state is SaveJobsLoading) {
+                return SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: const LoadingWidget(),
+                );
+              }
+              return DefElevatedButton(
+                title: LocaleKeys.buttons_complete.tr(),
+                onPressed: () {
+                  context.read<SaveJobsCubit>().saveJobs(
+                    appointmentId,
+                    context.read<ConditionService>().jobs,
+                  );
+                },
               );
             },
           ),

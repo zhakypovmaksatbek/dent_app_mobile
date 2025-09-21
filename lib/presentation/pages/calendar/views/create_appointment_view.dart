@@ -238,6 +238,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                                 },
                                 onSelectionCleared: () {
                                   _selectedPatient = null;
+                                  setState(() {});
                                 },
                                 scrollController: _scrollController,
                               ),

@@ -289,7 +289,7 @@ class _WorkingHoursSectionState extends State<WorkingHoursSection> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Total working hours this week',
+                      LocaleKeys.general_total_working_hours.tr(),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
@@ -467,9 +467,9 @@ class _WorkingHoursSectionState extends State<WorkingHoursSection> {
     final minutes = ((hours - wholeHours) * 60).round();
 
     if (minutes > 0) {
-      return '$wholeHours h $minutes m';
+      return '$wholeHours ч $minutes мин';
     } else {
-      return '$wholeHours h';
+      return '$wholeHours ч';
     }
   }
 

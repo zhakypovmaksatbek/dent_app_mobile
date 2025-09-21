@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/core/utils/currency.dart';
+import 'package:dent_app_mobile/core/utils/format_price.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class PriceConvertWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: price.toCurrency(),
+      future: price.toCurrencyFormat(showSymbol: true),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return AppText(

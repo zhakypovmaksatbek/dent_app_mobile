@@ -61,5 +61,13 @@ class AppTheme {
       backgroundColor: ColorConstants.primary,
       foregroundColor: Colors.white,
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      // filled: true,
+      // fillColor: ColorConstants.lightGrey.withValues(alpha: 0.1),
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: ColorConstants.grey),
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
   );
 }

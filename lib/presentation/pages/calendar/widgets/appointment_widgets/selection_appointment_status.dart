@@ -22,7 +22,7 @@ class SelectionAppointmentStatus extends StatelessWidget {
           decoration: InputDecoration(
             labelText: LocaleKeys.appointment_status_label.tr(),
             prefixIcon: const Icon(Icons.task_alt),
-            border: const OutlineInputBorder(),
+
             enabled: enabled,
           ),
           initialValue: initialValue,

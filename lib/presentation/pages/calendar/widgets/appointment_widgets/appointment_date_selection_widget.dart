@@ -92,7 +92,7 @@ class _AppointmentDateSelectionWidgetState
           decoration: InputDecoration(
             labelText: LocaleKeys.forms_select_date.tr(),
             prefixIcon: const Icon(Icons.date_range_outlined),
-            border: const OutlineInputBorder(),
+            // border: const OutlineInputBorder(),
           ),
           child: Text(
             _controller.text.isEmpty ? ' ' : _controller.text,

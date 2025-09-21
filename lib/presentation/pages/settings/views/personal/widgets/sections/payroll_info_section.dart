@@ -1,3 +1,4 @@
+import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/users/user_detail_model.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/widgets/common/info_row_widget.dart';
@@ -53,7 +54,10 @@ class PayrollInfoSection extends StatelessWidget {
             InfoRowWidget(
               icon: Icons.category_outlined,
               label: LocaleKeys.forms_salary_type.tr(),
-              value: payroll.percentOrFixed ?? '-',
+              value:
+                  SalaryType.fromString(
+                    payroll.percentOrFixed ?? '',
+                  ).displayName.tr(),
             ),
           ],
         ),

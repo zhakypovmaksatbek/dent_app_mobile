@@ -2,6 +2,8 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/report/report_model.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/card/custom_card_decoration.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,7 @@ class FinancialSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalAmount = report.totalAmount ?? '0';
+    final totalAmount = (report.totalAmount ?? '0');
 
     return CustomCardDecoration(
       child: Padding(
@@ -28,31 +30,15 @@ class FinancialSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      totalAmount,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      LocaleKeys.report_total_income.tr(),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            Center(
+              child: PriceConvertWidget(
+                price: double.parse(totalAmount),
+                textType: TextType.title36,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
             ),
+
             const SizedBox(height: 24),
             if (report.reportByDateResponse != null)
               _buildFinancialMetrics(context),
@@ -136,12 +122,11 @@ class FinancialSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+          PriceConvertWidget(
+            price: double.parse(value),
+            textType: TextType.body,
+            fontWeight: FontWeight.bold,
+            color: color,
           ),
         ],
       ),

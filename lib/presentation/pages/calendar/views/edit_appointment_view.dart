@@ -10,6 +10,7 @@ import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/appointment_widgets/appointment_date_selection_widget.dart';
@@ -366,6 +367,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
         bloc: _appointmentActionCubit,
         listener: (context, state) {
           if (state is AppointmentActionSuccess) {
+            context.read<CalendarAppointmentsCubit>().refreshAppointments();
             router.pop(true);
             AppSnackBar.showSuccessSnackBar(
               context,

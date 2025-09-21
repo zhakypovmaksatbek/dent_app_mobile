@@ -43,7 +43,6 @@ class _AppointmentNoteWidgetState extends State<AppointmentNoteWidget> {
       decoration: InputDecoration(
         labelText: LocaleKeys.appointment_notes.tr(),
         prefixIcon: const Icon(Icons.note_alt_outlined),
-        border: const OutlineInputBorder(),
       ),
     );
   }

@@ -10,6 +10,7 @@ enum TextType {
   title20,
   title24,
   small,
+  title36,
 }
 
 class AppText extends StatelessWidget {
@@ -87,6 +88,11 @@ class AppText extends StatelessWidget {
         return theme.headlineMedium!.copyWith(
           fontWeight: FontWeight.w600,
           fontSize: 24,
+        );
+      case TextType.title36:
+        return theme.headlineMedium!.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: 36,
         );
       case TextType.subtitle:
         return theme.labelLarge!.copyWith(fontWeight: FontWeight.w400);

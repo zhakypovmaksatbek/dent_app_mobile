@@ -25,7 +25,6 @@ class AppointmentTypeSelection extends StatelessWidget {
             labelText: LocaleKeys.appointment_appointment_type_label.tr(),
             hintText: LocaleKeys.appointment_appointment_type_label.tr(),
             prefixIcon: const Icon(Icons.category_outlined),
-            border: const OutlineInputBorder(),
             enabled: enabled,
           ),
 
