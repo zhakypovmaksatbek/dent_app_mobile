@@ -7,6 +7,8 @@ import "package:dent_app_mobile/core/service/token_interceptor.dart";
 import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
 
+final String baseUrl = AppConstants.instance.baseUrlProd;
+
 class DioService {
   DioService() {
     dio.interceptors.add(TokenInterceptor(tokenDio: dio));
@@ -15,7 +17,7 @@ class DioService {
 
     final tokenDio = Dio(
       BaseOptions(
-        baseUrl: AppConstants.instance.baseUrlTest,
+        baseUrl: baseUrl,
         contentType: "application/json",
         headers: {"Accept": "application/json"},
         connectTimeout: const Duration(seconds: 20),
@@ -32,7 +34,7 @@ class DioService {
 
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: AppConstants.instance.baseUrlTest,
+      baseUrl: baseUrl,
       contentType: "application/json",
       headers: {"Accept": "application/json"},
       connectTimeout: const Duration(seconds: 20),
@@ -174,7 +176,7 @@ class AuthDioSettings {
   }
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: AppConstants.instance.baseUrlTest,
+      baseUrl: baseUrl,
       contentType: "application/json",
       headers: {"Accept": "application/json"},
       connectTimeout: const Duration(seconds: 20),

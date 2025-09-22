@@ -101,6 +101,7 @@ class _PersonalPageState extends State<PersonalPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context);
     final theme = Theme.of(context);
     // Use the theme extension for consistent styling
     final cardStyle = theme.extension<CardStyleExtension>();
@@ -118,73 +119,76 @@ class _PersonalPageState extends State<PersonalPage> {
           tooltip: "Add Personal",
           child: const Icon(Icons.add, color: Colors.white),
         ),
-        body: BlocListener<PersonalActionCubit, PersonalActionState>(
-          listener: personalActionListener,
-          child: RefreshIndicator(
-            onRefresh: () async {
-              _fetchPersonals(isRefresh: true);
-            },
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              controller: _controller,
-              slivers: [
-                SliverAppBar(title: Text(LocaleKeys.routes_personal.tr())),
-                BlocConsumer<PersonalCubit, PersonalState>(
-                  listener: personalListListener, // Renamed listener
-                  builder: (context, state) {
-                    // Handle loading state for the list itself
-                    if (state is PersonalLoading &&
-                        users.isEmpty &&
-                        !isLoading) {
-                      return const SliverFillRemaining(
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    if (state is PersonalError && users.isEmpty) {
-                      return SliverFillRemaining(
-                        child: Center(child: Text(state.message)),
-                      );
-                    }
-                    // Display list or empty message
-                    if (users.isEmpty &&
-                        !isLoading &&
-                        state is! PersonalLoading) {
-                      return SliverFillRemaining(
-                        child: Center(
-                          child: Text(
-                            LocaleKeys.notifications_no_personal_found.tr(),
+        body: Padding(
+          padding: EdgeInsets.only(bottom: size.padding.bottom),
+          child: BlocListener<PersonalActionCubit, PersonalActionState>(
+            listener: personalActionListener,
+            child: RefreshIndicator(
+              onRefresh: () async {
+                _fetchPersonals(isRefresh: true);
+              },
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+                controller: _controller,
+                slivers: [
+                  SliverAppBar(title: Text(LocaleKeys.routes_personal.tr())),
+                  BlocConsumer<PersonalCubit, PersonalState>(
+                    listener: personalListListener, // Renamed listener
+                    builder: (context, state) {
+                      // Handle loading state for the list itself
+                      if (state is PersonalLoading &&
+                          users.isEmpty &&
+                          !isLoading) {
+                        return const SliverFillRemaining(
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                      if (state is PersonalError && users.isEmpty) {
+                        return SliverFillRemaining(
+                          child: Center(child: Text(state.message)),
+                        );
+                      }
+                      // Display list or empty message
+                      if (users.isEmpty &&
+                          !isLoading &&
+                          state is! PersonalLoading) {
+                        return SliverFillRemaining(
+                          child: Center(
+                            child: Text(
+                              LocaleKeys.notifications_no_personal_found.tr(),
+                            ),
                           ),
+                        );
+                      }
+                      return SliverPadding(
+                        // Add padding around the list
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        sliver: SliverList.separated(
+                          itemCount: users.length, // Add space for loader
+                          separatorBuilder:
+                              (context, index) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final user = users[index];
+                            return PersonalCard(
+                              decoration: decoration,
+                              user: user,
+                              theme: theme,
+                              // Pass handlers to PersonalCard
+                              onEditPressed: () => _handleEdit(user),
+                              onDeletePressed: () => _handleDelete(user),
+                            );
+                          },
                         ),
                       );
-                    }
-                    return SliverPadding(
-                      // Add padding around the list
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
-                      ),
-                      sliver: SliverList.separated(
-                        itemCount: users.length, // Add space for loader
-                        separatorBuilder:
-                            (context, index) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final user = users[index];
-                          return PersonalCard(
-                            decoration: decoration,
-                            user: user,
-                            theme: theme,
-                            // Pass handlers to PersonalCard
-                            onEditPressed: () => _handleEdit(user),
-                            onDeletePressed: () => _handleDelete(user),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ],
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
