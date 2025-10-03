@@ -68,6 +68,7 @@ class AppointmentDialogService {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 4,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -258,6 +259,7 @@ class AppointmentDialogService {
                   ),
                 ],
               ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
             ],
           ),
         );

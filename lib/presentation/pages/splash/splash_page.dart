@@ -113,7 +113,9 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 40),
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).padding.bottom + 10,
+                    ),
                     child: Column(
                       children: [
                         AppText(

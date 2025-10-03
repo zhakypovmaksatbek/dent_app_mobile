@@ -41,7 +41,10 @@ class _DoctorSelectionWidgetState extends State<DoctorSelectionWidget> {
     return BlocConsumer<DoctorCubit, DoctorState>(
       listener: (context, state) {
         if (state is DoctorLoaded) {
-          _doctors = state.doctors;
+          _doctors =
+              state.doctors
+                  .where((doctor) => (doctor.specialities?.isNotEmpty ?? false))
+                  .toList();
         }
       },
       builder: (context, state) {
