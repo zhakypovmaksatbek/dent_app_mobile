@@ -1,6 +1,6 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
-import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
-import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_doctor_model.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_doctors/get_appointment_doctors_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/new_custom_search_field.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DoctorSelectionWidget extends StatefulWidget {
   final ScrollController? scrollController;
-  final DoctorModel? initialValue;
-  final Function(DoctorModel doctor) onDoctorSelected;
+  final AppointmentDoctorModel? initialValue;
+  final Function(AppointmentDoctorModel doctor) onDoctorSelected;
   final VoidCallback onSelectionCleared;
   final bool enabled;
+  final DateTime date;
   const DoctorSelectionWidget({
     super.key,
     this.scrollController,
@@ -19,13 +20,14 @@ class DoctorSelectionWidget extends StatefulWidget {
     required this.onDoctorSelected,
     required this.onSelectionCleared,
     this.enabled = true,
+    required this.date,
   });
   @override
   State<DoctorSelectionWidget> createState() => _DoctorSelectionWidgetState();
 }
 
 class _DoctorSelectionWidgetState extends State<DoctorSelectionWidget> {
-  List<DoctorModel> _doctors = [];
+  List<AppointmentDoctorModel> _doctors = [];
   @override
   void initState() {
     super.initState();
@@ -33,22 +35,26 @@ class _DoctorSelectionWidgetState extends State<DoctorSelectionWidget> {
   }
 
   void _fetchDoctors() {
-    context.read<DoctorCubit>().getDoctors();
+    context.read<GetAppointmentDoctorsCubit>().getAppointmentDoctors(
+      widget.date,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DoctorCubit, DoctorState>(
+    return BlocConsumer<GetAppointmentDoctorsCubit, GetAppointmentDoctorsState>(
       listener: (context, state) {
-        if (state is DoctorLoaded) {
+        if (state is GetAppointmentDoctorsLoaded) {
           _doctors =
-              state.doctors
-                  .where((doctor) => (doctor.specialities?.isNotEmpty ?? false))
+              (state.doctors.content ?? [])
+                  .where(
+                    (doctor) => (doctor.freeTimeResponses?.isNotEmpty ?? false),
+                  )
                   .toList();
         }
       },
       builder: (context, state) {
-        return NewCustomSearchInput<DoctorModel>(
+        return NewCustomSearchInput<AppointmentDoctorModel>(
           prefixIconPath: "doctor",
           scrollController: widget.scrollController,
           resultBuilder:
@@ -75,7 +81,7 @@ class _DoctorSelectionWidgetState extends State<DoctorSelectionWidget> {
     );
   }
 
-  Future<List<DoctorModel>> _searchUsers(String query) async {
+  Future<List<AppointmentDoctorModel>> _searchUsers(String query) async {
     await Future.delayed(const Duration(milliseconds: 200));
     if (query.isEmpty) {
       return _doctors;

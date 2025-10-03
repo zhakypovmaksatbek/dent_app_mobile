@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
-import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
@@ -44,7 +44,7 @@ class CreateAppointmentView extends StatefulWidget {
 class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   final ScrollController _scrollController = ScrollController();
   late final AppointmentActionCubit _appointmentActionCubit;
-  DoctorModel? _selectedDoctor;
+  AppointmentDoctorModel? _selectedDoctor;
   PatientShortModel? _selectedPatient;
   DateTime? _selectedDate;
   TimeModel? _selectedTimeSlot;
@@ -74,7 +74,10 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
     if (!widget.isAdmin) {
       final currentUserId = await AppDataService.instance.getUserId();
       if (currentUserId != null) {
-        _selectedDoctor = DoctorModel(id: currentUserId, fullName: '');
+        _selectedDoctor = AppointmentDoctorModel(
+          userId: currentUserId,
+          fullName: '',
+        );
         setState(() {});
       }
     }
@@ -106,7 +109,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
 
   void _loadFreeTimeSlots() {
     context.read<FreeTimeCubit>().getFreeTime(
-      _selectedDoctor!.id!,
+      _selectedDoctor!.userId!,
       widget.selectedDate,
       30,
     );
@@ -122,7 +125,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
 
   @override
   Widget build(BuildContext context) {
-    log('Doctor ID: ${_selectedDoctor?.id}');
+    log('Doctor ID: ${_selectedDoctor?.userId}');
     log('Selected Date: $_selectedDate');
     log('Selected Patient: ${_selectedPatient?.fullName}');
     log('Selected Patient ID: ${_selectedPatient?.id}');
@@ -157,6 +160,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                           final role = asyncSnapshot.data;
                           if (role == Role.admin) {
                             return DoctorSelectionWidget(
+                              date: _selectedDate ?? widget.selectedDate,
                               scrollController: _scrollController,
                               initialValue: _selectedDoctor,
                               onDoctorSelected: (doctor) {
@@ -196,7 +200,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                               ),
 
                               TimeAndDurationPicker(
-                                doctorId: _selectedDoctor?.id ?? 0,
+                                doctorId: _selectedDoctor?.userId ?? 0,
                                 selectedDate:
                                     _selectedDate ?? widget.selectedDate,
                                 onTimeSlotChanged: (timeSlot) {
@@ -327,7 +331,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
                           recordType: _selectedRecordType?.key,
                           roomId: _selectedRoomId?.id,
                           description: _description,
-                          userId: _selectedDoctor!.id!,
+                          userId: _selectedDoctor!.userId!,
                           patientId: _selectedPatient!.id!,
                           startTime: _selectedTimeSlot!.startTime,
                           endTime: _selectedTimeSlot!.endTime,

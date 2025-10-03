@@ -729,7 +729,7 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                 value: isWorkingDay,
                 onChanged:
                     (value) => _toggleWorkingDay(dayRequest.dayOfWeek!, value),
-                activeColor: Theme.of(context).primaryColor,
+                activeThumbColor: Theme.of(context).primaryColor,
               ),
             ],
           ),

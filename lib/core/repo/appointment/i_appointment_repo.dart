@@ -1,6 +1,7 @@
 import 'package:dent_app_mobile/core/utils/image_type.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
@@ -70,4 +71,7 @@ abstract class IAppointmentRepo {
   Future<void> deleteImage(String imageId);
   Future<void> uploadPatientXRay(UploadXRayModel uploadPatientRontgenModel);
   Future<List<XRayModel>> getPatientXRay(int patientId);
+  Future<AppointmentDoctorsPaginationModel> getAppointmentDoctors(
+    DateTime date,
+  );
 }

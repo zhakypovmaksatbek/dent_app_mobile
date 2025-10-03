@@ -5,6 +5,7 @@ import 'package:dent_app_mobile/core/utils/image_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
@@ -352,5 +353,18 @@ class AppointmentRepo extends IAppointmentRepo {
     return data
         .map((e) => XRayModel.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<AppointmentDoctorsPaginationModel> getAppointmentDoctors(
+    DateTime date,
+  ) async {
+    final dateFormatter = DateFormat('yyyy-MM-dd');
+    final formattedDate = dateFormatter.format(date);
+    final response = await dio.get(
+      'api/appointments/doctors',
+      queryParameters: {'day': formattedDate, 'total': 20},
+    );
+    return AppointmentDoctorsPaginationModel.fromJson(response.data);
   }
 }

@@ -599,7 +599,7 @@ class _ServiceFormModalState extends State<ServiceFormModal> {
     }
 
     return DropdownButtonFormField<String>(
-      value: _selectedServiceType, // Shows the currently selected value.
+      initialValue: _selectedServiceType, // Shows the currently selected value.
       isExpanded: true,
       decoration: InputDecoration(
         labelText: LocaleKeys.general_service_type.tr(),

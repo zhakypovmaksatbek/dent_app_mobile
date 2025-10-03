@@ -3,9 +3,9 @@ import 'dart:developer';
 
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/models/appointment/appointment_doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/appointment/create_appointment_model.dart';
-import 'package:dent_app_mobile/models/appointment/doctor_model.dart';
 import 'package:dent_app_mobile/models/appointment/room_model.dart';
 import 'package:dent_app_mobile/models/appointment/time_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
@@ -41,7 +41,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
   late final AppointmentActionCubit _appointmentActionCubit;
 
   // State'i tutacak değişkenler
-  late DoctorModel _selectedDoctor;
+  late AppointmentDoctorModel _selectedDoctor;
   late PatientShortModel _selectedPatient;
   late DateTime _selectedDate;
   TimeModel? _selectedTimeSlot;
@@ -58,9 +58,9 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
     context.read<RoomCubit>().getRoomList();
     _appointmentActionCubit = AppointmentActionCubit();
 
-    _selectedDoctor = DoctorModel(
+    _selectedDoctor = AppointmentDoctorModel(
       fullName: widget.appointment.doctorFirsName ?? '',
-      id: widget.appointment.doctorId,
+      userId: widget.appointment.doctorId,
     );
     _selectedPatient = PatientShortModel(
       id: widget.appointment.patientId,
@@ -106,7 +106,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
   void _loadFreeTimeSlots() {
     if (_selectedTimeSlot != null) {
       context.read<FreeTimeCubit>().getFreeTime(
-        _selectedDoctor.id!,
+        _selectedDoctor.userId!,
         _selectedDate,
         calculateDurationInMinutes(
           _selectedTimeSlot?.startTime ?? '',
@@ -175,6 +175,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
                       AbsorbPointer(
                         absorbing: false,
                         child: DoctorSelectionWidget(
+                          date: _selectedDate,
                           scrollController: _scrollController,
                           initialValue: _selectedDoctor,
                           onDoctorSelected: (doctor) {},
@@ -306,7 +307,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
                         onPressed: () {
                           _isTimeChanged.value = true;
                           context.read<FreeTimeCubit>().getFreeTime(
-                            _selectedDoctor.id ?? 0,
+                            _selectedDoctor.userId ?? 0,
                             _selectedDate,
                             duration,
                           );
@@ -325,7 +326,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
             spacing: 6,
             children: [
               TimeAndDurationPicker(
-                doctorId: _selectedDoctor.id ?? 0,
+                doctorId: _selectedDoctor.userId ?? 0,
                 selectedDate: _selectedDate,
                 initialMinute: duration,
                 onTimeSlotChanged: (timeSlot) {
@@ -391,7 +392,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
                   recordType: _selectedRecordType?.key,
                   roomId: _selectedRoom?.id,
                   description: _description,
-                  userId: _selectedDoctor.id!,
+                  userId: _selectedDoctor.userId!,
                   patientId: _selectedPatient.id!,
                   startTime:
                       _selectedTimeSlot?.startTime != null

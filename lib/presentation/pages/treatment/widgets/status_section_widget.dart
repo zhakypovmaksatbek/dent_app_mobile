@@ -32,7 +32,7 @@ class StatusSectionWidget extends StatelessWidget {
             prefixIcon: const Icon(Icons.adjust_outlined),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
-          value: appointmentStatus,
+          initialValue: appointmentStatus,
           items:
               AppointmentStatus.values
                   .map(

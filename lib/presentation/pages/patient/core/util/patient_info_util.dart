@@ -4,7 +4,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/
 class PatientInfoUtil {
   // visibility phone number
   static Future<bool> getVisibilityPhoneNumber() async {
-    final Role? role = await AppDataService.instance.getRole();
+    final Role role = await AppDataService.instance.getRole();
     if (role == Role.admin) {
       return true;
     }

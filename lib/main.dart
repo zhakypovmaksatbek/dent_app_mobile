@@ -8,6 +8,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_doctors/get_appointment_doctors_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_receipt/get_receipt_appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/room/room_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/save_service/save_service_cubit.dart';
@@ -143,5 +144,6 @@ class Initializer {
       create: (_) => UploadImageCubit(appointmentRepo: AppointmentRepo()),
     ),
     BlocProvider(create: (_) => GetXRayCubit()),
+    BlocProvider(create: (_) => GetAppointmentDoctorsCubit()),
   ];
 }

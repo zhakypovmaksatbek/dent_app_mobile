@@ -7,7 +7,10 @@ import "package:dent_app_mobile/core/service/token_interceptor.dart";
 import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
 
-final String baseUrl = AppConstants.instance.baseUrlProd;
+final String baseUrl =
+    kDebugMode
+        ? AppConstants.instance.baseUrlTest
+        : AppConstants.instance.baseUrlProd;
 
 class DioService {
   DioService() {

@@ -61,8 +61,9 @@ class _WarehousePageState extends State<WarehousePage>
   Timer? _productSearchDebounce;
   void _handleProductSearch() {
     // Debounce arama - çok hızlı yazılınca her tuşta API isteği göndermemek için
-    if (_productSearchDebounce?.isActive ?? false)
+    if (_productSearchDebounce?.isActive ?? false) {
       _productSearchDebounce!.cancel();
+    }
     _productSearchDebounce = Timer(const Duration(milliseconds: 500), () {
       _productCubit.getProducts(search: _productSearchController.text);
     });
@@ -72,8 +73,9 @@ class _WarehousePageState extends State<WarehousePage>
   Timer? _documentSearchDebounce;
   void _handleDocumentSearch() {
     // Debounce arama - çok hızlı yazılınca her tuşta API isteği göndermemek için
-    if (_documentSearchDebounce?.isActive ?? false)
+    if (_documentSearchDebounce?.isActive ?? false) {
       _documentSearchDebounce!.cancel();
+    }
     _documentSearchDebounce = Timer(const Duration(milliseconds: 500), () {
       _documentCubit.getDocuments(search: _documentSearchController.text);
     });

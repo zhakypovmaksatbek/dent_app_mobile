@@ -432,7 +432,7 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
     required Function(T?) onChanged,
   }) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
