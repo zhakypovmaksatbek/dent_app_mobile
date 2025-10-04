@@ -233,9 +233,15 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
 
                           SelectionRoomWidget(
                             enabled: true,
-                            initialValue: _selectedRoom,
+                            initialValue: RoomModel(
+                              id: widget.appointment.roomId,
+                              name: widget.appointment.room,
+                            ),
+                            value: _selectedRoom, // Mevcut seçili değeri geç
                             onRoomSelected: (room) {
-                              _selectedRoom = room;
+                              setState(() {
+                                _selectedRoom = room;
+                              });
                             },
                           ),
                           AppointmentNoteWidget(
@@ -331,7 +337,9 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
                 initialMinute: duration,
                 onTimeSlotChanged: (timeSlot) {
                   _roomLoadDebounceTimer?.cancel();
-                  _selectedRoom = null;
+                  setState(() {
+                    _selectedRoom = null; // setState içine al
+                  });
                   _selectedTimeSlot = timeSlot;
                   if (timeSlot != null) {
                     _roomLoadDebounceTimer = Timer(

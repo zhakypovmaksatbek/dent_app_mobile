@@ -11,16 +11,40 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SelectionRoomWidget extends StatelessWidget {
+class SelectionRoomWidget extends StatefulWidget {
   final bool enabled;
   final Function(RoomModel?) onRoomSelected;
   final RoomModel? initialValue;
+  final RoomModel? value; // Mevcut seçili değer
   const SelectionRoomWidget({
     super.key,
     required this.enabled,
     required this.onRoomSelected,
     this.initialValue,
+    this.value,
   });
+
+  @override
+  State<SelectionRoomWidget> createState() => _SelectionRoomWidgetState();
+}
+
+class _SelectionRoomWidgetState extends State<SelectionRoomWidget> {
+  RoomModel? _selectedRoom;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedRoom = widget.initialValue;
+  }
+
+  @override
+  void didUpdateWidget(SelectionRoomWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Parent'tan gelen value değiştiğinde local state'i güncelle
+    if (widget.value != oldWidget.value) {
+      _selectedRoom = widget.value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,33 +82,41 @@ class SelectionRoomWidget extends StatelessWidget {
 
         // 3. Başarılı Durum (Loaded State)
         if (state is RoomLoaded) {
-          // Gelen listede initialValue'ya karşılık gelen RoomModel'i bulalım.
-          // Bu, nesnelerin referansları farklı olsa bile ID'ye göre doğru eşleşmeyi sağlar.
+          // Önce widget.value'yu kontrol et, sonra _selectedRoom'u
+          final currentValue = widget.value ?? _selectedRoom;
+
+          // Gelen listede mevcut değere karşılık gelen RoomModel'i bulalım.
           final selectedRoom =
-              initialValue == null
+              currentValue == null
                   ? null
                   : state.rooms.firstWhereOrNull(
-                    (room) => room.id == initialValue!.id,
+                    (room) => room.id == currentValue.id,
                   );
 
           return DropdownButtonFormField<RoomModel>(
             // key: Dropdown'ın iç state'ini doğru yönetmesi için önemlidir.
             // Oda listesi değiştiğinde, Flutter'a bunun yeni bir dropdown olduğunu söyler.
-            key: ValueKey(state.rooms),
+            key: ValueKey('${state.rooms.length}_${selectedRoom?.id}'),
             initialValue: selectedRoom,
             items:
                 state.rooms.map((room) {
                   return DropdownMenuItem<RoomModel>(
                     value: room,
                     child: AppText(
-                      title:
-                          room.name ??
-                          'Bilinmeyen Oda', // Yerelleştirme anahtarı kullanmak daha iyi
+                      title: room.name ?? 'Bilinmeyen Oda',
                       textType: TextType.body,
                     ),
                   );
                 }).toList(),
-            onChanged: enabled ? (room) => onRoomSelected(room) : null,
+            onChanged:
+                widget.enabled
+                    ? (room) {
+                      setState(() {
+                        _selectedRoom = room;
+                      });
+                      widget.onRoomSelected(room);
+                    }
+                    : null,
             decoration: InputDecoration(
               labelText: LocaleKeys.appointment_room.tr(),
               prefixIcon: const Icon(Icons.meeting_room),
@@ -96,7 +128,7 @@ class SelectionRoomWidget extends StatelessWidget {
 
               // enabled: `onChanged: null` zaten dropdown'ı devre dışı bırakır.
               // Bu yüzden buradaki enabled estetik bir kontrol sağlar.
-              enabled: enabled && state.rooms.isNotEmpty,
+              enabled: widget.enabled && state.rooms.isNotEmpty,
             ),
           );
         }

@@ -41,17 +41,27 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
               CreatePatientPage(isEdit: false, patientName: patientName),
     );
 
-    if (result != null && mounted) {
+    if (result != null && context.mounted) {
       final patientShortModel = PatientShortModel(
         dateOfBirthday: result.birthDate,
         fullName: result.fullName,
         id: result.id,
       );
+
+      // Yeni hastayı cubit'a ekle
+      context.read<SearchPatientCubit>().addNewPatient(patientShortModel);
+
       widget.onPatientSelected(patientShortModel);
       _searchInputKey.currentState?.selectItemProgrammatically(
         patientShortModel,
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchUsers('');
   }
 
   Future<List<PatientShortModel>> _searchUsers(String query) async {
