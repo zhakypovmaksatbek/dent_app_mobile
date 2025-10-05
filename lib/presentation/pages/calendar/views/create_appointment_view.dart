@@ -110,7 +110,7 @@ class _CreateAppointmentViewState extends State<CreateAppointmentView> {
   void _loadFreeTimeSlots() {
     context.read<FreeTimeCubit>().getFreeTime(
       _selectedDoctor!.userId!,
-      widget.selectedDate,
+      _selectedDate!,
       30,
     );
   }

@@ -83,8 +83,10 @@ class _AppointmentDateSelectionWidgetState
 
         if (result != null && mounted) {
           setState(() {
-            widget.onDateChanged?.call(result);
+            _selectedDateTime = result; // Önce local state'i güncelle
+            _updateController(result); // Sonra controller'ı güncelle
           });
+          widget.onDateChanged?.call(result); // Parent'a bildir
         }
       },
       child: AbsorbPointer(
