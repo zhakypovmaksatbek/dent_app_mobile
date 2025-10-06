@@ -94,7 +94,6 @@ class _ServicesViewState extends State<_ServicesView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder:
           (modalContext) =>
           // Provide necessary Cubits to the modal via MultiBlocProvider.
@@ -120,7 +119,6 @@ class _ServicesViewState extends State<_ServicesView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder:
           (modalContext) => MultiBlocProvider(
             providers: [
@@ -506,44 +504,41 @@ class _ServiceFormModalState extends State<ServiceFormModal> {
   @override
   Widget build(BuildContext context) {
     // Modal content can remain the same as before.
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        bottom: MediaQuery.of(context).padding.bottom,
         top: 16,
       ),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
+      decoration: const BoxDecoration(
+        // color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildModalHeader(),
-                  const SizedBox(height: 24),
-                  // Use BlocBuilder to get the ServiceTypeState for the dropdown.
-                  BlocBuilder<ServiceTypeCubit, ServiceTypeState>(
-                    builder:
-                        (context, state) => _buildServiceTypeDropdown(state),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildNameField(),
-                  const SizedBox(height: 16),
-                  _buildPriceField(),
-                  const SizedBox(height: 32),
-                  _buildSubmitButton(),
-                  const SizedBox(height: 10), // Bottom padding inside modal
-                ],
-              ),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildModalHeader(),
+                const SizedBox(height: 24),
+                // Use BlocBuilder to get the ServiceTypeState for the dropdown.
+                BlocBuilder<ServiceTypeCubit, ServiceTypeState>(
+                  builder: (context, state) => _buildServiceTypeDropdown(state),
+                ),
+                const SizedBox(height: 16),
+                _buildNameField(),
+                const SizedBox(height: 16),
+                _buildPriceField(),
+                const SizedBox(height: 32),
+                _buildSubmitButton(),
+                const SizedBox(height: 10), // Bottom padding inside modal
+              ],
             ),
           ),
         ),

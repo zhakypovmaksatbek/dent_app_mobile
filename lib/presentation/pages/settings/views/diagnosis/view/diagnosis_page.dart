@@ -109,7 +109,6 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder:
           (modalContext) => DiagnosisFormModal(
             onSubmit: (name) async {
@@ -127,7 +126,6 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder:
           (modalContext) => DiagnosisFormModal(
             initialDiagnosis: diagnosis, // Pass the diagnosis for editing
