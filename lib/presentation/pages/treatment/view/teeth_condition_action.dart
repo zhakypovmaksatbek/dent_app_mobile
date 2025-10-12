@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
@@ -7,6 +8,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/view/select_conditi
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_diagnosis.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_service_step.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/select_tooth_type_step.dart';
+import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +17,8 @@ import 'package:provider/provider.dart';
 
 @RoutePage(name: 'TeethConditionActionRoute')
 class TeethConditionAction extends StatefulWidget {
-  const TeethConditionAction({super.key});
-
+  const TeethConditionAction({super.key, required this.appointmentId});
+  final int appointmentId;
   @override
   State<TeethConditionAction> createState() => _TeethConditionActionState();
 }
@@ -355,7 +357,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
                   _isCompleting
                       ? LocaleKeys.buttons_saving.tr()
                       : _currentStep >= _totalSteps - 1
-                      ? LocaleKeys.buttons_complete.tr()
+                      ? LocaleKeys.buttons_save.tr()
                       : LocaleKeys.buttons_next.tr(),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -432,7 +434,7 @@ class _TeethConditionActionState extends State<TeethConditionAction>
         _isCompleting = false;
       });
       // Show success dialog
-      _showSuccessDialog();
+      router.replace(WorkItemsRoute(appointmentId: widget.appointmentId));
     }
   }
 

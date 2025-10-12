@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.da
 import 'package:dent_app_mobile/models/users/user_model.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/screen/login_page.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/views/calendar_page.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/views/payment_detail_page.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/views/payment_view.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:dent_app_mobile/presentation/pages/main/main_page.dart';
@@ -62,6 +63,7 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(page: WorkItemsRoute.page, path: "/workItems"),
     AutoRoute(page: AboutClinicRoute.page, path: "/aboutClinic"),
+    AutoRoute(page: PaymentDetailRoute.page, path: "/paymentDetail"),
   ];
 }
 

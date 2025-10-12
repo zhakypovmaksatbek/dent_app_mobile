@@ -1,4 +1,5 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/models/payment/detail_receipt_model.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
@@ -71,7 +72,7 @@ class PaymentServicesListCard extends StatelessWidget {
     required this.formatAmount,
   });
 
-  final List services;
+  final List<WorkServicesResponses> services;
   final String Function(double) formatAmount;
 
   @override
@@ -132,14 +133,14 @@ class PaymentServiceItem extends StatelessWidget {
     required this.formatAmount,
   });
 
-  final dynamic service;
+  final WorkServicesResponses service;
   final String Function(double) formatAmount;
 
   @override
   Widget build(BuildContext context) {
-    final serviceName = service.name ?? 'Unnamed Service';
+    final serviceName = service.serviceName ?? 'Unnamed Service';
     final servicePrice = service.price ?? 0;
-    final serviceQuantity = service.quantity ?? 0;
+    final serviceQuantity = service.numberOfServices ?? 0;
     final serviceSum = service.sum ?? 0;
 
     return Padding(
@@ -154,6 +155,12 @@ class PaymentServiceItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    AppText(
+                      title: 'Зуб: ${service.toothNumber}',
+                      textType: TextType.body,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimary,
+                    ),
                     AppText(
                       title: serviceName,
                       textType: TextType.body,

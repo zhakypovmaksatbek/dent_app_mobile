@@ -18,6 +18,7 @@ import 'package:dent_app_mobile/models/diagnosis/x_ray_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_short_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
+import 'package:dent_app_mobile/models/payment/detail_receipt_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
 import 'package:dent_app_mobile/models/work/image_response_model.dart';
@@ -366,5 +367,11 @@ class AppointmentRepo extends IAppointmentRepo {
       queryParameters: {'day': formattedDate, 'total': 20},
     );
     return AppointmentDoctorsPaginationModel.fromJson(response.data);
+  }
+
+  @override
+  Future<DetailReceiptModel> getDetailReceipt(int appointmentId) async {
+    final response = await dio.get('api/payments/wantsToPay/$appointmentId');
+    return DetailReceiptModel.fromJson(response.data);
   }
 }

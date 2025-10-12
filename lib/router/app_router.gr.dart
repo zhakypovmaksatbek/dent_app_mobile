@@ -79,6 +79,16 @@ class CreatePersonalRouteArgs {
   String toString() {
     return 'CreatePersonalRouteArgs{key: $key, user: $user}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CreatePersonalRouteArgs) return false;
+    return key == other.key && user == other.user;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ user.hashCode;
 }
 
 /// generated route for
@@ -177,6 +187,16 @@ class PatientDetailRouteArgs {
   String toString() {
     return 'PatientDetailRouteArgs{key: $key, id: $id}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PatientDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
 }
 
 /// generated route for
@@ -193,6 +213,56 @@ class PatientRoute extends PageRouteInfo<void> {
       return const PatientPage();
     },
   );
+}
+
+/// generated route for
+/// [PaymentDetailPage]
+class PaymentDetailRoute extends PageRouteInfo<PaymentDetailRouteArgs> {
+  PaymentDetailRoute({
+    Key? key,
+    required int appointmentId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PaymentDetailRoute.name,
+         args: PaymentDetailRouteArgs(key: key, appointmentId: appointmentId),
+         initialChildren: children,
+       );
+
+  static const String name = 'PaymentDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PaymentDetailRouteArgs>();
+      return PaymentDetailPage(
+        key: args.key,
+        appointmentId: args.appointmentId,
+      );
+    },
+  );
+}
+
+class PaymentDetailRouteArgs {
+  const PaymentDetailRouteArgs({this.key, required this.appointmentId});
+
+  final Key? key;
+
+  final int appointmentId;
+
+  @override
+  String toString() {
+    return 'PaymentDetailRouteArgs{key: $key, appointmentId: $appointmentId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PaymentDetailRouteArgs) return false;
+    return key == other.key && appointmentId == other.appointmentId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ appointmentId.hashCode;
 }
 
 /// generated route for
@@ -230,6 +300,16 @@ class PaymentViewRouteArgs {
   String toString() {
     return 'PaymentViewRouteArgs{key: $key, appointmentId: $appointmentId}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PaymentViewRouteArgs) return false;
+    return key == other.key && appointmentId == other.appointmentId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ appointmentId.hashCode;
 }
 
 /// generated route for
@@ -267,6 +347,16 @@ class PersonalDetailRouteArgs {
   String toString() {
     return 'PersonalDetailRouteArgs{key: $key, userId: $userId}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PersonalDetailRouteArgs) return false;
+    return key == other.key && userId == other.userId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ userId.hashCode;
 }
 
 /// generated route for
@@ -320,6 +410,16 @@ class PersonalPatientsRouteArgs {
   String toString() {
     return 'PersonalPatientsRouteArgs{key: $key, userId: $userId}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PersonalPatientsRouteArgs) return false;
+    return key == other.key && userId == other.userId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ userId.hashCode;
 }
 
 /// generated route for
@@ -404,18 +504,56 @@ class SplashRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [TeethConditionAction]
-class TeethConditionActionRoute extends PageRouteInfo<void> {
-  const TeethConditionActionRoute({List<PageRouteInfo>? children})
-    : super(TeethConditionActionRoute.name, initialChildren: children);
+class TeethConditionActionRoute
+    extends PageRouteInfo<TeethConditionActionRouteArgs> {
+  TeethConditionActionRoute({
+    Key? key,
+    required int appointmentId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         TeethConditionActionRoute.name,
+         args: TeethConditionActionRouteArgs(
+           key: key,
+           appointmentId: appointmentId,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'TeethConditionActionRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const TeethConditionAction();
+      final args = data.argsAs<TeethConditionActionRouteArgs>();
+      return TeethConditionAction(
+        key: args.key,
+        appointmentId: args.appointmentId,
+      );
     },
   );
+}
+
+class TeethConditionActionRouteArgs {
+  const TeethConditionActionRouteArgs({this.key, required this.appointmentId});
+
+  final Key? key;
+
+  final int appointmentId;
+
+  @override
+  String toString() {
+    return 'TeethConditionActionRouteArgs{key: $key, appointmentId: $appointmentId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! TeethConditionActionRouteArgs) return false;
+    return key == other.key && appointmentId == other.appointmentId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ appointmentId.hashCode;
 }
 
 /// generated route for
@@ -461,6 +599,16 @@ class TreatmentRouteArgs {
   String toString() {
     return 'TreatmentRouteArgs{key: $key, calendarAppointment: $calendarAppointment}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! TreatmentRouteArgs) return false;
+    return key == other.key && calendarAppointment == other.calendarAppointment;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ calendarAppointment.hashCode;
 }
 
 /// generated route for
@@ -514,4 +662,14 @@ class WorkItemsRouteArgs {
   String toString() {
     return 'WorkItemsRouteArgs{key: $key, appointmentId: $appointmentId}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! WorkItemsRouteArgs) return false;
+    return key == other.key && appointmentId == other.appointmentId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ appointmentId.hashCode;
 }

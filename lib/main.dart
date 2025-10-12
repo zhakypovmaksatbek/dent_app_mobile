@@ -6,6 +6,7 @@ import 'package:dent_app_mobile/presentation/localization/app_localization.dart'
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/detail_receipt/detail_receipt_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_doctors/get_appointment_doctors_cubit.dart';
@@ -145,5 +146,6 @@ class Initializer {
     ),
     BlocProvider(create: (_) => GetXRayCubit()),
     BlocProvider(create: (_) => GetAppointmentDoctorsCubit()),
+    BlocProvider(create: (_) => DetailReceiptCubit()),
   ];
 }

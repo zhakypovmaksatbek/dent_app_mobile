@@ -1,12 +1,12 @@
 import 'package:auto_route/annotations.dart';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
+import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/core/utils/payment_types.dart';
 import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
-import 'package:dent_app_mobile/models/payment/detail_receipt_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/calendar/bloc/get_receipt/get_receipt_appointment_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/calendar/bloc/detail_receipt/detail_receipt_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/pay_appointment/pay_appointment_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/payment_form_widgets.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/widgets/payment_info_widgets.dart';
@@ -21,17 +21,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-@RoutePage(name: "PaymentViewRoute")
-class PaymentView extends StatefulWidget {
-  const PaymentView({super.key, required this.appointmentId});
+@RoutePage(name: 'PaymentDetailRoute')
+class PaymentDetailPage extends StatefulWidget {
+  const PaymentDetailPage({super.key, required this.appointmentId});
   final int appointmentId;
 
   @override
-  State<PaymentView> createState() => _PaymentViewState();
+  State<PaymentDetailPage> createState() => _PaymentDetailPageState();
 }
 
-class _PaymentViewState extends State<PaymentView> {
-  late final GetReceiptAppointmentCubit _getReceiptAppointmentCubit;
+class _PaymentDetailPageState extends State<PaymentDetailPage> {
+  late final DetailReceiptCubit _detailReceiptCubit;
   late final PayAppointmentCubit _payAppointmentCubit;
   late final ValueNotifier<PaymentType> _selectedPaymentType;
   late final TextEditingController _amountController;
@@ -44,7 +44,8 @@ class _PaymentViewState extends State<PaymentView> {
   @override
   void initState() {
     super.initState();
-    _getReceiptAppointmentCubit = GetReceiptAppointmentCubit();
+    AppointmentRepo().getDetailReceipt(widget.appointmentId);
+    _detailReceiptCubit = DetailReceiptCubit();
     _payAppointmentCubit = PayAppointmentCubit();
     _selectedPaymentType = ValueNotifier(PaymentType.cash);
     _amountController = TextEditingController();
@@ -58,12 +59,12 @@ class _PaymentViewState extends State<PaymentView> {
     _discountController.addListener(_calculateAmounts);
     _discountType.addListener(_calculateAmounts);
 
-    _getReceiptAppointmentCubit.getReceipt(widget.appointmentId);
+    _detailReceiptCubit.getDetailReceipt(widget.appointmentId);
   }
 
   @override
   void dispose() {
-    _getReceiptAppointmentCubit.close();
+    _detailReceiptCubit.close();
     _payAppointmentCubit.close();
     _selectedPaymentType.dispose();
     _amountController.dispose();
@@ -98,21 +99,18 @@ class _PaymentViewState extends State<PaymentView> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: _getReceiptAppointmentCubit),
+        BlocProvider.value(value: _detailReceiptCubit),
         BlocProvider.value(value: _payAppointmentCubit),
       ],
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: RefreshIndicator(
           onRefresh: () async {
-            _getReceiptAppointmentCubit.getReceipt(widget.appointmentId);
+            _detailReceiptCubit.getDetailReceipt(widget.appointmentId);
           },
-          child: BlocConsumer<
-            GetReceiptAppointmentCubit,
-            GetReceiptAppointmentState
-          >(
+          child: BlocConsumer<DetailReceiptCubit, DetailReceiptState>(
             listener: (context, state) {
-              if (state is GetReceiptAppointmentError) {
+              if (state is DetailReceiptError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.message),
@@ -156,25 +154,26 @@ class _PaymentViewState extends State<PaymentView> {
                   ),
 
                   // Content based on state
-                  if (state is GetReceiptAppointmentLoading) ...[
+                  if (state is DetailReceiptLoading) ...[
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: const Center(child: LoadingWidget()),
                     ),
-                  ] else if (state is GetReceiptAppointmentError) ...[
+                  ] else if (state is DetailReceiptError) ...[
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: _buildErrorState(state.message),
                     ),
-                  ] else if (state is GetReceiptAppointmentSuccess) ...[
+                  ] else if (state is DetailReceiptSuccess) ...[
                     // Auto-fill amount on first load
-                    if (!_hasAutoFilled && (state.receipt.debt ?? 0) > 0) ...[
+                    if (!_hasAutoFilled &&
+                        (state.detailReceipt.debt ?? 0) > 0) ...[
                       Builder(
                         builder: (context) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (!_hasAutoFilled) {
                               _amountController.text =
-                                  (state.receipt.debt ?? 0).toString();
+                                  (state.detailReceipt.debt ?? 0).toString();
                               _hasAutoFilled = true;
                             }
                           });
@@ -201,17 +200,7 @@ class _PaymentViewState extends State<PaymentView> {
                       sliver: SliverToBoxAdapter(
                         child: PaymentServicesListCard(
                           services:
-                              (state.receipt.serviceQuantityResponses ?? [])
-                                  .map((e) {
-                                    return WorkServicesResponses(
-                                      numberOfServices: e.quantity,
-                                      price: e.price,
-                                      serviceName: e.name,
-                                      toothNumber: null,
-                                      sum: e.sum,
-                                    );
-                                  })
-                                  .toList(),
+                              state.detailReceipt.workServicesResponses ?? [],
                           formatAmount: _formatAmount,
                         ),
                       ),
@@ -233,14 +222,14 @@ class _PaymentViewState extends State<PaymentView> {
                       padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                       sliver: SliverToBoxAdapter(
                         child: PaymentStatusCards(
-                          receipt: state.receipt,
+                          receipt: state.detailReceipt,
                           formatAmount: _formatAmount,
                         ),
                       ),
                     ),
 
                     // Payment Form Section (only show if there's debt)
-                    if ((state.receipt.debt ?? 0) > 0) ...[
+                    if ((state.detailReceipt.debt ?? 0) > 0) ...[
                       SliverPadding(
                         padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
                         sliver: SliverToBoxAdapter(
@@ -264,7 +253,8 @@ class _PaymentViewState extends State<PaymentView> {
                               // Amount Input
                               PaymentAmountInput(
                                 controller: _amountController,
-                                maxAmount: (state.receipt.debt ?? 0).toDouble(),
+                                maxAmount:
+                                    (state.detailReceipt.debt ?? 0).toDouble(),
                                 formatAmount: _formatAmount,
                               ),
                               const SizedBox(height: 16),
@@ -307,7 +297,7 @@ class _PaymentViewState extends State<PaymentView> {
                                   'Оплата прошла успешно!',
                                 );
                                 // Refresh receipt data
-                                _getReceiptAppointmentCubit.getReceipt(
+                                _detailReceiptCubit.getDetailReceipt(
                                   widget.appointmentId,
                                 );
                                 _loadAppointmentsForDateRange(context);
@@ -369,9 +359,8 @@ class _PaymentViewState extends State<PaymentView> {
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed:
-                () => _getReceiptAppointmentCubit.getReceipt(
-                  widget.appointmentId,
-                ),
+                () =>
+                    _detailReceiptCubit.getDetailReceipt(widget.appointmentId),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.white,

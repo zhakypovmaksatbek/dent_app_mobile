@@ -5,6 +5,8 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/service_card.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
+import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,189 +61,222 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _serviceCubit,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Search Field (Read-only, opens bottom sheet)
-          GestureDetector(
-            onTap: _showSearchBottomSheet,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.outline.withValues(alpha: 0.2),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Search Field (Read-only, opens bottom sheet)
+            GestureDetector(
+              onTap: _showSearchBottomSheet,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
                 ),
-                boxShadow: [
-                  BoxShadow(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
                     color: Theme.of(
                       context,
-                    ).shadowColor.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
+                    ).colorScheme.outline.withValues(alpha: 0.2),
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.search,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Consumer<ConditionService>(
-                      builder: (context, conditionService, child) {
-                        final selectedCount =
-                            conditionService.selectedServices.length;
-                        final totalCount = conditionService.totalServicesCount;
-
-                        return Text(
-                          selectedCount == 0
-                              ? 'Поиск и выбор услуг...'
-                              : 'Выбрано: $selectedCount услуг${selectedCount > 1 ? '' : 'а'} ($totalCount шт.)',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(
-                            color:
-                                selectedCount == 0
-                                    ? Theme.of(context).colorScheme.onSurface
-                                        .withValues(alpha: 0.6)
-                                    : Theme.of(context).colorScheme.onSurface,
-                          ),
-                        );
-                      },
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(
+                        context,
+                      ).shadowColor.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
                     ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_up,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-                    size: 20,
-                  ),
-                ],
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.search,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Consumer<ConditionService>(
+                        builder: (context, conditionService, child) {
+                          final selectedCount =
+                              conditionService.selectedServices.length;
+                          final totalCount =
+                              conditionService.totalServicesCount;
+
+                          return Text(
+                            selectedCount == 0
+                                ? 'Поиск и выбор услуг...'
+                                : 'Выбрано: $selectedCount услуг${selectedCount > 1 ? '' : 'а'} ($totalCount шт.)',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color:
+                                  selectedCount == 0
+                                      ? Theme.of(context).colorScheme.onSurface
+                                          .withValues(alpha: 0.6)
+                                      : Theme.of(context).colorScheme.onSurface,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_up,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.6),
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Selected Services Chips
-          Consumer<ConditionService>(
-            builder: (context, conditionService, child) {
-              final selectedServices = conditionService.selectedServices;
+            // Selected Services Chips
+            Consumer<ConditionService>(
+              builder: (context, conditionService, child) {
+                final selectedServices = conditionService.selectedServices;
 
-              if (selectedServices.isNotEmpty) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    Row(
+                if (selectedServices.isNotEmpty) {
+                  return Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Text(
+                                'Выбранные услуги:',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton.icon(
+                                onPressed: _clearAllServices,
+                                icon: Icon(
+                                  Icons.clear_all,
+                                  size: 16,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                                label: Text(
+                                  'Очистить все',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+
+                          // DEĞİŞİKLİK: ConstrainedBox yerine Flexible/Expanded kullan
+                          // Ekranın %25'i
+                          Column(
+                            spacing: 8,
+                            children:
+                                selectedServices.entries.map((entry) {
+                                  return _buildServiceChip(
+                                    entry.key,
+                                    entry.value,
+                                  );
+                                }).toList(),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // Total sum
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppText(
+                            title: "${LocaleKeys.report_total_amount.tr()}:",
+                            textType: TextType.title24,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
+                          ),
+                          PriceConvertWidget(
+                            price: conditionService.totalServicesSum,
+                            textType: TextType.title24,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                }
+
+                // Empty state
+                return Container(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.3,
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Icon(
+                          Icons.medical_services_outlined,
+                          size: 64,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.3),
+                        ),
+                        const SizedBox(height: 16),
                         Text(
-                          'Выбранные услуги:',
+                          'Услуги не выбраны',
                           style: Theme.of(
                             context,
-                          ).textTheme.bodyMedium?.copyWith(
+                          ).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        const Spacer(),
-                        TextButton.icon(
-                          onPressed: _clearAllServices,
-                          icon: Icon(
-                            Icons.clear_all,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          label: Text(
-                            'Очистить все',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              fontSize: 12,
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        const SizedBox(height: 8),
+                        Text(
+                          'Нажмите на поле поиска выше,\nчтобы выбрать услуги',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height * 0.4,
-                      ),
-                      child: SingleChildScrollView(
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children:
-                              selectedServices.entries.map((entry) {
-                                return _buildServiceChip(
-                                  entry.key,
-                                  entry.value,
-                                );
-                              }).toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-
-              // Empty state when no services selected
-              return Container(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height * 0.3,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.medical_services_outlined,
-                        size: 64,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.3),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Услуги не выбраны',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Нажмите на поле поиска выше,\nчтобы выбрать услуги',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -258,8 +293,9 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
         ),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Service name - Flexible ile wrap et
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,46 +303,78 @@ class _SelectServiceStepState extends State<SelectServiceStep> {
               children: [
                 Text(
                   service.name ?? 'Без названия',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (count > 1) ...[
-                  const SizedBox(height: 2),
+                if (count > 1)
                   Text(
                     'Количество: $count',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(
                         context,
-                      ).colorScheme.primary.withValues(alpha: 0.8),
-                      fontWeight: FontWeight.w400,
+                      ).colorScheme.primary.withValues(alpha: 0.7),
+                      fontSize: 11,
                     ),
                   ),
-                ],
               ],
             ),
           ),
           const SizedBox(width: 8),
-          GestureDetector(
-            onTap: () => _removeService(service),
-            child: Container(
-              width: 18,
-              height: 18,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(9),
+          // Buttons group - Fixed width
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Decrement button
+              _CompactIconButton(
+                icon: Icons.remove,
+                onPressed: () => _decrementService(service),
               ),
-              child: Icon(
-                Icons.close,
-                size: 12,
-                color: Theme.of(context).colorScheme.onPrimary,
+              const SizedBox(width: 4),
+              // Increment button
+              _CompactIconButton(
+                icon: Icons.add,
+                onPressed: () => _incrementService(service),
               ),
-            ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  void _incrementService(ServiceItem service) {
+    final conditionService = context.read<ConditionService>();
+    conditionService.addService(service);
+  }
+
+  void _decrementService(ServiceItem service) {
+    final conditionService = context.read<ConditionService>();
+    conditionService.removeService(service);
+  }
+}
+
+class _CompactIconButton extends StatelessWidget {
+  const _CompactIconButton({required this.icon, required this.onPressed});
+
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Icon(
+          icon,
+          size: 22,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

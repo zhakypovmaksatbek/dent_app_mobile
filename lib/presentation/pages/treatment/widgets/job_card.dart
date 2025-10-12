@@ -13,6 +13,7 @@ import 'package:dent_app_mobile/presentation/pages/treatment/widgets/pattern_sel
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/price_convert_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class JobCard extends StatefulWidget {
@@ -248,24 +249,12 @@ class _JobCardState extends State<JobCard> {
             ),
             child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: AppText(
-                    title:
-                        '${LocaleKeys.forms_tooth.tr()}: ${widget.job.toothId}',
-                    textType: TextType.body,
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                AppText(
+                  title:
+                      '${LocaleKeys.forms_tooth.tr()}: ${widget.job.toothId}',
+                  textType: TextType.title24,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w600,
                 ),
                 const Spacer(),
                 if (widget.onEdit != null)
@@ -324,9 +313,9 @@ class _JobCardState extends State<JobCard> {
                     Expanded(
                       child: _buildInfoSection(
                         context,
-                        LocaleKeys.forms_tooth_type.tr(),
+                        LocaleKeys.forms_damaged_side.tr(),
                         widget.job.toothType?.title ?? '',
-                        Icons.panorama_fish_eye,
+                        CupertinoIcons.plus,
                         widget.job.condition.color?.withValues(alpha: 0.8) ??
                             Colors.blue,
                       ),
@@ -335,6 +324,48 @@ class _JobCardState extends State<JobCard> {
                 ),
 
                 // Services List with Counts
+                ExpandableTextFieldWidget(
+                  title: PatternUtils.getTitleForPatternType(
+                    PatternType.surveyPlan,
+                  ),
+                  hintText: PatternUtils.getHintTextForPatternType(
+                    PatternType.surveyPlan,
+                  ),
+                  controller: _treatmentFormController.surveyPlanController,
+                  focusNode: _treatmentFormController.surveyPlanFocusNode,
+                  patternType: PatternType.surveyPlan,
+                  onPatternTap:
+                      () => _showPatternSelectionDialog(PatternType.surveyPlan),
+                ),
+                ExpandableTextFieldWidget(
+                  title: PatternUtils.getTitleForPatternType(
+                    PatternType.recommendation,
+                  ),
+                  hintText: PatternUtils.getHintTextForPatternType(
+                    PatternType.recommendation,
+                  ),
+                  controller: _treatmentFormController.recommendationController,
+                  focusNode: _treatmentFormController.recommendationFocusNode,
+                  patternType: PatternType.recommendation,
+                  onPatternTap:
+                      () => _showPatternSelectionDialog(
+                        PatternType.recommendation,
+                      ),
+                ),
+                ExpandableTextFieldWidget(
+                  title: PatternUtils.getTitleForPatternType(
+                    PatternType.treatment,
+                  ),
+                  hintText: PatternUtils.getHintTextForPatternType(
+                    PatternType.treatment,
+                  ),
+                  controller: _treatmentFormController.treatmentController,
+                  focusNode: _treatmentFormController.treatmentFocusNode,
+                  patternType: PatternType.treatment,
+
+                  onPatternTap:
+                      () => _showPatternSelectionDialog(PatternType.treatment),
+                ),
                 _buildServicesSection(context),
 
                 // Total Price
@@ -419,48 +450,6 @@ class _JobCardState extends State<JobCard> {
                       ),
                     ],
                   ),
-                ),
-                ExpandableTextFieldWidget(
-                  title: PatternUtils.getTitleForPatternType(
-                    PatternType.surveyPlan,
-                  ),
-                  hintText: PatternUtils.getHintTextForPatternType(
-                    PatternType.surveyPlan,
-                  ),
-                  controller: _treatmentFormController.surveyPlanController,
-                  focusNode: _treatmentFormController.surveyPlanFocusNode,
-                  patternType: PatternType.surveyPlan,
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(PatternType.surveyPlan),
-                ),
-                ExpandableTextFieldWidget(
-                  title: PatternUtils.getTitleForPatternType(
-                    PatternType.recommendation,
-                  ),
-                  hintText: PatternUtils.getHintTextForPatternType(
-                    PatternType.recommendation,
-                  ),
-                  controller: _treatmentFormController.recommendationController,
-                  focusNode: _treatmentFormController.recommendationFocusNode,
-                  patternType: PatternType.recommendation,
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(
-                        PatternType.recommendation,
-                      ),
-                ),
-                ExpandableTextFieldWidget(
-                  title: PatternUtils.getTitleForPatternType(
-                    PatternType.treatment,
-                  ),
-                  hintText: PatternUtils.getHintTextForPatternType(
-                    PatternType.treatment,
-                  ),
-                  controller: _treatmentFormController.treatmentController,
-                  focusNode: _treatmentFormController.treatmentFocusNode,
-                  patternType: PatternType.treatment,
-
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(PatternType.treatment),
                 ),
               ],
             ),

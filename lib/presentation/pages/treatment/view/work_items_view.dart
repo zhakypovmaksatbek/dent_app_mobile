@@ -10,7 +10,6 @@ import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart
 import 'package:dent_app_mobile/presentation/widgets/notification/app_bottom_sheet.dart';
 import 'package:dent_app_mobile/presentation/widgets/notification/app_warning.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
-import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +25,7 @@ class WorkItemsView extends StatelessWidget {
     return BlocListener<SaveJobsCubit, SaveJobsState>(
       listener: (context, state) {
         if (state is SaveJobsSuccess) {
-          router.replace(PaymentViewRoute(appointmentId: appointmentId));
+          router.pop();
           context.read<ConditionService>().clearJobs();
         } else if (state is SaveJobsError) {
           AppWarning.showToastWarning(
@@ -59,7 +58,7 @@ class WorkItemsView extends StatelessWidget {
                 );
               }
               return DefElevatedButton(
-                title: LocaleKeys.buttons_complete.tr(),
+                title: LocaleKeys.buttons_save.tr(),
                 onPressed: () {
                   context.read<SaveJobsCubit>().saveJobs(
                     appointmentId,

@@ -77,6 +77,7 @@ class ToothTypeCard extends StatelessWidget {
           ],
         ),
         child: Stack(
+          alignment: Alignment.center,
           children: [
             // Background pattern for selected state
             if (isSelected)
@@ -101,6 +102,7 @@ class ToothTypeCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // SVG Icon with background
                   Container(
@@ -155,7 +157,7 @@ class ToothTypeCard extends StatelessWidget {
                       height: 1.2,
                     ),
                     textAlign: TextAlign.center,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

@@ -55,6 +55,20 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                 const SizedBox(height: _verticalSpacing),
                 if (conditionService.jobs.isNotEmpty)
                   _buildWorkItemsCard(conditionService),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      router.push(
+                        PaymentDetailRoute(appointmentId: widget.appointmentId),
+                      );
+                    },
+                    child: Center(child: Text(LocaleKeys.buttons_pay.tr())),
+                  ),
+                ),
               ],
             ),
           );
@@ -249,7 +263,9 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
             onExamine: () {
               router.pop();
               conditionService.setToothId(toothId);
-              router.push(const TeethConditionActionRoute());
+              router.push(
+                TeethConditionActionRoute(appointmentId: widget.appointmentId),
+              );
             },
           ),
     );

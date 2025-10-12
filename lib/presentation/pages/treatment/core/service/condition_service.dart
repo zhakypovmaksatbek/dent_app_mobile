@@ -28,6 +28,11 @@ class ConditionService extends ChangeNotifier {
       _selectedServices.values.fold(0, (sum, count) => sum + count);
   List<JobModel> get jobs => _jobs;
 
+  double get totalServicesSum => _selectedServices.entries.fold(
+    0.0,
+    (sum, entry) => sum + (entry.key.price ?? 0) * entry.value,
+  );
+
   void setToothId(String toothId) {
     _toothId = toothId;
     notifyListeners();

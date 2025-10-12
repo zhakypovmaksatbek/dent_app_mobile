@@ -2,7 +2,6 @@ import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 enum ToothType {
-  main(key: 'MAIN'),
   right(key: 'RIGHT'),
   left(key: 'LEFT'),
   top(key: 'TOP'),
@@ -10,7 +9,8 @@ enum ToothType {
   jaw(key: 'JAW'),
   centerRight(key: 'CENTER_RIGHT'),
   centerLeft(key: 'CENTER_LEFT'),
-  all(key: 'ALL');
+  all(key: 'ALL'),
+  main(key: 'MAIN');
 
   final String key;
 

@@ -94,6 +94,18 @@ class AppointmentItemWidget extends StatelessWidget {
                 ),
               ],
             ),
+            Text(
+              AppointmentStatus.fromKey(
+                appointment.appointmentStatus ?? '',
+              ).label.tr(),
+              style: TextStyle(
+                color:
+                    AppointmentStatus.fromKey(
+                      appointment.appointmentStatus ?? '',
+                    ).color,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
         trailing: Row(

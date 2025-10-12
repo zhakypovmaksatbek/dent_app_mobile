@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -12,6 +14,10 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ru</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>dent_app_mobile</string>
 	<key>CFBundlePackageType</key>
@@ -22,7 +28,24 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>DentApp использует камеру для создания фотографий, необходимых для диагностики и документирования стоматологических процедур.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>DentApp использует микрофон для записи голосовых заметок и распознавания речи для удобства ввода информации.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>DentApp запрашивает разрешение на сохранение фотографий, связанных с медицинскими процедурами и результатами лечения.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>DentApp запрашивает доступ к вашей медиатеке для выбора и просмотра фотографий, связанных с лечением пациентов.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>DentApp использует распознавание речи для преобразования голосовых заметок в текст, что упрощает ведение записей о пациентах.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -41,32 +64,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-
-	<key>CFBundleLocalizations</key>
-	<array>
-		<string>ru</string>
-	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-	<string>sms</string>
-	<string>tel</string>
-	</array>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>DentApp использует микрофон для записи голосовых заметок и распознавания речи для удобства ввода информации.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>DentApp использует распознавание речи для преобразования голосовых заметок в текст, что упрощает ведение записей о пациентах.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>DentApp запрашивает доступ к вашей медиатеке для выбора и просмотра фотографий, связанных с лечением пациентов.</string>
-
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>DentApp запрашивает разрешение на сохранение фотографий, связанных с медицинскими процедурами и результатами лечения.</string>
-
-	<key>NSCameraUsageDescription</key>
-	<string>DentApp использует камеру для создания фотографий, необходимых для диагностики и документирования стоматологических процедур.</string>
-
 </dict>
 </plist>
