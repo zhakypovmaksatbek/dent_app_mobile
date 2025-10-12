@@ -431,13 +431,18 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                     },
                     conditionService,
                   ),
-              isSelected:
-                  conditionService.condition?.code ==
-                  conditionModels[index].code,
+              isSelected: isValidConditionCode(
+                conditionModels[index].code ?? '',
+                conditionService.condition?.code ?? '',
+              ),
             ),
         itemCount: conditionModels.length,
       );
     }
+  }
+
+  bool isValidConditionCode(String categoryCode, String conditionCode) {
+    return conditionCode.startsWith('$categoryCode.');
   }
 
   List<Conditions> _flattenConditions(List<ConditionModel> conditionModels) {

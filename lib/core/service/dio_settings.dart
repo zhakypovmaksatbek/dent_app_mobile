@@ -10,7 +10,7 @@ import "package:flutter/foundation.dart";
 final String baseUrl =
     kDebugMode
         ? AppConstants.instance.baseUrlTest
-        : AppConstants.instance.baseUrlProd;
+        : AppConstants.instance.baseUrlTest;
 
 class DioService {
   DioService() {

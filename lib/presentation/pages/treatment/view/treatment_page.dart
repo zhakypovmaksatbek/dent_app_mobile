@@ -64,6 +64,7 @@ class _TreatmentPageState extends State<TreatmentPage>
           children: [
             ToothDiagnosisTab(
               appointmentId: widget.calendarAppointment!.appointmentId!,
+              patientId: widget.calendarAppointment!.patientId!,
             ),
             TreatmentInfoTab(calendarAppointment: widget.calendarAppointment),
             UploadXRayTab(calendarAppointment: widget.calendarAppointment!),
