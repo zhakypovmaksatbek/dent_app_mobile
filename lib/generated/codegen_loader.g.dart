@@ -286,7 +286,8 @@ class CodegenLoader extends AssetLoader{
     "select_time_first": "Пожалуйста, сначала выберите время",
     "prompt_select_another_time": "Чтобы подобрать другое время, нажмите 'Обновить'.",
     "selected_time": "Выбранное время",
-    "damaged_side": "Поврежденная сторона"
+    "damaged_side": "Поврежденная сторона",
+    "not_selected_room": "Кабинет не выбрано"
   },
   "routes": {
     "dashboard": "Главная",

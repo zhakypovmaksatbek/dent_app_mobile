@@ -16,14 +16,14 @@ class PaymentItem extends StatelessWidget {
             ? DateFormat(
               'dd MMM yyyy, HH:mm',
             ).format(DateTime.parse(payment.appointmentDateTime!))
-            : 'N/A';
+            : "-";
 
     final paymentDate =
         payment.payedDate != null
             ? DateFormat(
               'dd MMM yyyy',
             ).format(DateTime.parse(payment.payedDate!))
-            : 'N/A';
+            : "-";
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -104,12 +104,12 @@ class PaymentItem extends StatelessWidget {
                 _buildInfoItem(
                   context,
                   LocaleKeys.report_payment_method.tr(),
-                  payment.typeOfPayment ?? 'N/A',
+                  payment.typeOfPayment ?? "-",
                 ),
                 _buildInfoItem(
                   context,
                   'ID',
-                  '#${payment.appointmentId?.toString().padLeft(4, '0') ?? 'N/A'}',
+                  '#${payment.appointmentId?.toString().padLeft(4, '0') ?? "-"}',
                 ),
               ],
             ),

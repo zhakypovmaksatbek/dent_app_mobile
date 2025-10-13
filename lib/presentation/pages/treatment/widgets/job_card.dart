@@ -337,6 +337,21 @@ class _JobCardState extends State<JobCard> {
                   onPatternTap:
                       () => _showPatternSelectionDialog(PatternType.surveyPlan),
                 ),
+
+                ExpandableTextFieldWidget(
+                  title: PatternUtils.getTitleForPatternType(
+                    PatternType.treatment,
+                  ),
+                  hintText: PatternUtils.getHintTextForPatternType(
+                    PatternType.treatment,
+                  ),
+                  controller: _treatmentFormController.treatmentController,
+                  focusNode: _treatmentFormController.treatmentFocusNode,
+                  patternType: PatternType.treatment,
+
+                  onPatternTap:
+                      () => _showPatternSelectionDialog(PatternType.treatment),
+                ),
                 ExpandableTextFieldWidget(
                   title: PatternUtils.getTitleForPatternType(
                     PatternType.recommendation,
@@ -351,20 +366,6 @@ class _JobCardState extends State<JobCard> {
                       () => _showPatternSelectionDialog(
                         PatternType.recommendation,
                       ),
-                ),
-                ExpandableTextFieldWidget(
-                  title: PatternUtils.getTitleForPatternType(
-                    PatternType.treatment,
-                  ),
-                  hintText: PatternUtils.getHintTextForPatternType(
-                    PatternType.treatment,
-                  ),
-                  controller: _treatmentFormController.treatmentController,
-                  focusNode: _treatmentFormController.treatmentFocusNode,
-                  patternType: PatternType.treatment,
-
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(PatternType.treatment),
                 ),
                 _buildServicesSection(context),
 

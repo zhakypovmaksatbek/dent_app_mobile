@@ -185,16 +185,6 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                     ],
 
-                    // // Appointment ID Section
-                    // SliverPadding(
-                    //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-                    //   sliver: SliverToBoxAdapter(
-                    //     child: PaymentInfoCard(
-                    //       appointmentId: state.receipt.appointmentId ?? 0,
-                    //     ),
-                    //   ),
-                    // ),
-
                     // Services Section
                     SliverPadding(
                       padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
@@ -216,17 +206,6 @@ class _PaymentViewState extends State<PaymentView> {
                         ),
                       ),
                     ),
-
-                    // // Payment Summary Section
-                    // SliverPadding(
-                    //   padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                    //   sliver: SliverToBoxAdapter(
-                    //     child: ReceiptPaymentSummary(
-                    //       receipt: state.receipt,
-                    //       formatAmount: _formatAmount,
-                    //     ),
-                    //   ),
-                    // ),
 
                     // Payment Status Section
                     SliverPadding(
@@ -294,7 +273,12 @@ class _PaymentViewState extends State<PaymentView> {
 
                       // Payment listener and button
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                        padding: EdgeInsets.fromLTRB(
+                          20,
+                          16,
+                          20,
+                          MediaQuery.of(context).padding.bottom + 20,
+                        ),
                         sliver: SliverToBoxAdapter(
                           child: BlocConsumer<
                             PayAppointmentCubit,
@@ -328,7 +312,9 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                     ] else ...[
                       SliverPadding(
-                        padding: const EdgeInsets.only(bottom: 32),
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).padding.bottom,
+                        ),
                         sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
                       ),
                     ],

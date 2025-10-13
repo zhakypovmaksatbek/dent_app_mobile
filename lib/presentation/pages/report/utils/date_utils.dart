@@ -17,7 +17,7 @@ class ReportDateUtils {
     String? dateTimeString, {
     String format = 'dd MMM yyyy, HH:mm',
   }) {
-    if (dateTimeString == null) return 'N/A';
+    if (dateTimeString == null) return "-";
     try {
       final dateTime = DateTime.parse(dateTimeString);
       return DateFormat(format).format(dateTime);

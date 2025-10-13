@@ -311,18 +311,19 @@ class PaymentStatusCard extends StatelessWidget {
               const SizedBox(width: 8),
               AppText(
                 title: title,
-                textType: TextType.description,
+                textType: TextType.body,
                 color: AppColors.textSecondary,
               ),
             ],
           ),
           const SizedBox(height: 4),
-          PriceConvertWidget(
-            price: amount,
-            textType: TextType.title,
-            fontWeight: FontWeight.w600,
-            color: color,
-          ),
+          if (amount != 0)
+            PriceConvertWidget(
+              price: amount,
+              textType: TextType.title,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
         ],
       ),
     );

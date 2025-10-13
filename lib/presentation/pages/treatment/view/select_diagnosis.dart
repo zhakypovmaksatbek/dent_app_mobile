@@ -502,6 +502,9 @@ class _DiagnosisSearchBottomSheetState
             child: TextField(
               controller: _searchController,
               focusNode: _searchFocusNode,
+              onTapOutside: (event) {
+                _searchFocusNode.unfocus();
+              },
               decoration: InputDecoration(
                 hintText: 'Введите название диагноза...',
                 hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(

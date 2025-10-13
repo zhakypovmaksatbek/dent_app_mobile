@@ -30,16 +30,16 @@ class DocumentItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${LocaleKeys.general_description.tr()}: ${document.description ?? 'N/A'}',
+                    '${LocaleKeys.general_description.tr()}: ${document.description ?? "-"}',
                   ),
                   Text(
                     '${LocaleKeys.general_total_amount.tr()}: ${document.totalPrice ?? 0}',
                   ),
                   Text(
-                    '${LocaleKeys.report_date.tr()}: ${document.dateOfCreated ?? 'N/A'}',
+                    '${LocaleKeys.report_date.tr()}: ${document.dateOfCreated ?? "-"}',
                   ),
                   Text(
-                    '${LocaleKeys.appointment_status_label.tr()}: ${document.paymentStatus ?? 'N/A'}',
+                    '${LocaleKeys.appointment_status_label.tr()}: ${document.paymentStatus ?? "-"}',
                   ),
                 ],
               ),

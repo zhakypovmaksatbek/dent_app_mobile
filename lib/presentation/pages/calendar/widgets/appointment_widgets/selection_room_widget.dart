@@ -103,7 +103,7 @@ class _SelectionRoomWidgetState extends State<SelectionRoomWidget> {
                   return DropdownMenuItem<RoomModel>(
                     value: room,
                     child: AppText(
-                      title: room.name ?? 'Bilinmeyen Oda',
+                      title: room.name ?? 'Название не указано',
                       textType: TextType.body,
                     ),
                   );

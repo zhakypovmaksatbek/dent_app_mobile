@@ -167,7 +167,7 @@ class PatientCard extends StatelessWidget {
                   children: [
                     _buildInfoRow(
                       LocaleKeys.forms_email.tr(),
-                      patient.email ?? 'N/A',
+                      patient.email ?? '-',
                     ),
                     const SizedBox(height: 8),
                     _buildInfoRow(
@@ -177,17 +177,17 @@ class PatientCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     _buildInfoRow(
                       LocaleKeys.forms_debt.tr(),
-                      patient.debt?.toString() ?? 'N/A',
+                      patient.debt?.toString() ?? '-',
                     ),
                     const SizedBox(height: 8),
                     _buildInfoRow(
                       LocaleKeys.forms_deposit.tr(),
-                      patient.deposit?.toString() ?? 'N/A',
+                      patient.deposit?.toString() ?? '',
                     ),
                     const SizedBox(height: 8),
                     _buildInfoRow(
                       LocaleKeys.forms_payment.tr(),
-                      patient.payment?.toString() ?? 'N/A',
+                      patient.payment?.toString() ?? "-",
                     ),
                     const SizedBox(height: 16),
                     // Detail button

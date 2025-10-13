@@ -350,7 +350,7 @@ class _ServicesViewState extends State<_ServicesView> {
               'dd/MM/yyyy',
               localeString,
             ).format(DateTime.parse(item.createdAt!))
-            : 'N/A';
+            : "-";
 
     return Container(
       // No margin here, spacing is handled by Padding in SliverList delegate

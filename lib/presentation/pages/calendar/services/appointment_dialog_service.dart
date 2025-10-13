@@ -133,7 +133,8 @@ class AppointmentDialogService {
               ),
               _buildDetailRow(
                 LocaleKeys.appointment_room.tr(),
-                appointmentModel.room ?? 'N/A',
+                appointmentModel.room ??
+                    LocaleKeys.forms_not_selected_room.tr(),
               ),
               if (appointmentModel.description != null &&
                   appointmentModel.description!.isNotEmpty)

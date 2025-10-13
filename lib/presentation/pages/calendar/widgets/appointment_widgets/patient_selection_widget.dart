@@ -33,7 +33,15 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
   _searchInputKey = GlobalKey<NewCustomSearchInputState<PatientShortModel>>();
 
   void _onAddPatient(BuildContext context, String patientName) async {
+    // Önce overlay'i kapat
+    _searchInputKey.currentState?.deactivate();
+
+    // Focus'u kaldır
     FocusScope.of(context).unfocus();
+
+    // Overlay'in kapanması için kısa bir bekleme
+    await Future.delayed(const Duration(milliseconds: 100));
+
     final result = await showCupertinoModalBottomSheet<PatientModel>(
       context: context,
       builder:
@@ -48,10 +56,9 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
         id: result.id,
       );
 
-      // Yeni hastayı cubit'a ekle
       context.read<SearchPatientCubit>().addNewPatient(patientShortModel);
-
       widget.onPatientSelected(patientShortModel);
+
       _searchInputKey.currentState?.selectItemProgrammatically(
         patientShortModel,
       );

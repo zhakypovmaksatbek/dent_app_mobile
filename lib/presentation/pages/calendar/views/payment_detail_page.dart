@@ -284,7 +284,12 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
 
                       // Payment listener and button
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                        padding: EdgeInsets.fromLTRB(
+                          20,
+                          16,
+                          20,
+                          MediaQuery.of(context).padding.bottom + 20,
+                        ),
                         sliver: SliverToBoxAdapter(
                           child: BlocConsumer<
                             PayAppointmentCubit,
@@ -318,7 +323,9 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       ),
                     ] else ...[
                       SliverPadding(
-                        padding: const EdgeInsets.only(bottom: 32),
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).padding.bottom,
+                        ),
                         sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
                       ),
                     ],
