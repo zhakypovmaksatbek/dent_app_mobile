@@ -41,7 +41,7 @@ class _PatientSelectionWidgetState extends State<PatientSelectionWidget> {
 
     // Overlay'in kapanması için kısa bir bekleme
     await Future.delayed(const Duration(milliseconds: 100));
-
+    if (!context.mounted) return;
     final result = await showCupertinoModalBottomSheet<PatientModel>(
       context: context,
       builder:
