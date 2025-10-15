@@ -70,29 +70,11 @@ class AppointmentItemWidget extends StatelessWidget {
               ).displayName.tr(),
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
-            Row(
-              children: [
-                if (appointment.appointmentStatus ==
-                    AppointmentStatus.canceled.key.toUpperCase())
-                  Text(
-                    AppointmentStatus.fromKey(
-                      appointment.appointmentStatus ?? '',
-                    ).label.tr(),
-                    style: TextStyle(
-                      color:
-                          AppointmentStatus.fromKey(
-                            appointment.appointmentStatus ?? '',
-                          ).color,
-                      fontSize: 12,
-                    ),
-                  ),
-                Text(
-                  (appointment.doctorFirsName ?? '') +
-                      (' ') +
-                      (appointment.doctorLastName ?? ''),
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                ),
-              ],
+            Text(
+              (appointment.doctorFirsName ?? '') +
+                  (' ') +
+                  (appointment.doctorLastName ?? ''),
+              style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             Text(
               AppointmentStatus.fromKey(

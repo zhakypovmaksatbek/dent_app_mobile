@@ -103,7 +103,7 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
     }
   }
 
-  void _toggleListening() async {
+  Future<void> _toggleListening() async {
     if (_speechController.isListening) {
       await _speechController.stopListening();
     } else {
@@ -111,10 +111,16 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
         onResult: widget.onResult,
         localeId: _getLocaleId(),
       );
+
+      // If permission was denied, show the error dialog
+      if (mounted &&
+          _speechController.speechState == SpeechState.permissionDenied) {
+        await _showErrorDialog();
+      }
     }
   }
 
-  void _showErrorDialog() {
+  Future<void> _showErrorDialog() async {
     if (!mounted) return; // Don't show dialog if widget is not mounted
 
     final speechState = _speechController.speechState;
@@ -131,13 +137,20 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
           child: Text(LocaleKeys.buttons_cancel.tr()),
         ),
-        TextButton(
-          onPressed: () {
+        FilledButton(
+          onPressed: () async {
             Navigator.of(context).pop();
             // Try to reinitialize which will show system permission dialog
-            _speechController.initialize();
+            final success = await _speechController.initialize();
+            if (success && mounted) {
+              // If successful, automatically try to start listening
+              _toggleListening();
+            }
           },
           child: Text(LocaleKeys.buttons_try_again.tr()),
         ),
@@ -151,12 +164,18 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
           child: Text(LocaleKeys.buttons_ok.tr()),
         ),
-        TextButton(
-          onPressed: () {
+        FilledButton(
+          onPressed: () async {
             Navigator.of(context).pop();
-            _speechController.initialize();
+            final success = await _speechController.initialize();
+            if (success && mounted) {
+              _toggleListening();
+            }
           },
           child: Text(LocaleKeys.buttons_retry.tr()),
         ),
@@ -166,18 +185,33 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
       content = _speechController.errorMessage;
 
       actions = [
-        TextButton(
+        FilledButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(LocaleKeys.buttons_ok.tr()),
         ),
       ];
     }
 
-    showDialog(
+    await showDialog(
       context: context,
+      barrierDismissible: false,
       builder:
           (context) => AlertDialog(
-            title: Text(title),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: [
+                Icon(
+                  speechState == SpeechState.permissionDenied
+                      ? Icons.mic_off
+                      : Icons.error_outline,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text(title)),
+              ],
+            ),
             content: Text(content),
             actions: actions,
           ),

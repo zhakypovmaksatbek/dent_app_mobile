@@ -69,7 +69,7 @@ class ConditionCard extends StatelessWidget {
                       color: _getContrastColor(
                         category.conditions?.first.color ?? AppColors.primary,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -103,18 +103,18 @@ class ConditionCard extends StatelessWidget {
                   ],
                 ],
               ),
-              if (category.codeName != null &&
-                  category.codeName!.isNotEmpty) ...[
-                AppText(
-                  title: category.codeDescription!,
-                  textType: TextType.description,
-                  color: _getContrastColor(
-                    category.conditions?.first.color ?? AppColors.primary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+              // if (category.codeName != null &&
+              //     category.codeName!.isNotEmpty) ...[
+              //   AppText(
+              //     title: category.codeDescription!,
+              //     textType: TextType.description,
+              //     color: _getContrastColor(
+              //       category.conditions?.first.color ?? AppColors.primary,
+              //     ),
+              //     maxLines: 1,
+              //     overflow: TextOverflow.ellipsis,
+              //   ),
+              // ],
             ],
           ),
         ),
@@ -140,13 +140,13 @@ class ConditionCard extends StatelessWidget {
                 child: Tooltip(
                   message:
                       selectedDiagnosis != null && isSelected
-                          ? (selectedDiagnosis!.name ?? "N/A")
-                          : (category.code ?? "N/A"),
+                          ? (selectedDiagnosis!.name ?? "-")
+                          : (category.code ?? "-"),
                   child: AppText(
                     title:
                         selectedDiagnosis != null && isSelected
-                            ? (selectedDiagnosis!.name ?? "N/A")
-                            : (category.code ?? "N/A"),
+                            ? (selectedDiagnosis!.name ?? "-")
+                            : (category.code ?? "-"),
                     textType: TextType.description,
                     fontWeight: FontWeight.w600,
                     color: theme.textTheme.bodySmall?.color?.withValues(

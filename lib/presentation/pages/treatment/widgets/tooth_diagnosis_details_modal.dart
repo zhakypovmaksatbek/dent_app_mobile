@@ -27,15 +27,21 @@ class DiagnosisDetailsModal extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          margin: EdgeInsets.only(bottom: size.padding.bottom),
+          // margin: EdgeInsets.only(bottom: size.padding.bottom),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(theme),
+
               Expanded(
                 child: ListView.separated(
                   controller: controller,
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    8,
+                    16,
+                    size.padding.bottom + 16,
+                  ),
                   itemCount: conditions.conditions?.length ?? 0,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {

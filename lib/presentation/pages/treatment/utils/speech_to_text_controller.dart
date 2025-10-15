@@ -45,6 +45,9 @@ class SpeechToTextController extends ChangeNotifier {
   // Initialize speech recognition
   Future<bool> initialize() async {
     try {
+      // Reset error state before initialization
+      _errorMessage = '';
+
       // Let speech_to_text handle its own permission
       final bool available = await _speechToText.initialize(
         onError: _onSpeechError,
@@ -57,8 +60,18 @@ class SpeechToTextController extends ChangeNotifier {
         _updateState(SpeechState.ready);
         return true;
       } else {
-        _updateState(SpeechState.notAvailable);
-        _errorMessage = LocaleKeys.errors_speech_recognition_not_available.tr();
+        // Check if it's a permission issue
+        final hasPermission = await _speechToText.hasPermission;
+        if (!hasPermission) {
+          _updateState(SpeechState.permissionDenied);
+          _errorMessage =
+              LocaleKeys.diagnosis_microphone_permission_required_description
+                  .tr();
+        } else {
+          _updateState(SpeechState.notAvailable);
+          _errorMessage =
+              LocaleKeys.errors_speech_recognition_not_available.tr();
+        }
         return false;
       }
     } catch (e) {
@@ -73,9 +86,19 @@ class SpeechToTextController extends ChangeNotifier {
     Function(String)? onResult,
     String? localeId,
   }) async {
+    // Initialize if not already done
     if (!_isInitialized) {
       final initialized = await initialize();
       if (!initialized) return;
+    }
+
+    // Check permission before attempting to listen
+    final hasPermission = await _speechToText.hasPermission;
+    if (!hasPermission) {
+      _updateState(SpeechState.permissionDenied);
+      _errorMessage =
+          LocaleKeys.diagnosis_microphone_permission_required_description.tr();
+      return;
     }
 
     if (!isAvailable || isListening) return;
@@ -105,8 +128,21 @@ class SpeechToTextController extends ChangeNotifier {
         }
       });
     } catch (e) {
-      _updateState(SpeechState.error);
-      _errorMessage = 'Failed to start listening: $e';
+      debugPrint('Error starting listening: $e');
+
+      // Check if it's a permission error
+      final errorString = e.toString().toLowerCase();
+      if (errorString.contains('permission') ||
+          errorString.contains('denied') ||
+          errorString.contains('not authorized')) {
+        _updateState(SpeechState.permissionDenied);
+        _errorMessage =
+            LocaleKeys.diagnosis_microphone_permission_required_description
+                .tr();
+      } else {
+        _updateState(SpeechState.error);
+        _errorMessage = 'Failed to start listening: $e';
+      }
     }
   }
 
@@ -181,7 +217,12 @@ class SpeechToTextController extends ChangeNotifier {
         errorString.contains('not authorized')) {
       _updateState(SpeechState.permissionDenied);
       _errorMessage =
-          'Microphone permission is required. Please allow microphone access in device settings.';
+          LocaleKeys.diagnosis_microphone_permission_required_description.tr();
+    } else if (errorString.contains('not available') ||
+        errorString.contains('service') ||
+        errorString.contains('unavailable')) {
+      _updateState(SpeechState.notAvailable);
+      _errorMessage = LocaleKeys.errors_speech_recognition_not_available.tr();
     } else {
       _updateState(SpeechState.error);
       _errorMessage = 'Speech recognition error: $error';
