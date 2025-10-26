@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/presentation/localization/app_localization.dart'
 import 'package:dent_app_mobile/presentation/pages/treatment/utils/speech_to_text_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SpeechToTextWidget extends StatefulWidget {
   const SpeechToTextWidget({
@@ -145,14 +146,10 @@ class _SpeechToTextWidgetState extends State<SpeechToTextWidget>
         FilledButton(
           onPressed: () async {
             Navigator.of(context).pop();
-            // Try to reinitialize which will show system permission dialog
-            final success = await _speechController.initialize();
-            if (success && mounted) {
-              // If successful, automatically try to start listening
-              _toggleListening();
-            }
+            // Kullanıcıyı uygulama ayarlarına yönlendir
+            await openAppSettings();
           },
-          child: Text(LocaleKeys.buttons_try_again.tr()),
+          child: Text(LocaleKeys.routes_settings.tr()),
         ),
       ];
     } else if (speechState == SpeechState.notAvailable) {

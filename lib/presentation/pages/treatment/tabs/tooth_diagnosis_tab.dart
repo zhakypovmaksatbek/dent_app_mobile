@@ -84,7 +84,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: _verticalSpacing),
-                    _buildTeethSelector(conditionService, _teeth),
+                    _buildTeethSelector(conditionService),
                     const SizedBox(height: _verticalSpacing),
                     if (conditionService.jobs.isNotEmpty)
                       _buildWorkItemsCard(conditionService),
@@ -118,22 +118,53 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
     final map = <String, Color>{};
 
     for (final tooth in _teeth) {
-      if (tooth.toothNumber != null &&
-          tooth.main?.color != null &&
-          tooth.main!.color!.isNotEmpty) {
+      if (tooth.toothNumber != null) {
         final String toothId = tooth.toothNumber.toString();
-        map[toothId] = _hexToColor(tooth.main!.color!);
+
+        // Önce main.color'a bak
+        if (tooth.main?.color != null && tooth.main!.color!.isNotEmpty) {
+          map[toothId] = _hexToColor(tooth.main!.color!);
+        } else {
+          // main.color yoksa, innerToothResponse içindeki ilk rengi kullan
+          final innerColor = _getFirstInnerToothColor(tooth);
+          if (innerColor != null) {
+            map[toothId] = innerColor;
+          }
+        }
       }
     }
 
     return map;
   }
 
+  /// innerToothResponse içindeki ilk bulunan rengi döndürür
+  Color? _getFirstInnerToothColor(ToothModel tooth) {
+    final inner = tooth.innerToothResponse;
+    if (inner == null) return null;
+
+    final parts = [
+      inner.top,
+      inner.bottom,
+      inner.left,
+      inner.right,
+      inner.centerLeft,
+      inner.centerRight,
+    ];
+
+    for (final part in parts) {
+      if (part?.color != null && part!.color!.isNotEmpty) {
+        return _hexToColor(part.color!);
+      }
+    }
+
+    return null;
+  }
+
   /// Converts a hex string to Color
   Color _hexToColor(String hexString) {
     try {
-      final String colorStr = hexString.replaceFirst('#', 'FF');
-      return Color(int.parse(colorStr, radix: 16));
+      final String colorStr = hexString.replaceAll('#', '');
+      return Color(int.parse('FF$colorStr', radix: 16));
     } catch (e) {
       // Return default color on error
       return ColorConstants.primary;
@@ -141,10 +172,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
   }
 
   /// Builds the teeth selector widget with jaw overlay buttons
-  Widget _buildTeethSelector(
-    ConditionService conditionService,
-    List<ToothModel> teeth,
-  ) {
+  Widget _buildTeethSelector(ConditionService conditionService) {
     final theme = Theme.of(context);
 
     return Center(
@@ -388,7 +416,11 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
               router.pop();
               conditionService.setToothId(toothId);
               router.push(
-                TeethConditionActionRoute(appointmentId: widget.appointmentId),
+                TeethConditionActionRoute(
+                  appointmentId: widget.appointmentId,
+                  patientToothCubit: _patientToothCubit,
+                  patientId: widget.patientId,
+                ),
               );
             },
           ),
@@ -550,8 +582,14 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
   }
 
   /// Navigates to work items page
-  void _navigateToWorkItems() {
-    router.push(WorkItemsRoute(appointmentId: widget.appointmentId));
+  Future<void> _navigateToWorkItems() async {
+    await router.push(
+      WorkItemsRoute(
+        appointmentId: widget.appointmentId,
+        patientToothCubit: _patientToothCubit,
+        patientId: widget.patientId,
+      ),
+    );
   }
 }
 
@@ -884,8 +922,8 @@ class _ToothExaminationDialog extends StatelessWidget {
   /// Converts a hex string to Color
   Color _hexToColor(String hexString) {
     try {
-      final String colorStr = hexString.replaceFirst('#', 'FF');
-      return Color(int.parse(colorStr, radix: 16));
+      final String colorStr = hexString.replaceAll('#', '');
+      return Color(int.parse('FF$colorStr', radix: 16));
     } catch (e) {
       // Return default color on error
       return ColorConstants.primary;

@@ -7,6 +7,7 @@ import 'package:dent_app_mobile/presentation/pages/calendar/views/payment_detail
 import 'package:dent_app_mobile/presentation/pages/calendar/views/payment_view.dart';
 import 'package:dent_app_mobile/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:dent_app_mobile/presentation/pages/main/main_page.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/patient_detail.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/view/patient_page.dart';
 import 'package:dent_app_mobile/presentation/pages/report/report_page.dart';

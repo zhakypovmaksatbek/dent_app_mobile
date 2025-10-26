@@ -1,5 +1,5 @@
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/widgets/speech_to_text_widget.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/widgets/new_speech_to_text_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/def_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -87,7 +87,7 @@ class ExpandableTextFieldWidget extends StatelessWidget {
                 children: [
                   // Speech to Text button
                   if (enableSpeechToText) ...[
-                    SpeechToTextWidget(onResult: _onSpeechResult, size: 20),
+                    NewSpeechToTextWidget(onResult: _onSpeechResult, size: 20),
                     const SizedBox(width: 8),
                   ],
                   // Pattern selection button

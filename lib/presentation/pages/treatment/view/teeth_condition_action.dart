@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
@@ -17,8 +18,15 @@ import 'package:provider/provider.dart';
 
 @RoutePage(name: 'TeethConditionActionRoute')
 class TeethConditionAction extends StatefulWidget {
-  const TeethConditionAction({super.key, required this.appointmentId});
+  const TeethConditionAction({
+    super.key,
+    required this.appointmentId,
+    required this.patientToothCubit,
+    required this.patientId,
+  });
   final int appointmentId;
+  final PatientToothCubit patientToothCubit;
+  final int patientId;
   @override
   State<TeethConditionAction> createState() => _TeethConditionActionState();
 }
@@ -434,7 +442,13 @@ class _TeethConditionActionState extends State<TeethConditionAction>
         _isCompleting = false;
       });
       // Show success dialog
-      router.replace(WorkItemsRoute(appointmentId: widget.appointmentId));
+      router.replace(
+        WorkItemsRoute(
+          appointmentId: widget.appointmentId,
+          patientToothCubit: widget.patientToothCubit,
+          patientId: widget.patientId,
+        ),
+      );
     }
   }
 

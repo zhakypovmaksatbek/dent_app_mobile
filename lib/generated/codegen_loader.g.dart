@@ -191,6 +191,7 @@ class CodegenLoader extends AssetLoader{
     "help": "Помощь",
     "try_again": "Попробовать снова",
     "start_voice_input": "Начать голосовой ввод",
+    "settings": "Настройки",
     "clear_all_filters": "Очистить все фильтры"
   },
   "errors": {

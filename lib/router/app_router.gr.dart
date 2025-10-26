@@ -509,12 +509,16 @@ class TeethConditionActionRoute
   TeethConditionActionRoute({
     Key? key,
     required int appointmentId,
+    required PatientToothCubit patientToothCubit,
+    required int patientId,
     List<PageRouteInfo>? children,
   }) : super(
          TeethConditionActionRoute.name,
          args: TeethConditionActionRouteArgs(
            key: key,
            appointmentId: appointmentId,
+           patientToothCubit: patientToothCubit,
+           patientId: patientId,
          ),
          initialChildren: children,
        );
@@ -528,32 +532,50 @@ class TeethConditionActionRoute
       return TeethConditionAction(
         key: args.key,
         appointmentId: args.appointmentId,
+        patientToothCubit: args.patientToothCubit,
+        patientId: args.patientId,
       );
     },
   );
 }
 
 class TeethConditionActionRouteArgs {
-  const TeethConditionActionRouteArgs({this.key, required this.appointmentId});
+  const TeethConditionActionRouteArgs({
+    this.key,
+    required this.appointmentId,
+    required this.patientToothCubit,
+    required this.patientId,
+  });
 
   final Key? key;
 
   final int appointmentId;
 
+  final PatientToothCubit patientToothCubit;
+
+  final int patientId;
+
   @override
   String toString() {
-    return 'TeethConditionActionRouteArgs{key: $key, appointmentId: $appointmentId}';
+    return 'TeethConditionActionRouteArgs{key: $key, appointmentId: $appointmentId, patientToothCubit: $patientToothCubit, patientId: $patientId}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! TeethConditionActionRouteArgs) return false;
-    return key == other.key && appointmentId == other.appointmentId;
+    return key == other.key &&
+        appointmentId == other.appointmentId &&
+        patientToothCubit == other.patientToothCubit &&
+        patientId == other.patientId;
   }
 
   @override
-  int get hashCode => key.hashCode ^ appointmentId.hashCode;
+  int get hashCode =>
+      key.hashCode ^
+      appointmentId.hashCode ^
+      patientToothCubit.hashCode ^
+      patientId.hashCode;
 }
 
 /// generated route for
@@ -633,10 +655,17 @@ class WorkItemsRoute extends PageRouteInfo<WorkItemsRouteArgs> {
   WorkItemsRoute({
     Key? key,
     required int appointmentId,
+    required PatientToothCubit patientToothCubit,
+    required int patientId,
     List<PageRouteInfo>? children,
   }) : super(
          WorkItemsRoute.name,
-         args: WorkItemsRouteArgs(key: key, appointmentId: appointmentId),
+         args: WorkItemsRouteArgs(
+           key: key,
+           appointmentId: appointmentId,
+           patientToothCubit: patientToothCubit,
+           patientId: patientId,
+         ),
          initialChildren: children,
        );
 
@@ -646,30 +675,51 @@ class WorkItemsRoute extends PageRouteInfo<WorkItemsRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<WorkItemsRouteArgs>();
-      return WorkItemsView(key: args.key, appointmentId: args.appointmentId);
+      return WorkItemsView(
+        key: args.key,
+        appointmentId: args.appointmentId,
+        patientToothCubit: args.patientToothCubit,
+        patientId: args.patientId,
+      );
     },
   );
 }
 
 class WorkItemsRouteArgs {
-  const WorkItemsRouteArgs({this.key, required this.appointmentId});
+  const WorkItemsRouteArgs({
+    this.key,
+    required this.appointmentId,
+    required this.patientToothCubit,
+    required this.patientId,
+  });
 
   final Key? key;
 
   final int appointmentId;
 
+  final PatientToothCubit patientToothCubit;
+
+  final int patientId;
+
   @override
   String toString() {
-    return 'WorkItemsRouteArgs{key: $key, appointmentId: $appointmentId}';
+    return 'WorkItemsRouteArgs{key: $key, appointmentId: $appointmentId, patientToothCubit: $patientToothCubit, patientId: $patientId}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! WorkItemsRouteArgs) return false;
-    return key == other.key && appointmentId == other.appointmentId;
+    return key == other.key &&
+        appointmentId == other.appointmentId &&
+        patientToothCubit == other.patientToothCubit &&
+        patientId == other.patientId;
   }
 
   @override
-  int get hashCode => key.hashCode ^ appointmentId.hashCode;
+  int get hashCode =>
+      key.hashCode ^
+      appointmentId.hashCode ^
+      patientToothCubit.hashCode ^
+      patientId.hashCode;
 }

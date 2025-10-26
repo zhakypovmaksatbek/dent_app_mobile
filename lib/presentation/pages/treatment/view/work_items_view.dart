@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs/save_jobs_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/job_card.dart';
@@ -18,15 +19,23 @@ import 'package:toastification/toastification.dart';
 
 @RoutePage(name: "WorkItemsRoute")
 class WorkItemsView extends StatelessWidget {
-  const WorkItemsView({super.key, required this.appointmentId});
+  WorkItemsView({
+    super.key,
+    required this.appointmentId,
+    required this.patientToothCubit,
+    required this.patientId,
+  });
   final int appointmentId;
+  final int patientId;
+  PatientToothCubit patientToothCubit;
   @override
   Widget build(BuildContext context) {
     return BlocListener<SaveJobsCubit, SaveJobsState>(
       listener: (context, state) {
         if (state is SaveJobsSuccess) {
-          router.pop();
+          router.pop(true);
           context.read<ConditionService>().clearJobs();
+          patientToothCubit.getToothList(patientId);
         } else if (state is SaveJobsError) {
           AppWarning.showToastWarning(
             context,

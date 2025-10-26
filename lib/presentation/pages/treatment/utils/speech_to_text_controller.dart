@@ -113,9 +113,11 @@ class SpeechToTextController extends ChangeNotifier {
         listenFor: _listeningTimeout,
         pauseFor: _pauseTimeout,
         localeId: localeId ?? 'en_US',
-        cancelOnError: true,
-        partialResults: true,
-        listenMode: ListenMode.confirmation,
+        listenOptions: SpeechListenOptions(
+          listenMode: ListenMode.confirmation,
+          cancelOnError: true,
+          partialResults: true,
+        ),
       );
 
       _updateState(SpeechState.listening);

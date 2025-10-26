@@ -177,6 +177,7 @@ abstract class  LocaleKeys {
   static const buttons_help = 'buttons.help';
   static const buttons_try_again = 'buttons.try_again';
   static const buttons_start_voice_input = 'buttons.start_voice_input';
+  static const buttons_settings = 'buttons.settings';
   static const buttons_clear_all_filters = 'buttons.clear_all_filters';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
