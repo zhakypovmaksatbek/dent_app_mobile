@@ -82,21 +82,28 @@ class ExpandableTextFieldWidget extends StatelessWidget {
             },
             decoration: InputDecoration(
               hintText: hintText,
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Speech to Text button
-                  if (enableSpeechToText) ...[
-                    NewSpeechToTextWidget(onResult: _onSpeechResult, size: 20),
+              suffixIcon: Semantics(
+                container: true,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Speech to Text button
+                    if (enableSpeechToText) ...[
+                      NewSpeechToTextWidget(
+                        onResult: _onSpeechResult,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                    // Pattern selection button
+                    GestureDetector(
+                      key: const Key('pattern_selection_button'),
+                      onTap: onPatternTap,
+                      child: const Icon(Icons.keyboard_arrow_down_sharp),
+                    ),
                     const SizedBox(width: 8),
                   ],
-                  // Pattern selection button
-                  GestureDetector(
-                    onTap: onPatternTap,
-                    child: const Icon(Icons.keyboard_arrow_down_sharp),
-                  ),
-                  const SizedBox(width: 8),
-                ],
+                ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

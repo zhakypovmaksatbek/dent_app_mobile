@@ -730,10 +730,13 @@ class _ToothExaminationDialog extends StatelessWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ] else ...[
-              AppText(
-                title: "Хотите ли вы провести осмотр этого зуба?",
-                textType: TextType.body,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: AppText(
+                  title: "Хотите ли вы провести осмотр этого зуба?",
+                  textType: TextType.body,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
 

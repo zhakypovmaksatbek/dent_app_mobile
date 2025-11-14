@@ -207,6 +207,7 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
       spacing: 24,
       children: [
         ExpandableTextFieldWidget(
+          key: const Key('complaints_text_field'),
           title: PatternUtils.getTitleForPatternType(PatternType.complaints),
           hintText: PatternUtils.getHintTextForPatternType(
             PatternType.complaints,
@@ -218,6 +219,7 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
               () => _showPatternSelectionDialog(PatternType.complaints),
         ),
         ExpandableTextFieldWidget(
+          key: const Key('description_text_field'),
           title: PatternUtils.getTitleForPatternType(
             PatternType.descriptionAndComments,
           ),
@@ -233,6 +235,7 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
               ),
         ),
         ExpandableTextFieldWidget(
+          key: const Key('history_text_field'),
           title: PatternUtils.getTitleForPatternType(
             PatternType.previousAndConcomitantDiseases,
           ),
@@ -248,6 +251,7 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
               ),
         ),
         ExpandableTextFieldWidget(
+          key: const Key('lab_data_text_field'),
           title: PatternUtils.getTitleForPatternType(
             PatternType.xRayAndLaboratoryData,
           ),
