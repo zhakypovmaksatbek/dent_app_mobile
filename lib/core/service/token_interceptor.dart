@@ -1,4 +1,6 @@
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
+import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -110,6 +112,7 @@ class TokenInterceptor extends Interceptor {
         print('❌ Refresh token not found');
       }
       await AppDataService.instance.setIsLogin(false);
+      router.replaceAll([LoginRoute()]);
       // throw Exception('Refresh token not found');
     }
 
