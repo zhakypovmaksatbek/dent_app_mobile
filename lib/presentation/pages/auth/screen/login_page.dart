@@ -114,8 +114,9 @@ class _LoginPageState extends State<LoginPage> {
           duration: const Duration(milliseconds: 1300),
           child: AppText(
             title: LocaleKeys.general_welcome_description.tr(),
-            textType: TextType.body,
+            textType: .body,
             color: Colors.grey.shade600,
+            textAlign: .center,
           ),
         ),
       ],
@@ -128,8 +129,8 @@ class _LoginPageState extends State<LoginPage> {
       child: DefTextField(
         controller: _emailController,
         hintText: LocaleKeys.forms_enter_email.tr(),
-        keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
+        keyboardType: .emailAddress,
+        textInputAction: .next,
         decoration: _inputDecoration(
           hintText: LocaleKeys.forms_enter_email.tr(),
           prefixIcon: Icon(Icons.email_outlined, color: Colors.grey.shade400),
@@ -152,8 +153,8 @@ class _LoginPageState extends State<LoginPage> {
         hintText: LocaleKeys.forms_enter_password.tr(),
         obscureText: true,
         maxLines: 1,
-        keyboardType: TextInputType.visiblePassword,
-        textInputAction: TextInputAction.done,
+        keyboardType: .visiblePassword,
+        textInputAction: .done,
         decoration: _inputDecoration(
           hintText: LocaleKeys.forms_enter_password.tr(),
           prefixIcon: Icon(Icons.lock_outline, color: Colors.grey.shade400),
@@ -170,6 +171,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginButton() {
+    const double size = 24.0;
     return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
         final isLoading = state is LoginLoading;
@@ -183,22 +185,21 @@ class _LoginPageState extends State<LoginPage> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child:
-                isLoading
-                    ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                    : AppText(
-                      title: LocaleKeys.buttons_login.tr(),
-                      textType: TextType.body,
-                      color: ColorConstants.white,
-                      fontWeight: FontWeight.bold,
+            child: isLoading
+                ? const SizedBox(
+                    height: size,
+                    width: size,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
                     ),
+                  )
+                : AppText(
+                    title: LocaleKeys.buttons_login.tr(),
+                    textType: TextType.body,
+                    color: ColorConstants.white,
+                    fontWeight: FontWeight.bold,
+                  ),
           ),
         );
       },
@@ -209,25 +210,26 @@ class _LoginPageState extends State<LoginPage> {
     required String hintText,
     required Widget prefixIcon,
   }) {
+    const double verticalPadding = 20;
+    const double horizontalPadding = 16;
     return InputDecoration(
       hintText: hintText,
       prefixIcon: prefixIcon,
       contentPadding: const EdgeInsets.symmetric(
-        vertical: 20.0,
-        horizontal: 16.0,
+        vertical: verticalPadding,
+        horizontal: horizontalPadding,
       ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide(color: Colors.grey.shade300),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide(color: Colors.grey.shade300),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+      border: defaultBorder,
+      enabledBorder: defaultBorder,
+      focusedBorder: defaultBorder.copyWith(
         borderSide: BorderSide(color: Theme.of(context).primaryColor),
       ),
     );
   }
+
+  static OutlineInputBorder defaultBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(radius)),
+    borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+  );
+  static const double radius = 12;
 }

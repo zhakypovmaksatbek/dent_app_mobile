@@ -131,7 +131,8 @@ class CodegenLoader extends AssetLoader{
     "closing": "Закрытие",
     "profile_photo": "Фото профиля",
     "change_photo": "Изменить фото",
-    "upload_photo": "Загрузить фото"
+    "upload_photo": "Загрузить фото",
+    "complaints": "Жалобы"
   },
   "buttons": {
     "login": "Войти",
@@ -192,7 +193,8 @@ class CodegenLoader extends AssetLoader{
     "try_again": "Попробовать снова",
     "start_voice_input": "Начать голосовой ввод",
     "settings": "Настройки",
-    "clear_all_filters": "Очистить все фильтры"
+    "clear_all_filters": "Очистить все фильтры",
+    "saved": "Сохраненные"
   },
   "errors": {
     "invalid_email": "Неверный формат электронной почты",
@@ -377,7 +379,9 @@ class CodegenLoader extends AssetLoader{
     "try_changing_search_query": "Попробуйте изменить поисковый запрос",
     "results": "результатов",
     "no_data_available": "Нет данных",
-    "unknown_state": "Неизвестное состояние"
+    "unknown_state": "Неизвестное состояние",
+    "diagnosis_length": "Диагноз: {} шт.",
+    "services_length": "Услуги: {} шт."
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -617,7 +621,10 @@ class CodegenLoader extends AssetLoader{
     "select_diagnosis_and_continue": "Выберите диагноз и продолжайте",
     "date_not_available": "Дата не доступна",
     "time_not_available": "Время не доступно",
-    "invalid_date": "Неверная дата"
+    "invalid_date": "Неверная дата",
+    "tooth": "Зуб {}",
+    "current_inspection": "Текущий осмотр",
+    "condition_name": "Состояние: {}"
   },
   "currency": {
     "som": "Сом",

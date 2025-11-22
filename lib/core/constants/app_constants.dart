@@ -7,7 +7,7 @@ final class AppConstants {
     print('DEBUG: Prod API URL: $baseUrlProd');
   }
 
-  final String appName = 'Dent App';
+  final String appName = 'DentApp';
   final String baseUrlTest = "http://212.112.123.118:8082/"; // test API
   final String baseUrlProd = "https://backend.dentapp.online/"; // prod API
   final String accessToken = "accessToken";

@@ -21,6 +21,7 @@ import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/models/payment/detail_receipt_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
+import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/models/work/image_response_model.dart';
 import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
 import 'package:dent_app_mobile/models/work/work_model.dart';
@@ -282,25 +283,24 @@ class AppointmentRepo extends IAppointmentRepo {
 
   @override
   Future<void> saveWorks(int appointmentId, List<JobModel> jobs) async {
-    final List<Map<String, dynamic>> request =
-        jobs.map((job) {
-          return WorkModel(
-            toothNumber: int.parse(job.toothId),
-            serviceIds:
-                job.serviceIdsWithCount, // Use the new getter that repeats IDs based on count
-            diagnosisId: job.diagnosisIds,
-            surveyPlan: job.surveyPlan,
-            treatment: job.treatment,
+    final List<Map<String, dynamic>> request = jobs.map((job) {
+      return WorkModel(
+        toothNumber: int.parse(job.toothId),
+        serviceIds: job
+            .serviceIdsWithCount, // Use the new getter that repeats IDs based on count
+        diagnosisId: job.diagnosisIds,
+        surveyPlan: job.surveyPlan,
+        treatment: job.treatment,
 
-            recommendations: job.recommendation,
-            toothRequests: [
-              ToothRequests(
-                conditionId: job.condition.id!,
-                toothType: job.toothType?.key,
-              ),
-            ],
-          ).toJson(); // Convert to JSON immediately
-        }).toList();
+        recommendations: job.recommendation,
+        toothRequests: [
+          ToothRequests(
+            conditionId: job.condition.id!,
+            toothType: job.toothType?.key,
+          ),
+        ],
+      ).toJson(); // Convert to JSON immediately
+    }).toList();
 
     await dio.post('api/works/$appointmentId', data: request);
   }
@@ -373,5 +373,15 @@ class AppointmentRepo extends IAppointmentRepo {
   Future<DetailReceiptModel> getDetailReceipt(int appointmentId) async {
     final response = await dio.get('api/payments/wantsToPay/$appointmentId');
     return DetailReceiptModel.fromJson(response.data);
+  }
+
+  @override
+  Future<List<AppointmentWorkModel>> getAppointmentWorks(
+    int appointmentId,
+  ) async {
+    final response = await dio.get('api/works/$appointmentId');
+    return (response.data as List<dynamic>)
+        .map((e) => AppointmentWorkModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

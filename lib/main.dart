@@ -1,5 +1,6 @@
 import 'package:dent_app_mobile/core/bloc/settings_cubit/settings_cubit.dart';
 import 'package:dent_app_mobile/core/bloc/upload/upload_image_cubit.dart';
+import 'package:dent_app_mobile/core/constants/app_constants.dart';
 import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
@@ -43,6 +44,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service_type/service_type_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/document/document_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs/save_jobs_cubit.dart';
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: router.config(),
-      title: 'DentApp Mobile',
+      title: AppConstants.instance.appName,
       theme: AppTheme.light,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
@@ -86,6 +88,9 @@ final router = getIt<AppRouter>();
 final getIt = GetIt.instance;
 void setupLocator() {
   getIt.registerSingleton<AppRouter>(AppRouter());
+  getIt.registerFactory<AppointmentWorksCubit>(
+    () => AppointmentWorksCubit(AppointmentRepo()),
+  );
 }
 
 class Initializer {

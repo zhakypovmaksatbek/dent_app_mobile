@@ -18,15 +18,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TreatmentInfoTab extends StatefulWidget {
-  const TreatmentInfoTab({super.key, this.calendarAppointment});
+class ComplaintsTab extends StatefulWidget {
+  const ComplaintsTab({super.key, this.calendarAppointment});
   final CalendarAppointmentModel? calendarAppointment;
 
   @override
-  State<TreatmentInfoTab> createState() => _TreatmentInfoTabState();
+  State<ComplaintsTab> createState() => _ComplaintsTabState();
 }
 
-class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
+class _ComplaintsTabState extends State<ComplaintsTab> {
   // Cubits
   late final AppointmentCubit _appointmentCubit;
   late final PatternCubit _patternCubit;
@@ -111,16 +111,15 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder:
-          (context) => PatternSelectionBottomSheet(
-            patternType: patternType,
-            title: title,
-            patternCubit: _patternCubit,
-            onPatternSelected: (pattern) {
-              final controller = _getControllerForPatternType(patternType);
-              _formController.insertPattern(controller, pattern);
-            },
-          ),
+      builder: (context) => PatternSelectionBottomSheet(
+        patternType: patternType,
+        title: title,
+        patternCubit: _patternCubit,
+        onPatternSelected: (pattern) {
+          final controller = _getControllerForPatternType(patternType);
+          _formController.insertPattern(controller, pattern);
+        },
+      ),
     );
   }
 
@@ -215,8 +214,8 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
           controller: _formController.complaintsController,
           focusNode: _formController.complaintsFocusNode,
           patternType: PatternType.complaints,
-          onPatternTap:
-              () => _showPatternSelectionDialog(PatternType.complaints),
+          onPatternTap: () =>
+              _showPatternSelectionDialog(PatternType.complaints),
         ),
         ExpandableTextFieldWidget(
           key: const Key('description_text_field'),
@@ -229,10 +228,8 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
           controller: _formController.descriptionController,
           focusNode: _formController.descriptionFocusNode,
           patternType: PatternType.descriptionAndComments,
-          onPatternTap:
-              () => _showPatternSelectionDialog(
-                PatternType.descriptionAndComments,
-              ),
+          onPatternTap: () =>
+              _showPatternSelectionDialog(PatternType.descriptionAndComments),
         ),
         ExpandableTextFieldWidget(
           key: const Key('history_text_field'),
@@ -245,10 +242,9 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
           controller: _formController.historyController,
           focusNode: _formController.historyFocusNode,
           patternType: PatternType.previousAndConcomitantDiseases,
-          onPatternTap:
-              () => _showPatternSelectionDialog(
-                PatternType.previousAndConcomitantDiseases,
-              ),
+          onPatternTap: () => _showPatternSelectionDialog(
+            PatternType.previousAndConcomitantDiseases,
+          ),
         ),
         ExpandableTextFieldWidget(
           key: const Key('lab_data_text_field'),
@@ -261,10 +257,8 @@ class _TreatmentInfoTabState extends State<TreatmentInfoTab> {
           controller: _formController.labDataController,
           focusNode: _formController.labDataFocusNode,
           patternType: PatternType.xRayAndLaboratoryData,
-          onPatternTap:
-              () => _showPatternSelectionDialog(
-                PatternType.xRayAndLaboratoryData,
-              ),
+          onPatternTap: () =>
+              _showPatternSelectionDialog(PatternType.xRayAndLaboratoryData),
         ),
       ],
     );

@@ -119,6 +119,7 @@ abstract class  LocaleKeys {
   static const general_profile_photo = 'general.profile_photo';
   static const general_change_photo = 'general.change_photo';
   static const general_upload_photo = 'general.upload_photo';
+  static const general_complaints = 'general.complaints';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
@@ -179,6 +180,7 @@ abstract class  LocaleKeys {
   static const buttons_start_voice_input = 'buttons.start_voice_input';
   static const buttons_settings = 'buttons.settings';
   static const buttons_clear_all_filters = 'buttons.clear_all_filters';
+  static const buttons_saved = 'buttons.saved';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
@@ -358,6 +360,8 @@ abstract class  LocaleKeys {
   static const notifications_results = 'notifications.results';
   static const notifications_no_data_available = 'notifications.no_data_available';
   static const notifications_unknown_state = 'notifications.unknown_state';
+  static const notifications_diagnosis_length = 'notifications.diagnosis_length';
+  static const notifications_services_length = 'notifications.services_length';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';
@@ -587,6 +591,9 @@ abstract class  LocaleKeys {
   static const diagnosis_date_not_available = 'diagnosis.date_not_available';
   static const diagnosis_time_not_available = 'diagnosis.time_not_available';
   static const diagnosis_invalid_date = 'diagnosis.invalid_date';
+  static const diagnosis_tooth = 'diagnosis.tooth';
+  static const diagnosis_current_inspection = 'diagnosis.current_inspection';
+  static const diagnosis_condition_name = 'diagnosis.condition_name';
   static const diagnosis = 'diagnosis';
   static const currency_som = 'currency.som';
   static const currency_usd = 'currency.usd';

@@ -17,6 +17,7 @@ import 'package:dent_app_mobile/models/pattern/pattern_model.dart';
 import 'package:dent_app_mobile/models/payment/detail_receipt_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/models/payment/receipt_model.dart';
+import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/models/work/image_response_model.dart';
 import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
@@ -76,4 +77,5 @@ abstract class IAppointmentRepo {
     DateTime date,
   );
   Future<DetailReceiptModel> getDetailReceipt(int appointmentId);
+  Future<List<AppointmentWorkModel>> getAppointmentWorks(int appointmentId);
 }

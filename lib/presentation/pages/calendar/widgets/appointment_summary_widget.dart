@@ -49,29 +49,32 @@ class AppointmentSummaryWidget extends StatelessWidget {
       }
     }
 
-    return Row(
-      spacing: 12,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildInfoCard(
-          context,
-          LocaleKeys.routes_appointments.tr(),
-          LocaleKeys.date_range_today.tr(),
-          todayCount,
-        ),
-        _buildInfoCard(
-          context,
-          LocaleKeys.routes_appointments.tr(),
-          LocaleKeys.appointment_tomorrow.tr(),
-          tomorrowCount,
-        ),
-        _buildInfoCard(
-          context,
-          LocaleKeys.routes_appointments.tr(),
-          LocaleKeys.date_range_this_week.tr(),
-          weekCount,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Row(
+        spacing: 12,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildInfoCard(
+            context,
+            LocaleKeys.routes_appointments.tr(),
+            LocaleKeys.date_range_today.tr(),
+            todayCount,
+          ),
+          _buildInfoCard(
+            context,
+            LocaleKeys.routes_appointments.tr(),
+            LocaleKeys.appointment_tomorrow.tr(),
+            tomorrowCount,
+          ),
+          _buildInfoCard(
+            context,
+            LocaleKeys.routes_appointments.tr(),
+            LocaleKeys.date_range_this_week.tr(),
+            weekCount,
+          ),
+        ],
+      ),
     );
   }
 
