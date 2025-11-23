@@ -16,8 +16,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ServicesContent extends StatefulWidget {
   final int appointmentId;
-
-  const ServicesContent({super.key, required this.appointmentId});
+  final bool onlyCloseSheet;
+  const ServicesContent({
+    super.key,
+    required this.appointmentId,
+    this.onlyCloseSheet = false,
+  });
 
   @override
   State<ServicesContent> createState() => _ServicesContentState();
@@ -306,9 +310,13 @@ class _ServicesContentState extends State<ServicesContent> {
       listener: (context, state) {
         if (state is SaveServiceSuccess) {
           AppSnackBar.showSuccessSnackBar(context, state.message);
-          router.popAndPush(
-            PaymentViewRoute(appointmentId: widget.appointmentId),
-          );
+          if (widget.onlyCloseSheet) {
+            Navigator.of(context).pop(true);
+          } else {
+            router.popAndPush(
+              PaymentViewRoute(appointmentId: widget.appointmentId),
+            );
+          }
         } else if (state is SaveServiceError) {
           AppSnackBar.showErrorSnackBar(context, state.message);
         }
@@ -338,19 +346,14 @@ class _ServicesContentState extends State<ServicesContent> {
                   _buildSearchBar(),
                   _buildTotalAmountCard(),
                   Expanded(
-                    child:
-                        _filteredServices.isEmpty && _searchQuery.isNotEmpty
-                            ? _buildNoResultsWidget()
-                            : ListView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              itemCount: _filteredServices.length,
-                              itemBuilder:
-                                  (context, index) => _buildServiceItem(
-                                    _filteredServices[index],
-                                  ),
-                            ),
+                    child: _filteredServices.isEmpty && _searchQuery.isNotEmpty
+                        ? _buildNoResultsWidget()
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: _filteredServices.length,
+                            itemBuilder: (context, index) =>
+                                _buildServiceItem(_filteredServices[index]),
+                          ),
                   ),
                   _buildSaveButton(),
                   SizedBox(height: MediaQuery.of(context).padding.bottom),

@@ -23,12 +23,19 @@ class FastPaymentService {
   ///
   /// [context] - The build context
   /// [appointmentId] - The ID of the appointment to process payment for
-  Future<void> showServices(BuildContext context, int appointmentId) async {
-    await showCupertinoModalBottomSheet(
+  Future<bool?> showServices(
+    BuildContext context,
+    int appointmentId, {
+    bool onlyCloseSheet = false,
+  }) async {
+    return await showCupertinoModalBottomSheet(
       context: context,
-      builder:
-          (context) =>
-              Material(child: ServicesContent(appointmentId: appointmentId)),
+      builder: (context) => Material(
+        child: ServicesContent(
+          onlyCloseSheet: onlyCloseSheet,
+          appointmentId: appointmentId,
+        ),
+      ),
     );
   }
 }

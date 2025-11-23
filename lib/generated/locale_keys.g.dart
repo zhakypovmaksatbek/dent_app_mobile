@@ -183,6 +183,7 @@ abstract class  LocaleKeys {
   static const buttons_settings = 'buttons.settings';
   static const buttons_clear_all_filters = 'buttons.clear_all_filters';
   static const buttons_saved = 'buttons.saved';
+  static const buttons_add_services = 'buttons.add_services';
   static const buttons = 'buttons';
   static const errors_invalid_email = 'errors.invalid_email';
   static const errors_invalid_password = 'errors.invalid_password';
