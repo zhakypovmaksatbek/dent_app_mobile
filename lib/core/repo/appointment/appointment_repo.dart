@@ -25,6 +25,7 @@ import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/models/work/image_response_model.dart';
 import 'package:dent_app_mobile/models/work/upload_patient_rontgen_model.dart';
 import 'package:dent_app_mobile/models/work/work_model.dart';
+import 'package:dent_app_mobile/models/work/work_update_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/condition_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
@@ -383,5 +384,25 @@ class AppointmentRepo extends IAppointmentRepo {
     return (response.data as List<dynamic>)
         .map((e) => AppointmentWorkModel.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<void> updateAppointmentWork(
+    int workId, {
+    required AppointmentWorkModel work,
+  }) async {
+    final request = WorkUpdateModel(
+      serviceIds: work.serviceIdsWithCount,
+      diagnosisId: work.diagnosisIds,
+      surveyPlan: work.surveyPlan,
+      treatment: work.treatment,
+      recommendations: work.recommendations,
+    ).toJson();
+    await dio.put('api/works/$workId', data: request);
+  }
+
+  @override
+  Future<void> deleteAppointmentWork(int workId) {
+    return dio.delete('api/works/$workId');
   }
 }

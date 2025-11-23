@@ -78,4 +78,9 @@ abstract class IAppointmentRepo {
   );
   Future<DetailReceiptModel> getDetailReceipt(int appointmentId);
   Future<List<AppointmentWorkModel>> getAppointmentWorks(int appointmentId);
+  Future<void> updateAppointmentWork(
+    int workId, {
+    required AppointmentWorkModel work,
+  });
+  Future<void> deleteAppointmentWork(int workId);
 }

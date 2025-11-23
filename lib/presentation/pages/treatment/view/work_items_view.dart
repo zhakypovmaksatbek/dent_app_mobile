@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs/save_jobs_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/job_card.dart';
@@ -24,10 +25,12 @@ class WorkItemsView extends StatelessWidget {
     required this.appointmentId,
     required this.patientToothCubit,
     required this.patientId,
+    required this.appointmentWorksCubit,
   });
   final int appointmentId;
   final int patientId;
   final PatientToothCubit patientToothCubit;
+  final AppointmentWorksCubit appointmentWorksCubit;
   @override
   Widget build(BuildContext context) {
     return BlocListener<SaveJobsCubit, SaveJobsState>(
@@ -36,6 +39,7 @@ class WorkItemsView extends StatelessWidget {
           router.pop(true);
           context.read<ConditionService>().clearJobs();
           patientToothCubit.getToothList(patientId);
+          appointmentWorksCubit.loadAppointmentWork(appointmentId);
         } else if (state is SaveJobsError) {
           AppWarning.showToastWarning(
             context,

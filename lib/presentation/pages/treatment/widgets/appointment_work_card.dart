@@ -204,19 +204,6 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
     }
   }
 
-  // Renk Parse Helper
-  Color _parseColor(String? hexColor) {
-    if (hexColor == null || hexColor.isEmpty) return Colors.grey;
-    try {
-      final buffer = StringBuffer();
-      if (hexColor.length == 6 || hexColor.length == 7) buffer.write('ff');
-      buffer.write(hexColor.replaceFirst('#', ''));
-      return Color(int.parse(buffer.toString(), radix: 16));
-    } catch (e) {
-      return Colors.grey;
-    }
-  }
-
   // TEŞHİS SEÇİM MODALI
   void _openDiagnosisSelection() {
     // Burada AllDiagnosisCubit'in zaten bir ust widgetta provide edildigini varsayiyoruz.
@@ -315,7 +302,7 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
                   title: toothNumber != null
                       ? '${LocaleKeys.forms_tooth.tr()}: $toothNumber'
                       : LocaleKeys.general_undefined.tr(),
-                  textType: TextType.title24,
+                  textType: toothNumber != null ? TextType.title24 : .body,
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -504,6 +491,21 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
     double totalPrice,
     int totalCount,
   ) {
+    // 1. Servisleri Gruplama Mantığı
+    // ID'ye göre servisleri tekilleştirip adetlerini sayıyoruz
+    final Map<int, int> serviceCounts = {};
+    final Map<int, ServiceResponse> uniqueServicesMap = {};
+
+    for (var service in _currentServices) {
+      if (service.id != null) {
+        serviceCounts[service.id!] = (serviceCounts[service.id!] ?? 0) + 1;
+        uniqueServicesMap[service.id!] = service;
+      }
+    }
+
+    // Haritadan listeye dönüştürme (Görüntüleme için)
+    final groupedServices = uniqueServicesMap.values.toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -531,7 +533,7 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
             TextButton.icon(
               onPressed: _openServiceSelection,
               icon: const Icon(Icons.add_circle_outline, size: 16),
-              label: Text(LocaleKeys.buttons_edit.tr()), // Duzenle
+              label: Text(LocaleKeys.buttons_edit.tr()),
               style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
             ),
           ],
@@ -547,7 +549,7 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
               color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
             ),
           ),
-          child: _currentServices.isEmpty
+          child: groupedServices.isEmpty
               ? Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
@@ -563,17 +565,19 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(8),
-                  itemCount: _currentServices.length,
+                  // Gruplanmış listenin uzunluğunu kullanıyoruz
+                  itemCount: groupedServices.length,
                   separatorBuilder: (context, index) => Divider(
                     height: 1,
                     color: Theme.of(context).dividerColor.withOpacity(0.1),
                   ),
                   itemBuilder: (context, index) {
-                    final service = _currentServices[index];
-                    // Servisleri tek tek gosteriyoruz, count logic service selection icinde handle edilecek
-                    // ve buraya flatten (duzlestirilmis) liste olarak donecek diye varsayiyoruz.
-                    // Eger ayni servis birden fazla ise burada gruplayabiliriz ama
-                    // ServiceResponse modelinde 'count' yoksa duz liste daha mantikli.
+                    final service = groupedServices[index];
+                    final count = serviceCounts[service.id] ?? 0;
+
+                    // Fiyat hesaplaması: Birim Fiyat * Adet
+                    final unitPrice = service.price?.toDouble() ?? 0;
+                    final lineTotalPrice = unitPrice * count;
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(
@@ -592,13 +596,50 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              service.name ?? 'Unknown',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  service.name ?? 'Unknown',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                // Eğer birim fiyat göstermek isterseniz buraya ekleyebilirsiniz
+                                // Text('$unitPrice / adet', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                              ],
                             ),
                           ),
+
+                          // Adet Göstergesi (Sadece 1'den büyükse göster)
+                          if (count > 1) ...[
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.secondary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'x$count',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+
+                          // Satır Toplam Fiyatı
                           PriceConvertWidget(
-                            price: service.price?.toDouble() ?? 0,
+                            price: lineTotalPrice,
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -613,13 +654,15 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
         // Total Price Footer
         Container(
           padding: const EdgeInsets.all(12),
-
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 LocaleKeys.report_total_amount.tr(),
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
               ),
               PriceConvertWidget(
                 price: totalPrice,
@@ -670,6 +713,5 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

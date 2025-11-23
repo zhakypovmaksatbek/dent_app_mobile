@@ -36,7 +36,7 @@ class _ServiceSelectionSheetState extends State<ServiceSelectionSheet> {
     for (var s in widget.initialServices) {
       if (s.id != null) {
         _counts[s.id!] = (_counts[s.id!] ?? 0) + 1;
-        _serviceMap[s.id!] = s; // Referans olarak sakla
+        _serviceMap[s.id!] = s;
       }
     }
   }
@@ -70,7 +70,7 @@ class _ServiceSelectionSheetState extends State<ServiceSelectionSheet> {
       final service = _serviceMap[id];
       if (service != null) {
         for (int i = 0; i < count; i++) {
-          result.add(service); // Ayni objeden 'count' kadar ekle
+          result.add(service);
         }
       }
     });

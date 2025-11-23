@@ -364,6 +364,11 @@ abstract class  LocaleKeys {
   static const notifications_unknown_state = 'notifications.unknown_state';
   static const notifications_diagnosis_length = 'notifications.diagnosis_length';
   static const notifications_services_length = 'notifications.services_length';
+  static const notifications_work_successfully_saved = 'notifications.work_successfully_saved';
+  static const notifications_work_successfully_deleted = 'notifications.work_successfully_deleted';
+  static const notifications_confirm_delete_work = 'notifications.confirm_delete_work';
+  static const notifications_no_works_found = 'notifications.no_works_found';
+  static const notifications_warning = 'notifications.warning';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';

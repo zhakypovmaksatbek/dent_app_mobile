@@ -34,6 +34,7 @@ class AppointmentWorkHistoryRoute
     Key? key,
     required List<AppointmentWorkModel> works,
     required int appointmentId,
+    required AppointmentWorksCubit appointmentWorkHistory,
     List<PageRouteInfo>? children,
   }) : super(
          AppointmentWorkHistoryRoute.name,
@@ -41,6 +42,7 @@ class AppointmentWorkHistoryRoute
            key: key,
            works: works,
            appointmentId: appointmentId,
+           appointmentWorkHistory: appointmentWorkHistory,
          ),
          initialChildren: children,
        );
@@ -55,6 +57,7 @@ class AppointmentWorkHistoryRoute
         key: args.key,
         works: args.works,
         appointmentId: args.appointmentId,
+        appointmentWorkHistory: args.appointmentWorkHistory,
       );
     },
   );
@@ -65,6 +68,7 @@ class AppointmentWorkHistoryRouteArgs {
     this.key,
     required this.works,
     required this.appointmentId,
+    required this.appointmentWorkHistory,
   });
 
   final Key? key;
@@ -73,9 +77,11 @@ class AppointmentWorkHistoryRouteArgs {
 
   final int appointmentId;
 
+  final AppointmentWorksCubit appointmentWorkHistory;
+
   @override
   String toString() {
-    return 'AppointmentWorkHistoryRouteArgs{key: $key, works: $works, appointmentId: $appointmentId}';
+    return 'AppointmentWorkHistoryRouteArgs{key: $key, works: $works, appointmentId: $appointmentId, appointmentWorkHistory: $appointmentWorkHistory}';
   }
 
   @override
@@ -84,14 +90,16 @@ class AppointmentWorkHistoryRouteArgs {
     if (other is! AppointmentWorkHistoryRouteArgs) return false;
     return key == other.key &&
         const ListEquality<AppointmentWorkModel>().equals(works, other.works) &&
-        appointmentId == other.appointmentId;
+        appointmentId == other.appointmentId &&
+        appointmentWorkHistory == other.appointmentWorkHistory;
   }
 
   @override
   int get hashCode =>
       key.hashCode ^
       const ListEquality<AppointmentWorkModel>().hash(works) ^
-      appointmentId.hashCode;
+      appointmentId.hashCode ^
+      appointmentWorkHistory.hashCode;
 }
 
 /// generated route for
@@ -579,6 +587,7 @@ class TeethConditionActionRoute
     required int appointmentId,
     required PatientToothCubit patientToothCubit,
     required int patientId,
+    required AppointmentWorksCubit appointmentWorksCubit,
     List<PageRouteInfo>? children,
   }) : super(
          TeethConditionActionRoute.name,
@@ -587,6 +596,7 @@ class TeethConditionActionRoute
            appointmentId: appointmentId,
            patientToothCubit: patientToothCubit,
            patientId: patientId,
+           appointmentWorksCubit: appointmentWorksCubit,
          ),
          initialChildren: children,
        );
@@ -602,6 +612,7 @@ class TeethConditionActionRoute
         appointmentId: args.appointmentId,
         patientToothCubit: args.patientToothCubit,
         patientId: args.patientId,
+        appointmentWorksCubit: args.appointmentWorksCubit,
       );
     },
   );
@@ -613,6 +624,7 @@ class TeethConditionActionRouteArgs {
     required this.appointmentId,
     required this.patientToothCubit,
     required this.patientId,
+    required this.appointmentWorksCubit,
   });
 
   final Key? key;
@@ -623,9 +635,11 @@ class TeethConditionActionRouteArgs {
 
   final int patientId;
 
+  final AppointmentWorksCubit appointmentWorksCubit;
+
   @override
   String toString() {
-    return 'TeethConditionActionRouteArgs{key: $key, appointmentId: $appointmentId, patientToothCubit: $patientToothCubit, patientId: $patientId}';
+    return 'TeethConditionActionRouteArgs{key: $key, appointmentId: $appointmentId, patientToothCubit: $patientToothCubit, patientId: $patientId, appointmentWorksCubit: $appointmentWorksCubit}';
   }
 
   @override
@@ -635,7 +649,8 @@ class TeethConditionActionRouteArgs {
     return key == other.key &&
         appointmentId == other.appointmentId &&
         patientToothCubit == other.patientToothCubit &&
-        patientId == other.patientId;
+        patientId == other.patientId &&
+        appointmentWorksCubit == other.appointmentWorksCubit;
   }
 
   @override
@@ -643,7 +658,8 @@ class TeethConditionActionRouteArgs {
       key.hashCode ^
       appointmentId.hashCode ^
       patientToothCubit.hashCode ^
-      patientId.hashCode;
+      patientId.hashCode ^
+      appointmentWorksCubit.hashCode;
 }
 
 /// generated route for
@@ -725,6 +741,7 @@ class WorkItemsRoute extends PageRouteInfo<WorkItemsRouteArgs> {
     required int appointmentId,
     required PatientToothCubit patientToothCubit,
     required int patientId,
+    required AppointmentWorksCubit appointmentWorksCubit,
     List<PageRouteInfo>? children,
   }) : super(
          WorkItemsRoute.name,
@@ -733,6 +750,7 @@ class WorkItemsRoute extends PageRouteInfo<WorkItemsRouteArgs> {
            appointmentId: appointmentId,
            patientToothCubit: patientToothCubit,
            patientId: patientId,
+           appointmentWorksCubit: appointmentWorksCubit,
          ),
          initialChildren: children,
        );
@@ -748,6 +766,7 @@ class WorkItemsRoute extends PageRouteInfo<WorkItemsRouteArgs> {
         appointmentId: args.appointmentId,
         patientToothCubit: args.patientToothCubit,
         patientId: args.patientId,
+        appointmentWorksCubit: args.appointmentWorksCubit,
       );
     },
   );
@@ -759,6 +778,7 @@ class WorkItemsRouteArgs {
     required this.appointmentId,
     required this.patientToothCubit,
     required this.patientId,
+    required this.appointmentWorksCubit,
   });
 
   final Key? key;
@@ -769,9 +789,11 @@ class WorkItemsRouteArgs {
 
   final int patientId;
 
+  final AppointmentWorksCubit appointmentWorksCubit;
+
   @override
   String toString() {
-    return 'WorkItemsRouteArgs{key: $key, appointmentId: $appointmentId, patientToothCubit: $patientToothCubit, patientId: $patientId}';
+    return 'WorkItemsRouteArgs{key: $key, appointmentId: $appointmentId, patientToothCubit: $patientToothCubit, patientId: $patientId, appointmentWorksCubit: $appointmentWorksCubit}';
   }
 
   @override
@@ -781,7 +803,8 @@ class WorkItemsRouteArgs {
     return key == other.key &&
         appointmentId == other.appointmentId &&
         patientToothCubit == other.patientToothCubit &&
-        patientId == other.patientId;
+        patientId == other.patientId &&
+        appointmentWorksCubit == other.appointmentWorksCubit;
   }
 
   @override
@@ -789,5 +812,6 @@ class WorkItemsRouteArgs {
       key.hashCode ^
       appointmentId.hashCode ^
       patientToothCubit.hashCode ^
-      patientId.hashCode;
+      patientId.hashCode ^
+      appointmentWorksCubit.hashCode;
 }

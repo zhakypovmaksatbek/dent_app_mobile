@@ -179,6 +179,39 @@ class ConditionService extends ChangeNotifier {
     }
   }
 
+  void updateJobServices(String jobId, List<ServiceItem> newServices) {
+    final index = _jobs.indexWhere((job) => job.id == jobId);
+    if (index == -1) {
+      debugPrint('Job with id $jobId not found for service update');
+      return;
+    }
+
+    // Listeyi Map'e çevirerek gruplama yapıyoruz (ServiceItem -> Count)
+    final Map<ServiceItem, int> updatedServicesMap = {};
+    for (var service in newServices) {
+      if (updatedServicesMap.containsKey(service)) {
+        updatedServicesMap[service] = updatedServicesMap[service]! + 1;
+      } else {
+        updatedServicesMap[service] = 1;
+      }
+    }
+
+    _jobs[index] = _jobs[index].copyWith(servicesWithCount: updatedServicesMap);
+    notifyListeners();
+  }
+
+  /// Mevcut bir işin teşhis (diagnosis) listesini günceller.
+  void updateJobDiagnosis(String jobId, List<DiagnosisModel> newDiagnosis) {
+    final index = _jobs.indexWhere((job) => job.id == jobId);
+    if (index == -1) {
+      debugPrint('Job with id $jobId not found for diagnosis update');
+      return;
+    }
+
+    _jobs[index] = _jobs[index].copyWith(diagnosis: newDiagnosis);
+    notifyListeners();
+  }
+
   void clearJobs() {
     _jobs.clear();
     notifyListeners();

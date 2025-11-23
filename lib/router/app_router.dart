@@ -23,7 +23,8 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/views
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/views/services_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/views/warehouse_page.dart';
 import 'package:dent_app_mobile/presentation/pages/splash/splash_page.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/content/appointment_work_history.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/view/appointment_work_history.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/teeth_condition_action.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/treatment_page.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/work_items_view.dart';

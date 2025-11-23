@@ -11,7 +11,7 @@ class AppWarning {
   }) {
     toastification.show(
       context: context, // optional if you use ToastificationWrapper
-      title: AppText(title: message, textType: TextType.body),
+      title: AppText(title: message, textType: TextType.body, maxLines: 3),
       autoCloseDuration: const Duration(seconds: 5),
       type: type,
       backgroundColor: backgroundColor,

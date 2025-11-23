@@ -46,6 +46,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/manage_work/manage_work_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs/save_jobs_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/upload_x_ray/upload_x_ray_cubit.dart';
@@ -90,6 +91,9 @@ void setupLocator() {
   getIt.registerSingleton<AppRouter>(AppRouter());
   getIt.registerFactory<AppointmentWorksCubit>(
     () => AppointmentWorksCubit(AppointmentRepo()),
+  );
+  getIt.registerFactory<ManageWorkCubit>(
+    () => ManageWorkCubit(AppointmentRepo()),
   );
 }
 

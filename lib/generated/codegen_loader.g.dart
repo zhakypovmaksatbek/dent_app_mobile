@@ -383,7 +383,12 @@ class CodegenLoader extends AssetLoader{
     "no_data_available": "Нет данных",
     "unknown_state": "Неизвестное состояние",
     "diagnosis_length": "Диагноз: {} шт.",
-    "services_length": "Услуги: {} шт."
+    "services_length": "Услуги: {} шт.",
+    "work_successfully_saved": "Работа успешно сохранена",
+    "work_successfully_deleted": "Работа успешно удалена",
+    "confirm_delete_work": "Вы уверены, что хотите удалить работу \"{name}\"?",
+    "no_works_found": "Работы не найдены",
+    "warning": "Внимание"
   },
   "report": {
     "select_date_range": "Выберите дату",

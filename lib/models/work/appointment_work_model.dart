@@ -51,6 +51,20 @@ class AppointmentWorkModel {
       _$AppointmentWorkModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppointmentWorkModelToJson(this);
+
+  List<int> get serviceIdsWithCount {
+    final List<int> result = [];
+    for (var service in (serviceResponses ?? [])) {
+      if (service.id != null) {
+        result.add(service.id!);
+      }
+    }
+    return result;
+  }
+
+  List<int> get diagnosisIds {
+    return (diagnosesResponse ?? []).map((e) => e.id).toList();
+  }
 }
 
 @JsonSerializable()

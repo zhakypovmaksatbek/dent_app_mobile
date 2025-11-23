@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/models/service/service_model.dart';
+import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/content/services_selection_sheet.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/data/pattern_type.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
@@ -334,8 +337,8 @@ class _JobCardState extends State<JobCard> {
                   controller: _treatmentFormController.surveyPlanController,
                   focusNode: _treatmentFormController.surveyPlanFocusNode,
                   patternType: PatternType.surveyPlan,
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(PatternType.surveyPlan),
+                  onPatternTap: () =>
+                      _showPatternSelectionDialog(PatternType.surveyPlan),
                 ),
 
                 ExpandableTextFieldWidget(
@@ -349,8 +352,8 @@ class _JobCardState extends State<JobCard> {
                   focusNode: _treatmentFormController.treatmentFocusNode,
                   patternType: PatternType.treatment,
 
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(PatternType.treatment),
+                  onPatternTap: () =>
+                      _showPatternSelectionDialog(PatternType.treatment),
                 ),
                 ExpandableTextFieldWidget(
                   title: PatternUtils.getTitleForPatternType(
@@ -362,10 +365,8 @@ class _JobCardState extends State<JobCard> {
                   controller: _treatmentFormController.recommendationController,
                   focusNode: _treatmentFormController.recommendationFocusNode,
                   patternType: PatternType.recommendation,
-                  onPatternTap:
-                      () => _showPatternSelectionDialog(
-                        PatternType.recommendation,
-                      ),
+                  onPatternTap: () =>
+                      _showPatternSelectionDialog(PatternType.recommendation),
                 ),
                 _buildServicesSection(context),
 
@@ -414,13 +415,13 @@ class _JobCardState extends State<JobCard> {
                           children: [
                             Text(
                               LocaleKeys.report_total_amount.tr(),
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withValues(alpha: 0.7),
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.7),
+                                  ),
                             ),
                             PriceConvertWidget(
                               price: widget.job.totalPrice,
@@ -475,15 +476,14 @@ class _JobCardState extends State<JobCard> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder:
-          (context) => PatternSelectionBottomSheet(
-            patternType: patternType,
-            title: title,
-            patternCubit: _patternCubit,
-            onPatternSelected: (pattern) {
-              _handlePatternSelection(patternType, pattern);
-            },
-          ),
+      builder: (context) => PatternSelectionBottomSheet(
+        patternType: patternType,
+        title: title,
+        patternCubit: _patternCubit,
+        onPatternSelected: (pattern) {
+          _handlePatternSelection(patternType, pattern);
+        },
+      ),
     );
   }
 
@@ -567,41 +567,37 @@ class _JobCardState extends State<JobCard> {
           Wrap(
             spacing: 6,
             runSpacing: 6,
-            children:
-                widget.job.diagnosis.map((diagnosis) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+            children: widget.job.diagnosis.map((diagnosis) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.local_hospital,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.3),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: AppText(
+                        title: diagnosis.name ?? 'Без названия',
+                        textType: TextType.subtitle,
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.local_hospital,
-                          size: 16,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: AppText(
-                            title: diagnosis.name ?? 'Без названия',
-                            textType: TextType.subtitle,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                  ],
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -653,27 +649,46 @@ class _JobCardState extends State<JobCard> {
   }
 
   Widget _buildServicesSection(BuildContext context) {
+    // JobModel zaten Map<ServiceItem, int> tutuyor, direkt listeye çeviriyoruz.
+    final groupedServices = widget.job.servicesWithCount.entries.toList();
+    final double totalPrice = widget.job.totalPrice;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // --- Header Row ---
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.list_alt,
-              size: 18,
-              color: Theme.of(context).colorScheme.secondary,
+            Row(
+              children: [
+                Icon(
+                  Icons.list_alt,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  LocaleKeys.routes_services.tr(),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Text(
-              LocaleKeys.routes_services.tr(),
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+            // BURASI EKLENDI: Servis Ekleme Butonu
+            TextButton.icon(
+              onPressed: _openServiceSelection, // Fonksiyonu bağladık
+              icon: const Icon(Icons.add_circle_outline, size: 16),
+              label: Text(LocaleKeys.buttons_edit.tr()),
+              style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
+
+        // --- Services List Container ---
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
@@ -682,114 +697,184 @@ class _JobCardState extends State<JobCard> {
               color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
             ),
           ),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(8),
-            itemCount: widget.job.servicesWithCount.length,
-            separatorBuilder:
-                (context, index) => Divider(
-                  height: 1,
-                  color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
-                ),
-            itemBuilder: (context, index) {
-              final entry = widget.job.servicesWithCount.entries.elementAt(
-                index,
-              );
-              final service = entry.key;
-              final count = entry.value;
-              final servicePrice = service.price ?? 0;
-              final totalServicePrice = servicePrice * count;
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        shape: BoxShape.circle,
-                      ),
+          child: groupedServices.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      LocaleKeys.notifications_no_search_results.tr(),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                )
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(8),
+                  itemCount: groupedServices.length,
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                    color: Theme.of(context).dividerColor.withOpacity(0.1),
+                  ),
+                  itemBuilder: (context, index) {
+                    final entry = groupedServices[index];
+                    final service = entry.key;
+                    final count = entry.value;
+
+                    final unitPrice = service.price?.toDouble() ?? 0;
+                    final lineTotalPrice = unitPrice * count;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 4,
+                      ),
+                      child: Row(
                         children: [
-                          Text(
-                            service.name ?? 'Без названия',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.w500),
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                          if (count > 1)
-                            Row(
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                PriceConvertWidget(
-                                  price: servicePrice,
-                                  textType: TextType.description,
-                                  color: Theme.of(context).colorScheme.onSurface
-                                      .withValues(alpha: 0.6),
+                                Text(
+                                  service.name ?? 'Unknown',
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],
                             ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (count > 1)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '×$count',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 10,
+                          ),
+
+                          // Adet Göstergesi (x2, x3 gibi)
+                          if (count > 1) ...[
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.secondary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'x$count',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
                               ),
                             ),
-                          ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: PriceConvertWidget(
-                            price: totalServicePrice,
+                            const SizedBox(width: 8),
+                          ],
+
+                          // Satır Toplam Fiyatı
+                          PriceConvertWidget(
+                            price: lineTotalPrice,
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+        ),
+
+        const SizedBox(height: 12),
+        // --- Total Price Footer ---
+        Container(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                LocaleKeys.report_total_amount.tr(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
+              ),
+              PriceConvertWidget(
+                price: totalPrice,
+                textType: TextType.title,
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  // SERVİS SEÇİM MODALI
+  void _openServiceSelection() {
+    // 1. Mevcut JobModel'deki servisleri (Map<ServiceItem, int>)
+    // Sheet'in anlayacağı List<ServiceResponse> formatına çeviriyoruz.
+    // 'Adet' kadar döngüye sokup listeye ekliyoruz.
+    List<ServiceResponse> currentServicesForSheet = [];
+
+    widget.job.servicesWithCount.forEach((serviceItem, count) {
+      for (int i = 0; i < count; i++) {
+        currentServicesForSheet.add(
+          ServiceResponse(
+            id: serviceItem.id,
+            name: serviceItem.name,
+            price: serviceItem.price?.toInt(),
+          ),
+        );
+      }
+    });
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => ServiceSelectionSheet(
+        initialServices: currentServicesForSheet,
+        onSelectionChanged: (List<ServiceResponse> selectedServices) {
+          // 2. Sheet'ten gelen ServiceResponse listesini
+          // ConditionService'in anlayacağı ServiceItem listesine çeviriyoruz.
+          List<ServiceItem> newServiceItems = selectedServices.map((e) {
+            return ServiceItem(
+              id: e.id,
+              name: e.name,
+              price: e.price?.toDouble(),
+            );
+          }).toList();
+
+          // 3. ConditionService üzerinden güncelleme yapıyoruz.
+          // Not: ConditionService sınıfınızda job'ın servislerini toplu güncelleyen
+          // bir metod olmalı (örn: updateJobServices).
+          // Eğer yoksa aşağıda 'Alternatif' bir çözüm de belirttim.
+
+          widget.conditionService.updateJobServices(
+            widget.job.id,
+            newServiceItems,
+          );
+
+          // UI güncellenmesi için setState (ConditionService listener tetiklemezse diye)
+          setState(() {});
+        },
+      ),
     );
   }
 }

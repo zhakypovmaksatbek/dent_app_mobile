@@ -23,4 +23,11 @@ class AppointmentWorksCubit extends Cubit<AppointmentWorksState> {
       emit(AppointmentWorksState.error(e.toString()));
     }
   }
+
+  @override
+  void emit(AppointmentWorksState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
 }

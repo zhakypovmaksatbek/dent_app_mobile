@@ -31,7 +31,7 @@ class _TreatmentPageState extends State<TreatmentPage>
   static final List<Widget> tabs = [
     Tab(text: LocaleKeys.forms_tooth.tr()),
     Tab(text: LocaleKeys.general_complaints.tr()),
-    Tab(text: LocaleKeys.forms_treatment.tr()),
+    // Tab(text: LocaleKeys.forms_treatment.tr()),
     Tab(text: LocaleKeys.forms_x_ray.tr()),
   ];
 
@@ -54,8 +54,8 @@ class _TreatmentPageState extends State<TreatmentPage>
               padding: EdgeInsets.symmetric(horizontal: 16),
               indicatorSize: TabBarIndicatorSize.tab,
               splashBorderRadius: BorderRadius.circular(10),
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
+              // isScrollable: true,
+              // tabAlignment: TabAlignment.start,
               indicator: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: .1),
                 borderRadius: BorderRadius.circular(10),
@@ -71,7 +71,6 @@ class _TreatmentPageState extends State<TreatmentPage>
               appointmentId: widget.calendarAppointment!.appointmentId!,
               patientId: widget.calendarAppointment!.patientId!,
             ),
-            ComplaintsTab(calendarAppointment: widget.calendarAppointment),
             ComplaintsTab(calendarAppointment: widget.calendarAppointment),
             UploadXRayTab(calendarAppointment: widget.calendarAppointment!),
           ],

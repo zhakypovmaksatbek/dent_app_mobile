@@ -44,6 +44,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
     super.initState();
     _patientToothCubit = PatientToothCubit();
     _appointmentWorksCubit = getIt<AppointmentWorksCubit>();
+
     _appointmentWorksCubit.loadAppointmentWork(widget.appointmentId);
     _patientToothCubit.getToothList(widget.patientId);
     AppointmentRepo().getAppointmentWorks(widget.patientId);
@@ -102,6 +103,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                             AppointmentWorkHistoryRoute(
                               works: works,
                               appointmentId: widget.appointmentId,
+                              appointmentWorkHistory: _appointmentWorksCubit,
                             ),
                           ),
                           jobCount: works.length,
@@ -435,6 +437,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
               appointmentId: widget.appointmentId,
               patientToothCubit: _patientToothCubit,
               patientId: widget.patientId,
+              appointmentWorksCubit: _appointmentWorksCubit,
             ),
           );
         },
@@ -449,6 +452,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
         appointmentId: widget.appointmentId,
         patientToothCubit: _patientToothCubit,
         patientId: widget.patientId,
+        appointmentWorksCubit: _appointmentWorksCubit,
       ),
     );
   }
