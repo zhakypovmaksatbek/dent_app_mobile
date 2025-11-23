@@ -27,6 +27,74 @@ class AboutClinicRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AppointmentWorkHistory]
+class AppointmentWorkHistoryRoute
+    extends PageRouteInfo<AppointmentWorkHistoryRouteArgs> {
+  AppointmentWorkHistoryRoute({
+    Key? key,
+    required List<AppointmentWorkModel> works,
+    required int appointmentId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AppointmentWorkHistoryRoute.name,
+         args: AppointmentWorkHistoryRouteArgs(
+           key: key,
+           works: works,
+           appointmentId: appointmentId,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'AppointmentWorkHistoryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AppointmentWorkHistoryRouteArgs>();
+      return AppointmentWorkHistory(
+        key: args.key,
+        works: args.works,
+        appointmentId: args.appointmentId,
+      );
+    },
+  );
+}
+
+class AppointmentWorkHistoryRouteArgs {
+  const AppointmentWorkHistoryRouteArgs({
+    this.key,
+    required this.works,
+    required this.appointmentId,
+  });
+
+  final Key? key;
+
+  final List<AppointmentWorkModel> works;
+
+  final int appointmentId;
+
+  @override
+  String toString() {
+    return 'AppointmentWorkHistoryRouteArgs{key: $key, works: $works, appointmentId: $appointmentId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AppointmentWorkHistoryRouteArgs) return false;
+    return key == other.key &&
+        const ListEquality<AppointmentWorkModel>().equals(works, other.works) &&
+        appointmentId == other.appointmentId;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      const ListEquality<AppointmentWorkModel>().hash(works) ^
+      appointmentId.hashCode;
+}
+
+/// generated route for
 /// [CalendarPage]
 class CalendarRoute extends PageRouteInfo<void> {
   const CalendarRoute({List<PageRouteInfo>? children})

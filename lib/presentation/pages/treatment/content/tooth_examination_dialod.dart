@@ -1,7 +1,7 @@
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
 import 'package:dent_app_mobile/presentation/constants/asset_constants.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 // Tooth Examination Dialog Widget
 class ToothExaminationDialog extends StatelessWidget {
   final String toothId;
-  final ConditionService? existingJob;
+  final JobModel? existingJob;
   final VoidCallback onExamine;
   final ToothModel? teethHistory;
   const ToothExaminationDialog({
@@ -119,30 +119,27 @@ class ToothExaminationDialog extends StatelessWidget {
                     AppText(
                       title: LocaleKeys.diagnosis_condition_name.tr(
                         args: [
-                          existingJob?.condition?.name ??
+                          existingJob?.condition.name ??
                               LocaleKeys.notifications_unknown_state.tr(),
                         ],
                       ),
                       textType: TextType.body,
                     ),
-                    if (existingJob?.selectedDiagnosis.isNotEmpty == true) ...[
+                    if (existingJob?.diagnosis.isNotEmpty == true) ...[
                       const SizedBox(height: 4),
                       AppText(
                         title: LocaleKeys.notifications_diagnosis_length.tr(
-                          args: [
-                            existingJob!.selectedDiagnosis.length.toString(),
-                          ],
+                          args: [existingJob!.diagnosis.length.toString()],
                         ),
                         textType: TextType.subtitle,
                       ),
                     ],
-                    if (existingJob?.selectedServicesList.isNotEmpty ==
-                        true) ...[
+                    if (existingJob?.services.isNotEmpty == true) ...[
                       const SizedBox(height: 4),
                       AppText(
                         title: LocaleKeys.notifications_diagnosis_length.tr(
                           args: [
-                            existingJob!.selectedServicesList.length.toString(),
+                            existingJob!.serviceIdsWithCount.length.toString(),
                           ],
                         ),
                         textType: TextType.subtitle,

@@ -20,7 +20,26 @@ class TimeAndDurationPicker extends StatefulWidget {
     required this.doctorId,
     required this.selectedDate,
     required this.onTimeSlotChanged,
-    this.minuteOptions = const [10, 20, 30, 40, 50, 60],
+    this.minuteOptions = const [
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100,
+      110,
+      120,
+      130,
+      140,
+      150,
+      160,
+      170,
+      180,
+    ],
     this.initialMinute = 30,
   });
 
@@ -231,43 +250,42 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
                     _handleTimeSelection(selectedValue);
                   },
 
-                  children:
-                      state.times.map((timeSlot) {
-                        final startTimeStr =
-                            timeSlot.startTime?.substring(0, 5) ?? '';
-                        final endTimeStr =
-                            timeSlot.endTime?.substring(0, 5) ?? '';
-                        return Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(startTimeStr),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6.0,
-                                ),
-                                child: Text(
-                                  '→',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.5),
-                                  ),
+                  children: state.times.map((timeSlot) {
+                    final startTimeStr =
+                        timeSlot.startTime?.substring(0, 5) ?? '';
+                    final endTimeStr = timeSlot.endTime?.substring(0, 5) ?? '';
+                    return Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(startTimeStr),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0,
+                            ),
+                            child: Text(
+                              '→',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
                                 ),
                               ),
-                              Text(
-                                endTimeStr,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.7,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        );
-                      }).toList(),
+                          Text(
+                            endTimeStr,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 );
               }
               return const SizedBox.shrink();
@@ -297,23 +315,22 @@ class _TimeAndDurationPickerState extends State<TimeAndDurationPicker> {
             onSelectedItemChanged: (index) {
               _onDurationChanged(widget.minuteOptions[index]);
             },
-            children:
-                widget.minuteOptions.map((minute) {
-                  final isSelected = minute == _selectedMinute;
-                  return Center(
-                    child: Text(
-                      '$minute',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color:
-                            isSelected
-                                ? theme.primaryColor
-                                : theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  );
-                }).toList(),
+            children: widget.minuteOptions.map((minute) {
+              final isSelected = minute == _selectedMinute;
+              return Center(
+                child: Text(
+                  '$minute',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color: isSelected
+                        ? theme.primaryColor
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ],

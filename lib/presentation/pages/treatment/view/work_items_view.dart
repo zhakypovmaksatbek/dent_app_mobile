@@ -19,7 +19,7 @@ import 'package:toastification/toastification.dart';
 
 @RoutePage(name: "WorkItemsRoute")
 class WorkItemsView extends StatelessWidget {
-  WorkItemsView({
+  const WorkItemsView({
     super.key,
     required this.appointmentId,
     required this.patientToothCubit,
@@ -27,7 +27,7 @@ class WorkItemsView extends StatelessWidget {
   });
   final int appointmentId;
   final int patientId;
-  PatientToothCubit patientToothCubit;
+  final PatientToothCubit patientToothCubit;
   @override
   Widget build(BuildContext context) {
     return BlocListener<SaveJobsCubit, SaveJobsState>(
@@ -124,8 +124,9 @@ class WorkItemsView extends StatelessWidget {
                                 Expanded(
                                   child: DefElevatedButton(
                                     title: LocaleKeys.buttons_cancel.tr(),
-                                    backgroundColor:
-                                        Theme.of(context).hintColor,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).hintColor,
                                     onPressed: () {
                                       router.maybePop();
                                     },
@@ -134,8 +135,9 @@ class WorkItemsView extends StatelessWidget {
                                 Expanded(
                                   child: DefElevatedButton(
                                     title: LocaleKeys.buttons_delete.tr(),
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.error,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.error,
                                     onPressed: () {
                                       workItemService.removeJob(job);
                                       router.maybePop();

@@ -1,8 +1,14 @@
+import 'dart:developer';
+
+import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
+import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/content/tooth_examination_dialod.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/work_list_tile.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
@@ -30,18 +36,23 @@ class ToothDiagnosisTab extends StatefulWidget {
 
 class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
   late PatientToothCubit _patientToothCubit;
+  late final AppointmentWorksCubit _appointmentWorksCubit;
   List<ToothModel> _teeth = [];
 
   @override
   void initState() {
     super.initState();
     _patientToothCubit = PatientToothCubit();
+    _appointmentWorksCubit = getIt<AppointmentWorksCubit>();
+    _appointmentWorksCubit.loadAppointmentWork(widget.appointmentId);
     _patientToothCubit.getToothList(widget.patientId);
+    AppointmentRepo().getAppointmentWorks(widget.patientId);
   }
 
   @override
   void dispose() {
     _patientToothCubit.close();
+    _appointmentWorksCubit.close();
     super.dispose();
   }
 
@@ -75,11 +86,29 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                         title: LocaleKeys.general_work_items.tr(),
                         iconData: Icons.work_history_outlined,
                       ),
-                    WorkListTile(
-                      navigateTo: () => _navigateToWorkItems(),
-                      jobCount: conditionService.jobs.length,
-                      title: LocaleKeys.buttons_saved.tr(),
-                      iconData: Icons.work_outlined,
+                    const SizedBox(height: _verticalSpacing),
+
+                    BlocBuilder<AppointmentWorksCubit, AppointmentWorksState>(
+                      bloc: _appointmentWorksCubit,
+                      builder: (context, state) {
+                        final List<AppointmentWorkModel> works = state
+                            .maybeWhen(
+                              loaded: (works) => works,
+                              orElse: () => [],
+                            );
+                        log('Loaded works count: ${works.length}');
+                        return WorkListTile(
+                          navigateTo: () => router.push(
+                            AppointmentWorkHistoryRoute(
+                              works: works,
+                              appointmentId: widget.appointmentId,
+                            ),
+                          ),
+                          jobCount: works.length,
+                          title: LocaleKeys.buttons_saved.tr(),
+                          iconData: Icons.work_outlined,
+                        );
+                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -369,9 +398,10 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
     ConditionService conditionService, {
     ToothModel? teethHistory,
   }) {
-    final existingJob = conditionService.jobs
-        .cast<ConditionService?>()
-        .firstWhere((job) => job?.toothId == toothId, orElse: () => null);
+    final existingJob = conditionService.jobs.cast<JobModel?>().firstWhere(
+      (job) => job?.toothId == toothId,
+      orElse: () => null,
+    );
 
     // EKLE: toothId'yi int'e çevir ve tooth history'yi bul
     int? toothIdInt;

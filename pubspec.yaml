@@ -70,6 +70,7 @@ dependencies:
   # Model generation packages
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

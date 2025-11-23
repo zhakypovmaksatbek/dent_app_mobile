@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';
 import 'package:dent_app_mobile/models/users/user_model.dart';
+import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/screen/login_page.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/views/calendar_page.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/views/payment_detail_page.dart';
@@ -21,6 +23,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/views
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/views/services_page.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/views/warehouse_page.dart';
 import 'package:dent_app_mobile/presentation/pages/splash/splash_page.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/content/appointment_work_history.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/teeth_condition_action.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/treatment_page.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/view/work_items_view.dart';
@@ -65,6 +68,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: WorkItemsRoute.page, path: "/workItems"),
     AutoRoute(page: AboutClinicRoute.page, path: "/aboutClinic"),
     AutoRoute(page: PaymentDetailRoute.page, path: "/paymentDetail"),
+    AutoRoute(page: AppointmentWorkHistoryRoute.page, path: "/workHistory"),
   ];
 }
 

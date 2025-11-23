@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'work_history_model.g.dart';
+part 'appointment_work_model.g.dart';
 
 @JsonSerializable()
 class AppointmentWorkModel {
@@ -48,9 +48,9 @@ class AppointmentWorkModel {
   );
 
   factory AppointmentWorkModel.fromJson(Map<String, dynamic> json) =>
-      _$WorkHistoryModelFromJson(json);
+      _$AppointmentWorkModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WorkHistoryModelToJson(this);
+  Map<String, dynamic> toJson() => _$AppointmentWorkModelToJson(this);
 }
 
 @JsonSerializable()
@@ -74,11 +74,11 @@ class DiagnosesResponse {
 @JsonSerializable()
 class ServiceResponse {
   @JsonKey(name: "id")
-  int id;
+  int? id;
   @JsonKey(name: "name")
-  String name;
+  String? name;
   @JsonKey(name: "price")
-  int price;
+  int? price;
 
   ServiceResponse({required this.id, required this.name, required this.price});
 
@@ -98,13 +98,13 @@ class ServiceResponse {
 @JsonSerializable()
 class ToothResponse {
   @JsonKey(name: "toothNumber")
-  int toothNumber;
+  int? toothNumber;
   @JsonKey(name: "main")
-  Jow main;
+  Jow? main;
   @JsonKey(name: "jow")
-  Jow jow;
+  Jow? jow;
   @JsonKey(name: "innerToothResponse")
-  InnerToothResponse innerToothResponse;
+  InnerToothResponse? innerToothResponse;
 
   ToothResponse({
     required this.toothNumber,
@@ -134,17 +134,17 @@ class ToothResponse {
 @JsonSerializable()
 class InnerToothResponse {
   @JsonKey(name: "right")
-  Jow right;
+  Jow? right;
   @JsonKey(name: "left")
-  Jow left;
+  Jow? left;
   @JsonKey(name: "top")
-  Jow top;
+  Jow? top;
   @JsonKey(name: "bottom")
-  Jow bottom;
+  Jow? bottom;
   @JsonKey(name: "centerRight")
-  Jow centerRight;
+  Jow? centerRight;
   @JsonKey(name: "centerLeft")
-  Jow centerLeft;
+  Jow? centerLeft;
 
   InnerToothResponse({
     required this.right,
@@ -180,9 +180,9 @@ class InnerToothResponse {
 @JsonSerializable()
 class Jow {
   @JsonKey(name: "name")
-  String name;
+  String? name;
   @JsonKey(name: "color")
-  String color;
+  String? color;
 
   Jow({required this.name, required this.color});
 

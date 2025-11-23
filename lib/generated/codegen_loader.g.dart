@@ -132,7 +132,9 @@ class CodegenLoader extends AssetLoader{
     "profile_photo": "Фото профиля",
     "change_photo": "Изменить фото",
     "upload_photo": "Загрузить фото",
-    "complaints": "Жалобы"
+    "complaints": "Жалобы",
+    "select": "Выбрать",
+    "undefined": "Неопределено"
   },
   "buttons": {
     "login": "Войти",
