@@ -171,13 +171,11 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
 
         // Önce main.color'a bak
         if (tooth.main?.color != null && tooth.main!.color!.isNotEmpty) {
-          map[toothId] = _hexToColor(tooth.main!.color!);
+          map[toothId] = AppColors.red; //_hexToColor(tooth.main!.color!);
         } else {
           // main.color yoksa, innerToothResponse içindeki ilk rengi kullan
-          final innerColor = _getFirstInnerToothColor(tooth);
-          if (innerColor != null) {
-            map[toothId] = innerColor;
-          }
+          final innerColor = AppColors.red; //_getFirstInnerToothColor(tooth);
+          map[toothId] = innerColor;
         }
       }
     }
@@ -394,7 +392,8 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
   ) {
     return {
       for (final job in conditionService.jobs)
-        job.toothId: _getToothColor(job.condition.color, theme),
+        job.toothId:
+            AppColors.red, //_getToothColor(job.condition.color, theme),
     };
   }
 

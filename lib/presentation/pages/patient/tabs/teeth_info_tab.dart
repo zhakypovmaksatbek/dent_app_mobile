@@ -92,11 +92,14 @@ class _TeethInfoTabState extends State<TeethInfoTab> {
     final map = <String, Color>{};
 
     for (final tooth in _teeth) {
-      if (tooth.toothNumber != null &&
-          tooth.main?.color != null &&
-          tooth.main!.color!.isNotEmpty) {
+      // Sadece diş numarasının olması yeterli.
+      // Rengi var mı yok mu diye bakmadan, listedeyse boyuyoruz.
+      if (tooth.toothNumber != null) {
         final String toothId = tooth.toothNumber.toString();
-        map[toothId] = _hexToColor(tooth.main!.color!);
+
+        // Listede olan her dişi kırmızı yap
+        // (AppColors.red yoksa Colors.red kullanabilirsiniz)
+        map[toothId] = AppColors.red;
       }
     }
 
@@ -124,16 +127,5 @@ class _TeethInfoTabState extends State<TeethInfoTab> {
       builder: (context) =>
           TeethDetailDialog(toothId: toothId, toothInfo: toothInfo),
     );
-  }
-
-  /// Converts a hex string to Color
-  Color _hexToColor(String hexString) {
-    try {
-      final String colorStr = hexString.replaceFirst('#', 'FF');
-      return Color(int.parse(colorStr, radix: 16));
-    } catch (e) {
-      // Return default color on error
-      return ColorConstants.primary;
-    }
   }
 }
