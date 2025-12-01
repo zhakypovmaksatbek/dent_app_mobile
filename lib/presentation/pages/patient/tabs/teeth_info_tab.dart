@@ -1,11 +1,12 @@
+import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_appointments/patient_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/patient/widgets/page_title_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/teeth_detail_dialog.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/widgets/teeth_selector_widget.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,12 +23,18 @@ class TeethInfoTab extends StatefulWidget {
 class _TeethInfoTabState extends State<TeethInfoTab> {
   late PatientToothCubit _patientToothCubit;
   List<ToothModel> _teeth = [];
-
+  final ValueNotifier<bool> showPermanent = ValueNotifier<bool>(true);
   @override
   void initState() {
     super.initState();
     _patientToothCubit = PatientToothCubit();
     _patientToothCubit.getToothList(widget.patientId);
+  }
+
+  @override
+  void dispose() {
+    showPermanent.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,16 +60,82 @@ class _TeethInfoTabState extends State<TeethInfoTab> {
   Widget _buildPageContent() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
+          spacing: 8,
           children: [
-            const PageTitleWidget(title: 'Стоматологическая карта'),
-            const SizedBox(height: 20),
-            TeethSelectorWidget(
-              onTeethSelected: _handleTeethSelection,
-              teethColorMap: _getTeethColorMap(),
+            ValueListenableBuilder<bool>(
+              valueListenable: showPermanent,
+              builder: (context, isPermanent, child) {
+                return Container(
+                  height: 45,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => showPermanent.value = true,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              color: isPermanent ? Colors.white : null,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              LocaleKeys.general_adult.tr(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: isPermanent
+                                    ? Colors.black
+                                    : Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => showPermanent.value = false,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              color: !isPermanent ? Colors.white : null,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              LocaleKeys.general_pediatric.tr(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: !isPermanent
+                                    ? Colors.black
+                                    : Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 20),
+            ValueListenableBuilder(
+              valueListenable: showPermanent,
+              builder: (context, value, child) {
+                return TeethSelectorWidget(
+                  onTeethSelected: _handleTeethSelection,
+                  teethColorMap: _getTeethColorMap(),
+                  showPermanent: value,
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -110,9 +183,8 @@ class _TeethInfoTabState extends State<TeethInfoTab> {
 
     showDialog(
       context: context,
-      builder:
-          (context) =>
-              TeethDetailDialog(toothId: toothId, toothInfo: toothInfo),
+      builder: (context) =>
+          TeethDetailDialog(toothId: toothId, toothInfo: toothInfo),
     );
   }
 

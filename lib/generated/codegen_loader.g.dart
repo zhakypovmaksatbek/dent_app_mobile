@@ -134,7 +134,8 @@ class CodegenLoader extends AssetLoader{
     "upload_photo": "Загрузить фото",
     "complaints": "Жалобы",
     "select": "Выбрать",
-    "undefined": "Неопределено"
+    "undefined": "Неопределено",
+    "pediatric": "Педиатрическая"
   },
   "buttons": {
     "login": "Войти",

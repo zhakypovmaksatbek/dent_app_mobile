@@ -59,58 +59,52 @@ class _PatientDetailState extends State<PatientDetail>
             _patientDetail = state.patientDetail;
           }
         },
-        builder:
-            (context, state) => Scaffold(
-              appBar: AppBar(
-                title: Text(LocaleKeys.patients_patients_info.tr()),
+        builder: (context, state) => Scaffold(
+          appBar: AppBar(title: Text(LocaleKeys.patients_patients_info.tr())),
+          body: Column(
+            children: [
+              // Modern TabBar
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.shadow.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ModernTabBar(
+                  controller: _tabController,
+                  tabs: [
+                    ModernTab(
+                      icon: Icons.person_outline,
+                      activeIcon: Icons.person,
+                      label: LocaleKeys.general_detail.tr(),
+                    ),
+                    ModernTab(
+                      icon: Icons.tour_outlined,
+                      activeIcon: Icons.tour,
+                      label: LocaleKeys.forms_tooth.tr(),
+                    ),
+                    ModernTab(
+                      icon: Icons.image_outlined,
+                      activeIcon: Icons.image,
+                      label: LocaleKeys.general_x_ray.tr(),
+                    ),
+                  ],
+                ),
               ),
-              body: Column(
-                children: [
-                  // Modern TabBar
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.shadow.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: ModernTabBar(
-                      controller: _tabController,
-                      tabs: [
-                        ModernTab(
-                          icon: Icons.person_outline,
-                          activeIcon: Icons.person,
-                          label: LocaleKeys.general_detail.tr(),
-                        ),
-                        ModernTab(
-                          icon: Icons.tour_outlined,
-                          activeIcon: Icons.tour,
-                          label: LocaleKeys.forms_tooth.tr(),
-                        ),
-                        ModernTab(
-                          icon: Icons.image_outlined,
-                          activeIcon: Icons.image,
-                          label: LocaleKeys.general_x_ray.tr(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // TabBar Body
-                  Expanded(child: _buildBody()),
-                ],
-              ),
-            ),
+              // TabBar Body
+              Expanded(child: _buildBody()),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -150,11 +144,10 @@ class _PatientDetailState extends State<PatientDetail>
 
     showDialog(
       context: context,
-      builder:
-          (dialogContext) => DeleteAppointmentDialog(
-            appointment: appointment,
-            onConfirm: () => _deleteAppointment(appointmentId),
-          ),
+      builder: (dialogContext) => DeleteAppointmentDialog(
+        appointment: appointment,
+        onConfirm: () => _deleteAppointment(appointmentId),
+      ),
     );
   }
 
@@ -181,20 +174,19 @@ class _PatientDetailState extends State<PatientDetail>
 
     showDialog(
       context: context,
-      builder:
-          (dialogContext) => AppointmentCommentDialog(
-            appointment: appointment,
-            onSave: (comment, status, complaints, history, xRayDescription) {
-              _updateAppointmentComment(
-                appointmentId,
-                comment,
-                status,
-                complaints: complaints,
-                oldDiseases: history,
-                xRayDescription: xRayDescription,
-              );
-            },
-          ),
+      builder: (dialogContext) => AppointmentCommentDialog(
+        appointment: appointment,
+        onSave: (comment, status, complaints, history, xRayDescription) {
+          _updateAppointmentComment(
+            appointmentId,
+            comment,
+            status,
+            complaints: complaints,
+            oldDiseases: history,
+            xRayDescription: xRayDescription,
+          );
+        },
+      ),
     );
   }
 

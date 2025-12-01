@@ -122,6 +122,7 @@ abstract class  LocaleKeys {
   static const general_complaints = 'general.complaints';
   static const general_select = 'general.select';
   static const general_undefined = 'general.undefined';
+  static const general_pediatric = 'general.pediatric';
   static const general = 'general';
   static const buttons_login = 'buttons.login';
   static const buttons_register = 'buttons.register';
