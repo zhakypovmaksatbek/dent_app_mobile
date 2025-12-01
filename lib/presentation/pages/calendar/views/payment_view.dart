@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/utils/payment_types.dart';
 import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/payment/detail_receipt_model.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
@@ -86,7 +87,7 @@ class _PaymentViewState extends State<PaymentView> {
     }
     if (context.mounted) {
       // Fetch appointments using the cubit
-      context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
+      getIt<CalendarAppointmentsCubit>().getCalendarAppointments(
         monthStart,
         monthEnd,
         userIds: role == Role.admin ? null : [userId!],
@@ -107,227 +108,235 @@ class _PaymentViewState extends State<PaymentView> {
           onRefresh: () async {
             _getReceiptAppointmentCubit.getReceipt(widget.appointmentId);
           },
-          child: BlocConsumer<
-            GetReceiptAppointmentCubit,
-            GetReceiptAppointmentState
-          >(
-            listener: (context, state) {
-              if (state is GetReceiptAppointmentError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    backgroundColor: AppColors.error,
-                  ),
-                );
-              }
-            },
-            builder: (context, state) {
-              return CustomScrollView(
-                slivers: [
-                  // Header Sliver
-                  SliverAppBar(
-                    floating: true,
-                    snap: true,
-                    backgroundColor: AppColors.white,
-                    elevation: 2,
-                    title: Row(
-                      children: [
-                        const Icon(
-                          Icons.receipt_long,
-                          color: AppColors.primary,
-                          size: 24,
+          child:
+              BlocConsumer<
+                GetReceiptAppointmentCubit,
+                GetReceiptAppointmentState
+              >(
+                listener: (context, state) {
+                  if (state is GetReceiptAppointmentError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return CustomScrollView(
+                    slivers: [
+                      // Header Sliver
+                      SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        backgroundColor: AppColors.white,
+                        elevation: 2,
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.receipt_long,
+                              color: AppColors.primary,
+                              size: 24,
+                            ),
+                            const SizedBox(width: 12),
+                            const AppText(
+                              title: 'Детали оплаты',
+                              textType: TextType.title20,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        const AppText(
-                          title: 'Детали оплаты',
-                          textType: TextType.title20,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                        leading: IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+
+                      // Content based on state
+                      if (state is GetReceiptAppointmentLoading) ...[
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: const Center(child: LoadingWidget()),
+                        ),
+                      ] else if (state is GetReceiptAppointmentError) ...[
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: _buildErrorState(state.message),
+                        ),
+                      ] else if (state is GetReceiptAppointmentSuccess) ...[
+                        // Auto-fill amount on first load
+                        if (!_hasAutoFilled &&
+                            (state.receipt.debt ?? 0) > 0) ...[
+                          Builder(
+                            builder: (context) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (!_hasAutoFilled) {
+                                  _amountController.text =
+                                      (state.receipt.debt ?? 0).toString();
+                                  _hasAutoFilled = true;
+                                }
+                              });
+                              return const SliverToBoxAdapter(
+                                child: SizedBox.shrink(),
+                              );
+                            },
+                          ),
+                        ],
+
+                        // Services Section
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                          sliver: SliverToBoxAdapter(
+                            child: PaymentServicesListCard(
+                              services:
+                                  (state.receipt.serviceQuantityResponses ?? [])
+                                      .map((e) {
+                                        return WorkServicesResponses(
+                                          numberOfServices: e.quantity,
+                                          price: e.price,
+                                          serviceName: e.name,
+                                          toothNumber: null,
+                                          sum: e.sum,
+                                        );
+                                      })
+                                      .toList(),
+                              formatAmount: _formatAmount,
+                            ),
+                          ),
+                        ),
+
+                        // Payment Status Section
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                          sliver: SliverToBoxAdapter(
+                            child: PaymentStatusCards(
+                              receipt: state.receipt,
+                              formatAmount: _formatAmount,
+                            ),
+                          ),
+                        ),
+
+                        // Payment Form Section (only show if there's debt)
+                        if ((state.receipt.debt ?? 0) > 0) ...[
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                            sliver: SliverToBoxAdapter(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppText(
+                                    title: LocaleKeys.forms_payment.tr(),
+                                    textType: TextType.title,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Payment Type Selection
+                                  PaymentTypeSelection(
+                                    selectedPaymentType: _selectedPaymentType,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Amount Input
+                                  PaymentAmountInput(
+                                    controller: _amountController,
+                                    maxAmount: (state.receipt.debt ?? 0)
+                                        .toDouble(),
+                                    formatAmount: _formatAmount,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Discount Input
+                                  PaymentDiscountInput(
+                                    controller: _discountController,
+                                    discountType: _discountType,
+                                    amountController: _amountController,
+                                    onDiscountChanged: _calculateAmounts,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Calculation Summary
+                                  PaymentCalculationSummary(
+                                    calculatedDiscount: _calculatedDiscount,
+                                    finalAmount: _finalAmount,
+                                    amountController: _amountController,
+                                    discountController: _discountController,
+                                    discountType: _discountType,
+                                    formatAmount: _formatAmount,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Payment listener and button
+                          SliverPadding(
+                            padding: EdgeInsets.fromLTRB(
+                              20,
+                              16,
+                              20,
+                              MediaQuery.of(context).padding.bottom + 20,
+                            ),
+                            sliver: SliverToBoxAdapter(
+                              child:
+                                  BlocConsumer<
+                                    PayAppointmentCubit,
+                                    PayAppointmentState
+                                  >(
+                                    listener: (context, state) {
+                                      if (state is PayAppointmentSuccess) {
+                                        AppSnackBar.showSuccessSnackBar(
+                                          context,
+                                          'Оплата прошла успешно!',
+                                        );
+                                        // Refresh receipt data
+                                        _getReceiptAppointmentCubit.getReceipt(
+                                          widget.appointmentId,
+                                        );
+                                        _loadAppointmentsForDateRange(context);
+                                        // Clear form
+                                        _clearForm();
+                                      } else if (state is PayAppointmentError) {
+                                        AppSnackBar.showErrorSnackBar(
+                                          context,
+                                          state.error,
+                                        );
+                                      }
+                                    },
+                                    builder: (context, state) {
+                                      return PaymentButton(
+                                        onPressed: _makePayment,
+                                      );
+                                    },
+                                  ),
+                            ),
+                          ),
+                        ] else ...[
+                          SliverPadding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).padding.bottom,
+                            ),
+                            sliver: SliverToBoxAdapter(
+                              child: SizedBox.shrink(),
+                            ),
+                          ),
+                        ],
+                      ] else ...[
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: const SizedBox.shrink(),
                         ),
                       ],
-                    ),
-                    leading: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ),
-
-                  // Content based on state
-                  if (state is GetReceiptAppointmentLoading) ...[
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: const Center(child: LoadingWidget()),
-                    ),
-                  ] else if (state is GetReceiptAppointmentError) ...[
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: _buildErrorState(state.message),
-                    ),
-                  ] else if (state is GetReceiptAppointmentSuccess) ...[
-                    // Auto-fill amount on first load
-                    if (!_hasAutoFilled && (state.receipt.debt ?? 0) > 0) ...[
-                      Builder(
-                        builder: (context) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (!_hasAutoFilled) {
-                              _amountController.text =
-                                  (state.receipt.debt ?? 0).toString();
-                              _hasAutoFilled = true;
-                            }
-                          });
-                          return const SliverToBoxAdapter(
-                            child: SizedBox.shrink(),
-                          );
-                        },
-                      ),
                     ],
-
-                    // Services Section
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                      sliver: SliverToBoxAdapter(
-                        child: PaymentServicesListCard(
-                          services:
-                              (state.receipt.serviceQuantityResponses ?? [])
-                                  .map((e) {
-                                    return WorkServicesResponses(
-                                      numberOfServices: e.quantity,
-                                      price: e.price,
-                                      serviceName: e.name,
-                                      toothNumber: null,
-                                      sum: e.sum,
-                                    );
-                                  })
-                                  .toList(),
-                          formatAmount: _formatAmount,
-                        ),
-                      ),
-                    ),
-
-                    // Payment Status Section
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                      sliver: SliverToBoxAdapter(
-                        child: PaymentStatusCards(
-                          receipt: state.receipt,
-                          formatAmount: _formatAmount,
-                        ),
-                      ),
-                    ),
-
-                    // Payment Form Section (only show if there's debt)
-                    if ((state.receipt.debt ?? 0) > 0) ...[
-                      SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-                        sliver: SliverToBoxAdapter(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                title: LocaleKeys.forms_payment.tr(),
-                                textType: TextType.title,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Payment Type Selection
-                              PaymentTypeSelection(
-                                selectedPaymentType: _selectedPaymentType,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Amount Input
-                              PaymentAmountInput(
-                                controller: _amountController,
-                                maxAmount: (state.receipt.debt ?? 0).toDouble(),
-                                formatAmount: _formatAmount,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Discount Input
-                              PaymentDiscountInput(
-                                controller: _discountController,
-                                discountType: _discountType,
-                                amountController: _amountController,
-                                onDiscountChanged: _calculateAmounts,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Calculation Summary
-                              PaymentCalculationSummary(
-                                calculatedDiscount: _calculatedDiscount,
-                                finalAmount: _finalAmount,
-                                amountController: _amountController,
-                                discountController: _discountController,
-                                discountType: _discountType,
-                                formatAmount: _formatAmount,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Payment listener and button
-                      SliverPadding(
-                        padding: EdgeInsets.fromLTRB(
-                          20,
-                          16,
-                          20,
-                          MediaQuery.of(context).padding.bottom + 20,
-                        ),
-                        sliver: SliverToBoxAdapter(
-                          child: BlocConsumer<
-                            PayAppointmentCubit,
-                            PayAppointmentState
-                          >(
-                            listener: (context, state) {
-                              if (state is PayAppointmentSuccess) {
-                                AppSnackBar.showSuccessSnackBar(
-                                  context,
-                                  'Оплата прошла успешно!',
-                                );
-                                // Refresh receipt data
-                                _getReceiptAppointmentCubit.getReceipt(
-                                  widget.appointmentId,
-                                );
-                                _loadAppointmentsForDateRange(context);
-                                // Clear form
-                                _clearForm();
-                              } else if (state is PayAppointmentError) {
-                                AppSnackBar.showErrorSnackBar(
-                                  context,
-                                  state.error,
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              return PaymentButton(onPressed: _makePayment);
-                            },
-                          ),
-                        ),
-                      ),
-                    ] else ...[
-                      SliverPadding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).padding.bottom,
-                        ),
-                        sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
-                      ),
-                    ],
-                  ] else ...[
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: const SizedBox.shrink(),
-                    ),
-                  ],
-                ],
-              );
-            },
-          ),
+                  );
+                },
+              ),
         ),
       ),
     );
@@ -354,10 +363,8 @@ class _PaymentViewState extends State<PaymentView> {
           ),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed:
-                () => _getReceiptAppointmentCubit.getReceipt(
-                  widget.appointmentId,
-                ),
+            onPressed: () =>
+                _getReceiptAppointmentCubit.getReceipt(widget.appointmentId),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.white,
@@ -390,8 +397,9 @@ class _PaymentViewState extends State<PaymentView> {
     }
 
     // Use the calculated final amount for payment
-    final finalPaymentAmount =
-        _finalAmount.value > 0 ? _finalAmount.value : originalAmount;
+    final finalPaymentAmount = _finalAmount.value > 0
+        ? _finalAmount.value
+        : originalAmount;
 
     final payment = PaymentModel(
       sum: finalPaymentAmount.toInt(),
@@ -434,8 +442,9 @@ class _PaymentViewState extends State<PaymentView> {
       }
 
       // Make sure discount doesn't exceed the amount
-      calculatedDiscount =
-          calculatedDiscount > amount ? amount : calculatedDiscount;
+      calculatedDiscount = calculatedDiscount > amount
+          ? amount
+          : calculatedDiscount;
       finalAmount = amount - calculatedDiscount;
     }
 

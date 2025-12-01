@@ -32,17 +32,17 @@ class AppointmentWorkHistoryRoute
     extends PageRouteInfo<AppointmentWorkHistoryRouteArgs> {
   AppointmentWorkHistoryRoute({
     Key? key,
-    required List<AppointmentWorkModel> works,
     required int appointmentId,
     required AppointmentWorksCubit appointmentWorkHistory,
+    required ManageWorkCubit manageWorkCubit,
     List<PageRouteInfo>? children,
   }) : super(
          AppointmentWorkHistoryRoute.name,
          args: AppointmentWorkHistoryRouteArgs(
            key: key,
-           works: works,
            appointmentId: appointmentId,
            appointmentWorkHistory: appointmentWorkHistory,
+           manageWorkCubit: manageWorkCubit,
          ),
          initialChildren: children,
        );
@@ -55,9 +55,9 @@ class AppointmentWorkHistoryRoute
       final args = data.argsAs<AppointmentWorkHistoryRouteArgs>();
       return AppointmentWorkHistory(
         key: args.key,
-        works: args.works,
         appointmentId: args.appointmentId,
         appointmentWorkHistory: args.appointmentWorkHistory,
+        manageWorkCubit: args.manageWorkCubit,
       );
     },
   );
@@ -66,22 +66,22 @@ class AppointmentWorkHistoryRoute
 class AppointmentWorkHistoryRouteArgs {
   const AppointmentWorkHistoryRouteArgs({
     this.key,
-    required this.works,
     required this.appointmentId,
     required this.appointmentWorkHistory,
+    required this.manageWorkCubit,
   });
 
   final Key? key;
-
-  final List<AppointmentWorkModel> works;
 
   final int appointmentId;
 
   final AppointmentWorksCubit appointmentWorkHistory;
 
+  final ManageWorkCubit manageWorkCubit;
+
   @override
   String toString() {
-    return 'AppointmentWorkHistoryRouteArgs{key: $key, works: $works, appointmentId: $appointmentId, appointmentWorkHistory: $appointmentWorkHistory}';
+    return 'AppointmentWorkHistoryRouteArgs{key: $key, appointmentId: $appointmentId, appointmentWorkHistory: $appointmentWorkHistory, manageWorkCubit: $manageWorkCubit}';
   }
 
   @override
@@ -89,17 +89,17 @@ class AppointmentWorkHistoryRouteArgs {
     if (identical(this, other)) return true;
     if (other is! AppointmentWorkHistoryRouteArgs) return false;
     return key == other.key &&
-        const ListEquality<AppointmentWorkModel>().equals(works, other.works) &&
         appointmentId == other.appointmentId &&
-        appointmentWorkHistory == other.appointmentWorkHistory;
+        appointmentWorkHistory == other.appointmentWorkHistory &&
+        manageWorkCubit == other.manageWorkCubit;
   }
 
   @override
   int get hashCode =>
       key.hashCode ^
-      const ListEquality<AppointmentWorkModel>().hash(works) ^
       appointmentId.hashCode ^
-      appointmentWorkHistory.hashCode;
+      appointmentWorkHistory.hashCode ^
+      manageWorkCubit.hashCode;
 }
 
 /// generated route for

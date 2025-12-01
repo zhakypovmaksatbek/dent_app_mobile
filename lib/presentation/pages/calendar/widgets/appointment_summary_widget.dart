@@ -17,11 +17,19 @@ class AppointmentSummaryWidget extends StatelessWidget {
     int weekCount = 0;
 
     if (state is CalendarAppointmentsLoaded) {
-      final DateTime today = DateTime.now();
+      final DateTime now = DateTime.now();
+
+      // Saat bilgisini sıfırlayarak "Bugün 00:00:00"ı elde ediyoruz
+      final DateTime today = DateTime(now.year, now.month, now.day);
       final DateTime tomorrow = today.add(const Duration(days: 1));
+
+      // Haftanın başı: Pazartesi 00:00:00
+      // (now.weekday 1=Pazartesi, 7=Pazar)
       final DateTime weekStart = today.subtract(
-        Duration(days: today.weekday - 1),
+        Duration(days: now.weekday - 1),
       );
+
+      // Haftanın sonu: Gelecek Pazartesi 00:00:00 (Bu sayede Pazar 23:59'a kadar olanları kapsarız)
       final DateTime weekEnd = weekStart.add(const Duration(days: 7));
 
       for (var appointment
@@ -29,19 +37,26 @@ class AppointmentSummaryWidget extends StatelessWidget {
         if (appointment.startTime != null) {
           final appointmentDate = DateTime.parse(appointment.startTime!);
 
+          // Bugün kontrolü
           if (appointmentDate.year == today.year &&
               appointmentDate.month == today.month &&
               appointmentDate.day == today.day) {
             todayCount++;
           }
 
+          // Yarın kontrolü
           if (appointmentDate.year == tomorrow.year &&
               appointmentDate.month == tomorrow.month &&
               appointmentDate.day == tomorrow.day) {
             tomorrowCount++;
           }
 
-          if (appointmentDate.isAfter(weekStart) &&
+          // Bu hafta kontrolü (Pazartesi 00:00 dahil, Gelecek Pazartesi 00:00 hariç)
+          // isAtSameMomentAs: Tam başlangıç anını kapsar (Pazartesi 00:00)
+          // isAfter: Başlangıçtan sonrasını kapsar
+          // isBefore: Bitişten öncesini kapsar
+          if ((appointmentDate.isAtSameMomentAs(weekStart) ||
+                  appointmentDate.isAfter(weekStart)) &&
               appointmentDate.isBefore(weekEnd)) {
             weekCount++;
           }
@@ -116,14 +131,6 @@ class AppointmentSummaryWidget extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
               ),
-              // Text(
-              //   count,
-              //   style: TextStyle(
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.bold,
-              //     color: Theme.of(context).primaryColor,
-              //   ),
-              // ),
             ],
           ),
         ),

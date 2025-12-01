@@ -87,7 +87,7 @@ class _CalendarPageState extends State<CalendarPage> {
       print('Loading appointments from $monthStart to $monthEnd');
     }
     // Fetch appointments using the cubit
-    context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
+    getIt<CalendarAppointmentsCubit>().getCalendarAppointments(
       monthStart,
       monthEnd,
       userIds: await _selectionDoctor(),
@@ -124,24 +124,23 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // Update the list of appointments for the selected day
   void _updateSelectedDayAppointments() {
-    if (context.read<CalendarAppointmentsCubit>().state
+    if (getIt<CalendarAppointmentsCubit>().state
         is CalendarAppointmentsLoaded) {
       final appointments =
-          (context.read<CalendarAppointmentsCubit>().state
+          (getIt<CalendarAppointmentsCubit>().state
                   as CalendarAppointmentsLoaded)
               .appointments;
 
       // Filter appointments for the selected day
-      _selectedDayAppointments =
-          appointments.where((appointment) {
-            if (appointment.startTime != null) {
-              final appointmentDate = DateTime.parse(appointment.startTime!);
-              return appointmentDate.year == _selectedDate.year &&
-                  appointmentDate.month == _selectedDate.month &&
-                  appointmentDate.day == _selectedDate.day;
-            }
-            return false;
-          }).toList();
+      _selectedDayAppointments = appointments.where((appointment) {
+        if (appointment.startTime != null) {
+          final appointmentDate = DateTime.parse(appointment.startTime!);
+          return appointmentDate.year == _selectedDate.year &&
+              appointmentDate.month == _selectedDate.month &&
+              appointmentDate.day == _selectedDate.day;
+        }
+        return false;
+      }).toList();
     } else {
       _selectedDayAppointments = [];
     }
@@ -154,7 +153,7 @@ class _CalendarPageState extends State<CalendarPage> {
       final DateTime rangeStart = details.visibleDates.first;
       final DateTime rangeEnd = details.visibleDates.last;
 
-      context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
+      getIt<CalendarAppointmentsCubit>().getCalendarAppointments(
         rangeStart,
         rangeEnd,
         userIds: await _selectionDoctor(),
@@ -315,22 +314,21 @@ class _CalendarPageState extends State<CalendarPage> {
               context,
               LocaleKeys.notifications_appointment_updated_successfully.tr(),
             );
-            context.read<CalendarAppointmentsCubit>().refreshAppointments();
+            getIt<CalendarAppointmentsCubit>().refreshAppointments();
           } else if (state is AppointmentActionFailure) {
             AppSnackBar.showErrorSnackBar(context, state.message);
           }
         },
         child:
             BlocBuilder<CalendarAppointmentsCubit, CalendarAppointmentsState>(
-              // buildWhen: (previous, current) => previous != current,
+              bloc: getIt<CalendarAppointmentsCubit>(),
               builder: (context, state) {
                 // Create data source from loaded appointments
-                final calendarDataSource =
-                    state is CalendarAppointmentsLoaded
-                        ? AppointmentDataSourceUtil.getAppointmentDataSource(
-                          state.appointments,
-                        )
-                        : AppointmentDataSource([]);
+                final calendarDataSource = state is CalendarAppointmentsLoaded
+                    ? AppointmentDataSourceUtil.getAppointmentDataSource(
+                        state.appointments,
+                      )
+                    : AppointmentDataSource([]);
 
                 // Update selected day appointments when state changes
                 if (state is CalendarAppointmentsLoaded) {
@@ -384,10 +382,10 @@ class _CalendarPageState extends State<CalendarPage> {
                 appointments: _selectedDayAppointments,
                 selectedDate: _selectedDate,
                 onDoctorChanged: _handleDoctorSelection,
-                onDeleteAppointment:
-                    (appointment) => _deleteAppointment(context, appointment),
-                onCreateAppointment:
-                    (date) => _createAppointment(context, date),
+                onDeleteAppointment: (appointment) =>
+                    _deleteAppointment(context, appointment),
+                onCreateAppointment: (date) =>
+                    _createAppointment(context, date),
                 onClose: () {
                   _draggableController.animateTo(
                     initialChildSize,

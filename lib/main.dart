@@ -95,6 +95,7 @@ void setupLocator() {
   getIt.registerFactory<ManageWorkCubit>(
     () => ManageWorkCubit(AppointmentRepo()),
   );
+  getIt.registerLazySingleton(() => CalendarAppointmentsCubit());
 }
 
 class Initializer {
@@ -130,7 +131,6 @@ class Initializer {
     BlocProvider(create: (context) => PersonalWorkScheduleCubit()),
     BlocProvider(create: (context) => AppointmentCubit()),
     BlocProvider(create: (context) => AppointmentActionCubit()),
-    BlocProvider(create: (context) => CalendarAppointmentsCubit()),
     BlocProvider(create: (context) => SearchPatientCubit()),
     BlocProvider(create: (context) => FreeTimeCubit()),
     BlocProvider(create: (context) => RoomCubit()),

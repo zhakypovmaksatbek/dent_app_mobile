@@ -1,6 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
-import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/manage_work/manage_work_cubit.dart';
@@ -16,38 +15,32 @@ import 'package:toastification/toastification.dart';
 class AppointmentWorkHistory extends StatefulWidget {
   const AppointmentWorkHistory({
     super.key,
-    required this.works,
     required this.appointmentId,
     required this.appointmentWorkHistory,
+    required this.manageWorkCubit,
   });
-  final List<AppointmentWorkModel> works;
   final int appointmentId;
   final AppointmentWorksCubit appointmentWorkHistory;
+  final ManageWorkCubit manageWorkCubit;
   @override
   State<AppointmentWorkHistory> createState() => _AppointmentWorkHistoryState();
 }
 
 class _AppointmentWorkHistoryState extends State<AppointmentWorkHistory> {
-  late final ManageWorkCubit manageWorkCubit;
   List<AppointmentWorkModel> works = [];
   @override
   void initState() {
     super.initState();
-    manageWorkCubit = getIt<ManageWorkCubit>();
+
     initWork();
   }
 
   void initWork() {
-    if (widget.works.isNotEmpty) {
-      works = widget.works;
-    } else {
-      widget.appointmentWorkHistory.loadAppointmentWork(widget.appointmentId);
-    }
+    widget.appointmentWorkHistory.loadAppointmentWork(widget.appointmentId);
   }
 
   @override
   void dispose() {
-    manageWorkCubit.close();
     super.dispose();
   }
 
@@ -56,15 +49,15 @@ class _AppointmentWorkHistoryState extends State<AppointmentWorkHistory> {
     return Scaffold(
       appBar: AppBar(),
       body: BlocListener<ManageWorkCubit, ManageWorkState>(
-        bloc: manageWorkCubit,
+        bloc: widget.manageWorkCubit,
         listener: (context, state) {
           state.maybeWhen(
             success: (message, isDeleted, workId) {
-              if (isDeleted) {
-                widget.appointmentWorkHistory.loadAppointmentWork(
-                  widget.appointmentId,
-                );
-              }
+              // if (isDeleted) {
+              widget.appointmentWorkHistory.loadAppointmentWork(
+                widget.appointmentId,
+              );
+              // }
             },
             error: (message) {
               AppWarning.showToastWarning(
@@ -76,16 +69,39 @@ class _AppointmentWorkHistoryState extends State<AppointmentWorkHistory> {
             orElse: () {},
           );
         },
-        child: BlocBuilder<AppointmentWorksCubit, AppointmentWorksState>(
+        child: BlocConsumer<AppointmentWorksCubit, AppointmentWorksState>(
           bloc: widget.appointmentWorkHistory,
-          builder: (context, state) {
-            works = state.maybeWhen(
-              orElse: () => widget.works,
-              loaded: (works) => works,
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              loaded: (works) {
+                this.works = works;
+              },
             );
+          },
+          builder: (context, state) {
+            final bool isLoading = state.maybeWhen(
+              loading: () => true,
+              orElse: () => false,
+            );
+            if (isLoading && works.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
             if (works.isEmpty) {
-              return Center(
-                child: Text(LocaleKeys.notifications_no_works_found.tr()),
+              return RefreshIndicator(
+                onRefresh: () async {
+                  widget.appointmentWorkHistory.loadAppointmentWork(
+                    widget.appointmentId,
+                  );
+                },
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Text(LocaleKeys.notifications_no_works_found.tr()),
+                    ),
+                  ),
+                ),
               );
             }
             return RefreshIndicator(
@@ -119,7 +135,7 @@ class _AppointmentWorkHistoryState extends State<AppointmentWorkHistory> {
                             confirmButtonText: LocaleKeys.buttons_delete.tr(),
                             cancelButtonText: LocaleKeys.buttons_cancel.tr(),
                             onConfirm: () {
-                              manageWorkCubit.deleteWork(work.workId);
+                              widget.manageWorkCubit.deleteWork(work.workId);
                               Navigator.pop(context);
                             },
                             onCancel: () {
@@ -129,7 +145,7 @@ class _AppointmentWorkHistoryState extends State<AppointmentWorkHistory> {
                         },
                       );
                     },
-                    onSave: (updatedWork) => manageWorkCubit.updateWork(
+                    onSave: (updatedWork) => widget.manageWorkCubit.updateWork(
                       workId: work.workId,
                       workModel: updatedWork,
                     ),

@@ -3,6 +3,7 @@ import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/utils/payment_types.dart';
 import 'package:dent_app_mobile/core/utils/salary_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/payment/payment_model.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/detail_receipt/detail_receipt_cubit.dart';
@@ -91,7 +92,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     final DateTime monthEnd = DateTime(today.year, today.month + 1, 0);
 
     if (context.mounted) {
-      context.read<CalendarAppointmentsCubit>().getCalendarAppointments(
+      getIt<CalendarAppointmentsCubit>().getCalendarAppointments(
         monthStart,
         monthEnd,
         userIds: role == Role.admin ? null : [userId!],

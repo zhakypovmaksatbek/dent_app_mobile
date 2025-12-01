@@ -1,24 +1,22 @@
-import 'dart:developer';
-
-import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';
-import 'package:dent_app_mobile/models/work/appointment_work_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_tooth/patient_tooth_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/content/tooth_examination_dialod.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/manage_work/manage_work_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/model/job_model.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/service/condition_service.dart';
+import 'package:dent_app_mobile/presentation/pages/treatment/widgets/permanent_tab_widget.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/widgets/work_list_tile.dart';
 import 'package:dent_app_mobile/presentation/theme/colors/color_constants.dart';
+import 'package:dent_app_mobile/presentation/widgets/teeth_selector/teeth_selector.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
 import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:teeth_selector/teeth_selector.dart';
 
 class ToothDiagnosisTab extends StatefulWidget {
   const ToothDiagnosisTab({
@@ -37,23 +35,27 @@ class ToothDiagnosisTab extends StatefulWidget {
 class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
   late PatientToothCubit _patientToothCubit;
   late final AppointmentWorksCubit _appointmentWorksCubit;
+  late final ManageWorkCubit _manageWorksCubit;
   List<ToothModel> _teeth = [];
+  final ValueNotifier<bool> showPermanent = ValueNotifier<bool>(true);
 
   @override
   void initState() {
     super.initState();
     _patientToothCubit = PatientToothCubit();
     _appointmentWorksCubit = getIt<AppointmentWorksCubit>();
+    _manageWorksCubit = getIt<ManageWorkCubit>();
 
     _appointmentWorksCubit.loadAppointmentWork(widget.appointmentId);
     _patientToothCubit.getToothList(widget.patientId);
-    AppointmentRepo().getAppointmentWorks(widget.patientId);
   }
 
   @override
   void dispose() {
     _patientToothCubit.close();
     _appointmentWorksCubit.close();
+    showPermanent.dispose();
+    _manageWorksCubit.close();
     super.dispose();
   }
 
@@ -62,78 +64,100 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<PatientToothCubit, PatientToothState>(
-        bloc: _patientToothCubit,
-        listener: (context, state) {
-          if (state is PatientToothLoaded) {
-            _teeth = state.teeth;
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _patientToothCubit.getToothList(widget.patientId);
+          _appointmentWorksCubit.loadAppointmentWork(widget.appointmentId);
         },
-        builder: (context, state) {
-          return Consumer<ConditionService>(
-            builder: (context, conditionService, child) {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: _verticalSpacing),
-                    _buildTeethSelector(conditionService),
-                    const SizedBox(height: _verticalSpacing),
-                    if (conditionService.jobs.isNotEmpty)
-                      WorkListTile(
-                        navigateTo: () => _navigateToWorkItems(),
-                        jobCount: conditionService.jobs.length,
-                        title: LocaleKeys.general_work_items.tr(),
-                        iconData: Icons.work_history_outlined,
-                      ),
-                    const SizedBox(height: _verticalSpacing),
+        child: BlocListener<ManageWorkCubit, ManageWorkState>(
+          bloc: _manageWorksCubit,
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              success: (message, isDelete, workId) {
+                if (isDelete) {
+                  _patientToothCubit.getToothList(widget.patientId);
+                }
+              },
+            );
+          },
+          child: BlocConsumer<PatientToothCubit, PatientToothState>(
+            bloc: _patientToothCubit,
+            listener: (context, state) {
+              if (state is PatientToothLoaded) {
+                _teeth = state.teeth;
+              }
+            },
+            builder: (context, state) {
+              return Consumer<ConditionService>(
+                builder: (context, conditionService, child) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: _verticalSpacing),
+                        _buildTeethSelector(conditionService),
+                        const SizedBox(height: _verticalSpacing),
+                        if (conditionService.jobs.isNotEmpty)
+                          WorkListTile(
+                            navigateTo: () => _navigateToWorkItems(),
+                            jobCount: conditionService.jobs.length,
+                            title: LocaleKeys.general_work_items.tr(),
+                            iconData: Icons.work_history_outlined,
+                          ),
+                        const SizedBox(height: _verticalSpacing),
 
-                    BlocBuilder<AppointmentWorksCubit, AppointmentWorksState>(
-                      bloc: _appointmentWorksCubit,
-                      builder: (context, state) {
-                        final List<AppointmentWorkModel> works = state
-                            .maybeWhen(
-                              loaded: (works) => works,
-                              orElse: () => [],
+                        BlocBuilder<
+                          AppointmentWorksCubit,
+                          AppointmentWorksState
+                        >(
+                          bloc: _appointmentWorksCubit,
+                          builder: (context, state) {
+                            return WorkListTile(
+                              navigateTo: () => router.push(
+                                AppointmentWorkHistoryRoute(
+                                  appointmentId: widget.appointmentId,
+                                  appointmentWorkHistory:
+                                      _appointmentWorksCubit,
+                                  manageWorkCubit: _manageWorksCubit,
+                                ),
+                              ),
+                              jobCount: state.maybeWhen(
+                                orElse: () => 0,
+                                loaded: (works) => works.length,
+                              ),
+                              title: LocaleKeys.buttons_saved.tr(),
+                              iconData: Icons.work_outlined,
                             );
-                        log('Loaded works count: ${works.length}');
-                        return WorkListTile(
-                          navigateTo: () => router.push(
-                            AppointmentWorkHistoryRoute(
-                              works: works,
-                              appointmentId: widget.appointmentId,
-                              appointmentWorkHistory: _appointmentWorksCubit,
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              router.push(
+                                PaymentDetailRoute(
+                                  appointmentId: widget.appointmentId,
+                                ),
+                              );
+                            },
+                            child: Center(
+                              child: Text(LocaleKeys.buttons_pay.tr()),
                             ),
                           ),
-                          jobCount: works.length,
-                          title: LocaleKeys.buttons_saved.tr(),
-                          iconData: Icons.work_outlined,
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          router.push(
-                            PaymentDetailRoute(
-                              appointmentId: widget.appointmentId,
-                            ),
-                          );
-                        },
-                        child: Center(child: Text(LocaleKeys.buttons_pay.tr())),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -204,24 +228,44 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
         alignment: Alignment.center,
         children: [
           // TeethSelector as base
-          TeethSelector(
-            showPrimary: true,
-            StrokedColorized: _getTeethColorMap(),
-            multiSelect: false,
-            showPermanent: true,
-            colorized: _buildColorizedMap(conditionService, theme),
-            selectedColor: theme.colorScheme.primary,
-            rightString: LocaleKeys.general_right.tr(),
-            leftString: LocaleKeys.general_left.tr(),
-            initiallySelected: _getInitiallySelectedTeeth(conditionService),
-            onChange: (selected) =>
-                _handleTeethSelection(selected, conditionService),
+          Column(
+            spacing: 16,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: PermanentTabWidget(showPermanent: showPermanent),
+              ),
+
+              ValueListenableBuilder(
+                valueListenable: showPermanent,
+                builder: (context, value, child) {
+                  return CustomTeethSelector(
+                    showPrimary: !value,
+                    StrokedColorized: _getTeethColorMap(),
+                    multiSelect: false,
+                    showPermanent: value,
+                    colorized: _buildColorizedMap(conditionService, theme),
+                    selectedColor: theme.colorScheme.primary,
+                    rightString: LocaleKeys.general_right.tr(),
+                    leftString: LocaleKeys.general_left.tr(),
+                    initiallySelected: _getInitiallySelectedTeeth(
+                      conditionService,
+                    ),
+                    onChange: (selected) =>
+                        _handleTeethSelection(selected, conditionService),
+                  );
+                },
+              ),
+            ],
           ),
 
           // Overlay jaw buttons in the center
-          Positioned(
+          Padding(
+            padding: const EdgeInsets.only(top: 60.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: .center,
+              spacing: 12,
               children: [
                 // Upper jaw button
                 _buildCompactJawButton(
@@ -232,7 +276,6 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                   conditionService: conditionService,
                   theme: theme,
                 ),
-                const SizedBox(height: 12),
                 // Lower jaw button
                 _buildCompactJawButton(
                   context: context,
@@ -292,7 +335,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -308,7 +351,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
               // SVG Icon
               Icon(
                 isUpper ? Icons.arrow_upward : Icons.arrow_downward,
-                size: 20,
+                size: 16,
                 color: hasJob
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurface,
@@ -322,7 +365,7 @@ class _ToothDiagnosisTabState extends State<ToothDiagnosisTab> {
                 children: [
                   AppText(
                     title: title,
-                    textType: TextType.body,
+                    textType: TextType.description,
                     fontWeight: FontWeight.w600,
                     color: hasJob
                         ? theme.colorScheme.primary

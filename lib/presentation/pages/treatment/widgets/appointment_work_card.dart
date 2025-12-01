@@ -554,7 +554,7 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Text(
-                      LocaleKeys.notifications_no_search_results.tr(),
+                      LocaleKeys.notifications_no_search_results_found.tr(),
                       style: Theme.of(
                         context,
                       ).textTheme.bodySmall?.copyWith(color: Colors.grey),
@@ -619,7 +619,7 @@ class _AppointmentWorkCardState extends State<AppointmentWorkCard>
                               decoration: BoxDecoration(
                                 color: Theme.of(
                                   context,
-                                ).colorScheme.secondary.withOpacity(0.1),
+                                ).colorScheme.secondary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(

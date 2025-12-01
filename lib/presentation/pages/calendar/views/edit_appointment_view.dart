@@ -376,7 +376,7 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
         bloc: _appointmentActionCubit,
         listener: (context, state) {
           if (state is AppointmentActionSuccess) {
-            context.read<CalendarAppointmentsCubit>().refreshAppointments();
+            getIt<CalendarAppointmentsCubit>().refreshAppointments();
             router.pop(true);
             AppSnackBar.showSuccessSnackBar(
               context,
@@ -395,21 +395,19 @@ class _EditAppointmentViewState extends State<EditAppointmentView> {
               _appointmentActionCubit.updateAppointment(
                 widget.appointment.appointmentId!,
                 CreateAppointmentModel(
-                  appointmentStatus:
-                      _selectedAppointmentStatus.key.toUpperCase(),
+                  appointmentStatus: _selectedAppointmentStatus.key
+                      .toUpperCase(),
                   recordType: _selectedRecordType?.key,
                   roomId: _selectedRoom?.id,
                   description: _description,
                   userId: _selectedDoctor.userId!,
                   patientId: _selectedPatient.id!,
-                  startTime:
-                      _selectedTimeSlot?.startTime != null
-                          ? _selectedTimeSlot!.startTime
-                          : parseTime(widget.appointment.startTime ?? ''),
-                  endTime:
-                      _selectedTimeSlot?.endTime != null
-                          ? _selectedTimeSlot!.endTime
-                          : parseTime(widget.appointment.endTime ?? ''),
+                  startTime: _selectedTimeSlot?.startTime != null
+                      ? _selectedTimeSlot!.startTime
+                      : parseTime(widget.appointment.startTime ?? ''),
+                  endTime: _selectedTimeSlot?.endTime != null
+                      ? _selectedTimeSlot!.endTime
+                      : parseTime(widget.appointment.endTime ?? ''),
                   startDate: DateFormat('yyyy-MM-dd').format(_selectedDate),
                 ),
               );
