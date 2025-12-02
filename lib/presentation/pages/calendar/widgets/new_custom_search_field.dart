@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/util/upper_case_first_letter_formatter.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/custom_asset_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -169,23 +170,22 @@ class NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
     final overlayMaxHeight = max(0.0, min(defaultMaxHeight, spaceBelow));
 
     _overlayEntry = OverlayEntry(
-      builder:
-          (context) => Positioned(
-            width: size.width,
-            child: CompositedTransformFollower(
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(0.0, size.height + 8.0),
-              child: Material(
-                elevation: 4.0,
-                borderRadius: BorderRadius.circular(8.0),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: overlayMaxHeight),
-                  child: _buildResultsList(),
-                ),
-              ),
+      builder: (context) => Positioned(
+        width: size.width,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(0.0, size.height + 8.0),
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(8.0),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: overlayMaxHeight),
+              child: _buildResultsList(),
             ),
           ),
+        ),
+      ),
     );
 
     overlay.insert(_overlayEntry!);
@@ -246,21 +246,19 @@ class NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
   Widget build(BuildContext context) {
     final bool isSelectionLocked = _selectedItem != null;
 
-    final suffixIcon =
-        isSelectionLocked
-            ? IconButton(
-              icon: const Icon(Icons.close),
-              onPressed:
-                  widget.enabled
-                      ? () => _clearSelection(notifyParent: true)
-                      : null,
-            )
-            : _controller.text.isNotEmpty
-            ? IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: widget.enabled ? _controller.clear : null,
-            )
-            : null;
+    final suffixIcon = isSelectionLocked
+        ? IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: widget.enabled
+                ? () => _clearSelection(notifyParent: true)
+                : null,
+          )
+        : _controller.text.isNotEmpty
+        ? IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: widget.enabled ? _controller.clear : null,
+          )
+        : null;
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextField(
@@ -272,6 +270,7 @@ class NewCustomSearchInputState<T> extends State<NewCustomSearchInput<T>> {
         showCursor: !isSelectionLocked,
         enableInteractiveSelection: !isSelectionLocked,
         enabled: widget.enabled,
+        inputFormatters: [UpperCaseFirstLetterFormatter()],
         decoration: InputDecoration(
           labelText: widget.hintText ?? LocaleKeys.buttons_search.tr(),
           prefixIcon: Padding(

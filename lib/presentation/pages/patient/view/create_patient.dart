@@ -4,6 +4,7 @@ import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/create_patient/create_patient_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/patient/core/bloc/patient_bloc/patient_bloc.dart';
+import 'package:dent_app_mobile/presentation/pages/patient/core/util/upper_case_first_letter_formatter.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/gender.dart';
 import 'package:dent_app_mobile/presentation/widgets/buttons/def_elevated_button.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/custom_phone_input.dart';
@@ -111,18 +112,21 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
         FormTextField(
           hintText: LocaleKeys.forms_name.tr(),
           controller: _nameController,
+
           validator: (value) {
             if (value == null || value.isEmpty) {
               return LocaleKeys.errors_required_field.tr();
             }
             return null;
           },
+          inputFormatters: [UpperCaseFirstLetterFormatter()],
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
         ),
         FormTextField(
           hintText: LocaleKeys.forms_surname.tr(),
           controller: _surnameController,
+          inputFormatters: [UpperCaseFirstLetterFormatter()],
           validator: (value) {
             if (value == null || value.isEmpty) {
               return LocaleKeys.errors_required_field.tr();
@@ -202,6 +206,7 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
           controller: _patronymicController,
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
+          inputFormatters: [UpperCaseFirstLetterFormatter()],
         ),
 
         CustomPhoneInput(
@@ -288,65 +293,64 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder:
-          (context) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 4,
-                    width: 40,
-                    margin: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText(
-                          title: LocaleKeys.forms_gender.tr(),
-                          textType: TextType.subtitle,
-                        ),
-                        const SizedBox(height: 16),
-                        ...Gender.values.map(
-                          (gender) => ListTile(
-                            title: Text(gender.displayName.tr()),
-                            leading: Radio<Gender>(
-                              value: gender,
-                              groupValue: _selectedGender,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  Navigator.of(context).pop(value);
-                                }
-                              },
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop(gender);
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 4,
+                width: 40,
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      title: LocaleKeys.forms_gender.tr(),
+                      textType: TextType.subtitle,
+                    ),
+                    const SizedBox(height: 16),
+                    ...Gender.values.map(
+                      (gender) => ListTile(
+                        title: Text(gender.displayName.tr()),
+                        leading: Radio<Gender>(
+                          value: gender,
+                          groupValue: _selectedGender,
+                          onChanged: (value) {
+                            if (value != null) {
+                              Navigator.of(context).pop(value);
+                            }
+                          },
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop(gender);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
 
     if (selectedGender != null) {
@@ -364,65 +368,64 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder:
-          (context) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 4,
-                    width: 40,
-                    margin: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText(
-                          title: LocaleKeys.forms_from_where.tr(),
-                          textType: TextType.subtitle,
-                        ),
-                        const SizedBox(height: 16),
-                        ...FromWhere.values.map(
-                          (fromWhere) => ListTile(
-                            title: Text(fromWhere.title.tr()),
-                            leading: Radio<FromWhere>(
-                              value: fromWhere,
-                              groupValue: _selectedFromWhere,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  Navigator.of(context).pop(value);
-                                }
-                              },
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop(fromWhere);
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 4,
+                width: 40,
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      title: LocaleKeys.forms_from_where.tr(),
+                      textType: TextType.subtitle,
+                    ),
+                    const SizedBox(height: 16),
+                    ...FromWhere.values.map(
+                      (fromWhere) => ListTile(
+                        title: Text(fromWhere.title.tr()),
+                        leading: Radio<FromWhere>(
+                          value: fromWhere,
+                          groupValue: _selectedFromWhere,
+                          onChanged: (value) {
+                            if (value != null) {
+                              Navigator.of(context).pop(value);
+                            }
+                          },
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop(fromWhere);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
 
     if (selectedFromWhere != null) {
@@ -634,10 +637,9 @@ class _BirthdayPickerFieldState extends State<BirthdayPickerField> {
   Future<void> _showDatePicker(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate:
-          _selectedDate != null
-              ? DateTime.parse(_selectedDate!)
-              : DateTime.now().subtract(const Duration(days: 365 * 18)),
+      initialDate: _selectedDate != null
+          ? DateTime.parse(_selectedDate!)
+          : DateTime.now().subtract(const Duration(days: 365 * 18)),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       locale: context.locale,

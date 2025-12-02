@@ -37,6 +37,7 @@ class FormTextField extends StatelessWidget {
       onTapOutside: (value) {
         FocusScope.of(context).unfocus();
       },
+      textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
         labelText: hintText,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
