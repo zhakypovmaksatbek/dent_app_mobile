@@ -377,7 +377,7 @@ class CodegenLoader extends AssetLoader{
     "photo_successfully_uploaded": "Фото успешно загружено",
     "photo_successfully_deleted": "Фото успешно удалено",
     "no_personal_found": "Нет персонала",
-    "operation_successful": "Операция успешно завершена",
+    "operation_successful": "Запись успешно сохранен!",
     "no_search_results_found": "Ничего не найдено",
     "services_not_found": "Услуги не найдены",
     "try_changing_search_query": "Попробуйте изменить поисковый запрос",
@@ -390,7 +390,8 @@ class CodegenLoader extends AssetLoader{
     "work_successfully_deleted": "Работа успешно удалена",
     "confirm_delete_work": "Вы уверены, что хотите удалить работу \"{name}\"?",
     "no_works_found": "Работы не найдены",
-    "warning": "Внимание"
+    "warning": "Внимание",
+    "successfully_saved": "Успешно сохранено"
   },
   "report": {
     "select_date_range": "Выберите дату",
@@ -486,7 +487,7 @@ class CodegenLoader extends AssetLoader{
   },
   "alerts": {
     "confirm_delete_service": "Вы уверены, что хотите удалить услугу {name}?",
-    "operation_successful": "Операция успешно завершена",
+    "operation_successful": "Запись успешно завершена",
     "confirm_delete_diagnosis": "Вы уверены, что хотите удалить диагноз '{name}'?",
     "confirm_delete_specialty": "Вы уверены, что хотите удалить специальность '{name}'?",
     "delete_specialty": "Удалить специальность",

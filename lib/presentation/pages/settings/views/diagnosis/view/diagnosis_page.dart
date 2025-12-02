@@ -109,16 +109,15 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (modalContext) => DiagnosisFormModal(
-            onSubmit: (name) async {
-              router.maybePop();
+      builder: (modalContext) => DiagnosisFormModal(
+        onSubmit: (name) async {
+          router.maybePop();
 
-              // Call saveDiagnosis using the DIRECT INSTANCE
+          // Call saveDiagnosis using the DIRECT INSTANCE
 
-              await _diagnosisConfigurationCubit.saveDiagnosis(name);
-            },
-          ),
+          await _diagnosisConfigurationCubit.saveDiagnosis(name);
+        },
+      ),
     );
   }
 
@@ -126,21 +125,20 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (modalContext) => DiagnosisFormModal(
-            initialDiagnosis: diagnosis, // Pass the diagnosis for editing
-            onSubmit: (name) async {
-              if (diagnosis.id != null) {
-                router.maybePop();
+      builder: (modalContext) => DiagnosisFormModal(
+        initialDiagnosis: diagnosis, // Pass the diagnosis for editing
+        onSubmit: (name) async {
+          if (diagnosis.id != null) {
+            router.maybePop();
 
-                // Call updateDiagnosis using the DIRECT INSTANCE
-                await _diagnosisConfigurationCubit.updateDiagnosis(
-                  diagnosis.id!,
-                  name,
-                );
-              }
-            },
-          ),
+            // Call updateDiagnosis using the DIRECT INSTANCE
+            await _diagnosisConfigurationCubit.updateDiagnosis(
+              diagnosis.id!,
+              name,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -150,37 +148,32 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
 
     showDialog(
       context: context,
-      builder:
-          (dialogContext) => AlertDialog(
-            title: Text(LocaleKeys.buttons_delete.tr()),
-            content: Text(
-              // Use a specific confirmation message if available
-              LocaleKeys.alerts_confirm_delete_diagnosis.tr(
-                // ADD THIS LOCALE KEY
-                namedArgs: {'name': diagnosis.name ?? ''},
-              ),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: Text(LocaleKeys.buttons_cancel.tr()),
-              ),
-              TextButton(
-                onPressed: () async {
-                  // Call deleteDiagnosis using the DIRECT INSTANCE
-                  await _diagnosisConfigurationCubit.deleteDiagnosis(
-                    diagnosis.id!,
-                  );
-                  router.maybePop();
-                },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: Text(LocaleKeys.buttons_delete.tr()),
-              ),
-            ],
+      builder: (dialogContext) => AlertDialog(
+        title: Text(LocaleKeys.buttons_delete.tr()),
+        content: Text(
+          // Use a specific confirmation message if available
+          LocaleKeys.alerts_confirm_delete_diagnosis.tr(
+            // ADD THIS LOCALE KEY
+            namedArgs: {'name': diagnosis.name ?? ''},
           ),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(LocaleKeys.buttons_cancel.tr()),
+          ),
+          TextButton(
+            onPressed: () async {
+              // Call deleteDiagnosis using the DIRECT INSTANCE
+              await _diagnosisConfigurationCubit.deleteDiagnosis(diagnosis.id!);
+              router.maybePop();
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(LocaleKeys.buttons_delete.tr()),
+          ),
+        ],
+      ),
     );
   }
 
@@ -195,18 +188,13 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
       child: Scaffold(
         body: SafeArea(
           // Listen for ADD/EDIT/DELETE results
-          child: BlocListener<
-            DiagnosisConfigurationCubit,
-            DiagnosisConfigurationState
-          >(
+          child: BlocListener<DiagnosisConfigurationCubit, DiagnosisConfigurationState>(
             listener: (context, configState) {
               if (configState is DiagnosisConfigurationLoaded) {
                 AppSnackBar.showSuccessSnackBar(
                   context,
-                  LocaleKeys.alerts_operation_successful
-                      .tr(), // ADD THIS LOCALE KEY
+                  LocaleKeys.notifications_successfully_saved.tr(),
                 );
-                // Refresh the list from the start after a successful operation
                 _fetchDiagnoses(isRefresh: true, isInitial: true);
               } else if (configState is DiagnosisConfigurationError) {
                 AppSnackBar.showErrorSnackBar(context, configState.message);
@@ -231,9 +219,8 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
                     actions: [
                       IconButton(
                         icon: const Icon(Icons.add_circle_outline),
-                        tooltip:
-                            LocaleKeys.buttons_add_new_diagnosis
-                                .tr(), // ADD THIS LOCALE KEY
+                        tooltip: LocaleKeys.buttons_add_new_diagnosis
+                            .tr(), // ADD THIS LOCALE KEY
                         onPressed: _showAddDiagnosisDialog,
                       ),
                     ],
@@ -385,40 +372,39 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
                   _confirmDeleteDiagnosis(diagnosis);
                 }
               },
-              itemBuilder:
-                  (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.edit_outlined,
-                            size: 20,
-                            color: theme.iconTheme.color,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(LocaleKeys.buttons_edit.tr()),
-                        ],
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.edit_outlined,
+                        size: 20,
+                        color: theme.iconTheme.color,
                       ),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_outline,
-                            size: 20,
-                            color: Colors.red.shade700,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            LocaleKeys.buttons_delete.tr(),
-                            style: TextStyle(color: Colors.red.shade700),
-                          ),
-                        ],
+                      const SizedBox(width: 8),
+                      Text(LocaleKeys.buttons_edit.tr()),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delete_outline,
+                        size: 20,
+                        color: Colors.red.shade700,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        LocaleKeys.buttons_delete.tr(),
+                        style: TextStyle(color: Colors.red.shade700),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

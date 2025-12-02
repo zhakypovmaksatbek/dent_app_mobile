@@ -58,28 +58,27 @@ class _PersonalPageState extends State<PersonalPage> {
   void _handleDelete(UserModel user) {
     showDialog(
       context: context,
-      builder:
-          (dialogContext) => AlertDialog(
-            title: const Text("Confirm Deletion"),
-            content: Text(
-              "Are you sure you want to delete ${user.fullName ?? 'this user'}?",
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text("Cancel"),
-                onPressed: () {
-                  router.maybePop();
-                },
-              ),
-              TextButton(
-                child: const Text("Delete"),
-                onPressed: () {
-                  cubit.deletePerson(user.id!);
-                  router.maybePop();
-                },
-              ),
-            ],
+      builder: (dialogContext) => AlertDialog(
+        title: const Text("Confirm Deletion"),
+        content: Text(
+          "Are you sure you want to delete ${user.fullName ?? 'this user'}?",
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text("Cancel"),
+            onPressed: () {
+              router.maybePop();
+            },
           ),
+          TextButton(
+            child: const Text("Delete"),
+            onPressed: () {
+              cubit.deletePerson(user.id!);
+              router.maybePop();
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -170,8 +169,8 @@ class _PersonalPageState extends State<PersonalPage> {
                         ),
                         sliver: SliverList.separated(
                           itemCount: users.length, // Add space for loader
-                          separatorBuilder:
-                              (context, index) => const SizedBox(height: 12),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final user = users[index];
                             return PersonalCard(
@@ -227,10 +226,10 @@ class _PersonalPageState extends State<PersonalPage> {
   void personalActionListener(BuildContext context, PersonalActionState state) {
     if (state is PersonalActionSuccess) {
       CherryToast.success(
-        title: Text(LocaleKeys.notifications_operation_successful.tr()),
+        title: Text(LocaleKeys.notifications_successfully_saved.tr()),
         animationType: AnimationType.fromTop,
       ).show(context);
-      _fetchPersonals(isRefresh: true); // Refresh list on success
+      _fetchPersonals(isRefresh: true);
     } else if (state is PersonalActionError) {
       CherryToast.error(
         title: Text(state.message),

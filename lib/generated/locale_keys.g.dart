@@ -371,6 +371,7 @@ abstract class  LocaleKeys {
   static const notifications_confirm_delete_work = 'notifications.confirm_delete_work';
   static const notifications_no_works_found = 'notifications.no_works_found';
   static const notifications_warning = 'notifications.warning';
+  static const notifications_successfully_saved = 'notifications.successfully_saved';
   static const notifications = 'notifications';
   static const report_select_date_range = 'report.select_date_range';
   static const report_financial_summary = 'report.financial_summary';

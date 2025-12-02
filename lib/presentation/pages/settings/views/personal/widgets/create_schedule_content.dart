@@ -50,18 +50,17 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
     _scheduleModel = CreateScheduleModel(
       startDate: DateFormat('yyyy-MM-dd').format(today),
       endDate: null, // End date is empty by default
-      dayScheduleRequests:
-          Week.values
-              .map(
-                (week) => DayScheduleRequests(
-                  dayOfWeek: week.name.toUpperCase(),
-                  workingDay: week != Week.saturday && week != Week.sunday,
-                  startTime: '09:00',
-                  endTime: '18:00',
-                  breakPatternIds: [],
-                ),
-              )
-              .toList(),
+      dayScheduleRequests: Week.values
+          .map(
+            (week) => DayScheduleRequests(
+              dayOfWeek: week.name.toUpperCase(),
+              workingDay: week != Week.saturday && week != Week.sunday,
+              startTime: '09:00',
+              endTime: '18:00',
+              breakPatternIds: [],
+            ),
+          )
+          .toList(),
     );
 
     // Set initial values
@@ -195,15 +194,15 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
     if (dayRequest == null) return;
 
     // Parse current time or use default
-    String currentTimeString =
-        isStartTime
-            ? (dayRequest.startTime ?? '09:00')
-            : (dayRequest.endTime ?? '18:00');
+    String currentTimeString = isStartTime
+        ? (dayRequest.startTime ?? '09:00')
+        : (dayRequest.endTime ?? '18:00');
 
     final timeParts = currentTimeString.split(':');
     final currentHour = int.tryParse(timeParts[0]) ?? 9;
-    final currentMinute =
-        timeParts.length > 1 ? (int.tryParse(timeParts[1]) ?? 0) : 0;
+    final currentMinute = timeParts.length > 1
+        ? (int.tryParse(timeParts[1]) ?? 0)
+        : 0;
 
     Duration selectedDuration = Duration(
       hours: currentHour,
@@ -343,7 +342,7 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                 AppSnackBar.showSuccessSnackBar(
                   context,
                   state.response.message ??
-                      LocaleKeys.alerts_operation_successful.tr(),
+                      LocaleKeys.notifications_successfully_saved.tr(),
                 );
                 _isLoadingNotifier.value = false;
               } else if (state is CreateScheduleLoading) {
@@ -388,10 +387,9 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                                       duration: const Duration(
                                         milliseconds: 300,
                                       ),
-                                      child:
-                                          areDatesSelected
-                                              ? _buildWeeklyScheduleSection()
-                                              : _buildDisabledWeeklyScheduleSection(),
+                                      child: areDatesSelected
+                                          ? _buildWeeklyScheduleSection()
+                                          : _buildDisabledWeeklyScheduleSection(),
                                     ),
                                   );
                                 },
@@ -517,10 +515,9 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                   builder: (context, startDate, child) {
                     return _buildCompactDateButton(
                       title: LocaleKeys.date_range_start_date.tr(),
-                      value:
-                          _startDateController.text.isEmpty
-                              ? LocaleKeys.date_range_select_start_date.tr()
-                              : _startDateController.text,
+                      value: _startDateController.text.isEmpty
+                          ? LocaleKeys.date_range_select_start_date.tr()
+                          : _startDateController.text,
                       icon: Icons.calendar_today,
                       isSelected: _startDateController.text.isNotEmpty,
                       onTap: () => _selectDate(context, true),
@@ -536,10 +533,9 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                       children: [
                         _buildCompactDateButton(
                           title: LocaleKeys.date_range_end_date.tr(),
-                          value:
-                              _endDateController.text.isEmpty
-                                  ? LocaleKeys.date_range_select_end_date.tr()
-                                  : _endDateController.text,
+                          value: _endDateController.text.isEmpty
+                              ? LocaleKeys.date_range_select_end_date.tr()
+                              : _endDateController.text,
                           icon: Icons.event,
                           isSelected: _endDateController.text.isNotEmpty,
                           onTap: () => _selectDate(context, false),
@@ -567,12 +563,11 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                                     LocaleKeys
                                         .date_range_schedule_period_configured
                                         .tr(),
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                   ),
                                 ),
                               ],
@@ -609,10 +604,9 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
             children: [
               Icon(
                 icon,
-                color:
-                    isSelected
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey[400],
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[400],
                 size: 20,
               ),
               const SizedBox(width: 12),
@@ -632,8 +626,9 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                       value,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: isSelected ? Colors.grey[800] : Colors.grey[500],
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                       ),
                     ),
                   ],
@@ -682,12 +677,9 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
               valueListenable: _daySchedulesNotifier,
               builder: (context, daySchedules, child) {
                 return Column(
-                  children:
-                      daySchedules
-                          .map(
-                            (dayRequest) => _buildDayScheduleCard(dayRequest),
-                          )
-                          .toList(),
+                  children: daySchedules
+                      .map((dayRequest) => _buildDayScheduleCard(dayRequest))
+                      .toList(),
                 );
               },
             ),
@@ -727,8 +719,8 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
               ),
               Switch(
                 value: isWorkingDay,
-                onChanged:
-                    (value) => _toggleWorkingDay(dayRequest.dayOfWeek!, value),
+                onChanged: (value) =>
+                    _toggleWorkingDay(dayRequest.dayOfWeek!, value),
                 activeThumbColor: Theme.of(context).primaryColor,
               ),
             ],
@@ -741,8 +733,8 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                   child: _buildTimeField(
                     label: LocaleKeys.date_range_start_time.tr(),
                     time: dayRequest.startTime ?? '09:00',
-                    onTap:
-                        () => _selectTime(context, dayRequest.dayOfWeek!, true),
+                    onTap: () =>
+                        _selectTime(context, dayRequest.dayOfWeek!, true),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -750,9 +742,8 @@ class _CreateScheduleContentState extends State<CreateScheduleContent> {
                   child: _buildTimeField(
                     label: LocaleKeys.date_range_end_time.tr(),
                     time: dayRequest.endTime ?? '18:00',
-                    onTap:
-                        () =>
-                            _selectTime(context, dayRequest.dayOfWeek!, false),
+                    onTap: () =>
+                        _selectTime(context, dayRequest.dayOfWeek!, false),
                   ),
                 ),
               ],

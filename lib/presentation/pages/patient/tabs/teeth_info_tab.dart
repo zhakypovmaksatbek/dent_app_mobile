@@ -92,13 +92,8 @@ class _TeethInfoTabState extends State<TeethInfoTab> {
     final map = <String, Color>{};
 
     for (final tooth in _teeth) {
-      // Sadece diş numarasının olması yeterli.
-      // Rengi var mı yok mu diye bakmadan, listedeyse boyuyoruz.
       if (tooth.toothNumber != null) {
         final String toothId = tooth.toothNumber.toString();
-
-        // Listede olan her dişi kırmızı yap
-        // (AppColors.red yoksa Colors.red kullanabilirsiniz)
         map[toothId] = AppColors.red;
       }
     }

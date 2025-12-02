@@ -59,7 +59,7 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                 _teethController.clear();
                 AppSnackBar.showSuccessSnackBar(
                   context,
-                  LocaleKeys.alerts_operation_successful.tr(),
+                  LocaleKeys.notifications_successfully_saved.tr(),
                 );
               }
             } else if (state is UploadImageDeleted) {
@@ -237,10 +237,9 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                     const SizedBox(width: 8),
                     Expanded(
                       child: AppText(
-                        title:
-                            _isSavedToAppointment
-                                ? "Рентген сохранен в запись"
-                                : "Рентген загружен",
+                        title: _isSavedToAppointment
+                            ? "Рентген сохранен в запись"
+                            : "Рентген загружен",
                         textType: TextType.body,
                       ),
                     ),
@@ -349,19 +348,18 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed: isLoading ? null : _saveToAppointment,
-                          icon:
-                              isLoading
-                                  ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
+                          icon: isLoading
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
                                     ),
-                                  )
-                                  : const Icon(Icons.save, size: 18),
+                                  ),
+                                )
+                              : const Icon(Icons.save, size: 18),
                           label: Text(
                             isLoading ? "Сохранение..." : "Сохранить в запись",
                           ),
@@ -709,16 +707,14 @@ class _UploadXRayTabState extends State<UploadXRayTab>
                 initialScale: PhotoViewComputedScale.contained,
                 heroAttributes: PhotoViewHeroAttributes(tag: imageUrl),
                 backgroundDecoration: const BoxDecoration(color: Colors.black),
-                loadingBuilder:
-                    (context, event) => const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                errorBuilder:
-                    (context, error, stackTrace) => const Center(
-                      child: Icon(Icons.error, color: Colors.white, size: 50),
-                    ),
+                loadingBuilder: (context, event) => const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+                errorBuilder: (context, error, stackTrace) => const Center(
+                  child: Icon(Icons.error, color: Colors.white, size: 50),
+                ),
               ),
 
               // Close button
