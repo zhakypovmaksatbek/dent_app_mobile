@@ -18,4 +18,5 @@ final class AppConstants {
   final String clinicId = "clinicId";
   final String role = "role";
   final String currency = "currency";
+  final String testModeKey = 'is_test_mode';
 }

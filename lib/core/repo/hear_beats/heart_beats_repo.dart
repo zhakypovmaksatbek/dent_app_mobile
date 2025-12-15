@@ -1,10 +1,8 @@
-import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/heartbeats/heart_beats_model.dart';
 
 class HeartBeatsRepo {
-  final DioService dio = DioService();
-
   Future<HeartbeatsModel> getHeartBeats(DateType dateType) async {
     final response = await dio.get(
       'api/heartbeats',

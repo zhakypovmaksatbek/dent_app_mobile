@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/core/service/dio_settings.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/report/debtor_model.dart';
 import 'package:dent_app_mobile/models/report/payment_report_model.dart';
 import 'package:dent_app_mobile/models/report/report_model.dart';
@@ -25,7 +25,6 @@ abstract class IReportRepository {
 }
 
 class ReportRepository extends IReportRepository {
-  final dio = DioService();
   @override
   Future<ReportModel> getReport(String startDate, String endDate) async {
     final response = await dio.get(

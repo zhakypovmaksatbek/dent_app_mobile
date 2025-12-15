@@ -1,8 +1,8 @@
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
 import 'package:dent_app_mobile/core/repo/appointment/i_appointment_repo.dart';
-import 'package:dent_app_mobile/core/service/dio_settings.dart';
 import 'package:dent_app_mobile/core/utils/image_type.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_comment_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_detail_model.dart';
 import 'package:dent_app_mobile/models/appointment/appointment_doctor_model.dart';
@@ -35,7 +35,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AppointmentRepo extends IAppointmentRepo {
-  final dio = DioService();
   @override
   Future<List<AppointmentDetailModel>> getAppointments() async {
     final response = await dio.get('api/appointments');

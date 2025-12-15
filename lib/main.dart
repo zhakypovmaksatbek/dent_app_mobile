@@ -3,6 +3,8 @@ import 'package:dent_app_mobile/core/bloc/upload/upload_image_cubit.dart';
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
 import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
+import 'package:dent_app_mobile/core/service/dio_settings.dart';
+import 'package:dent_app_mobile/core/service/environment_service.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
@@ -59,10 +61,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   setupLocator();
+
   WidgetsFlutterBinding.ensureInitialized();
+  await setupDependencies();
+
   await EasyLocalization.ensureInitialized();
   runApp(AppLocalization(child: await Initializer.initialize(MyApp())));
 }
@@ -85,7 +91,8 @@ class MyApp extends StatelessWidget {
 }
 
 final router = getIt<AppRouter>();
-
+final dio = getIt<DioService>();
+final authDio = getIt<AuthDioSettings>();
 final getIt = GetIt.instance;
 void setupLocator() {
   getIt.registerSingleton<AppRouter>(AppRouter());
@@ -96,6 +103,27 @@ void setupLocator() {
     () => ManageWorkCubit(AppointmentRepo()),
   );
   getIt.registerLazySingleton(() => CalendarAppointmentsCubit());
+}
+
+Future<void> setupDependencies() async {
+  // SharedPreferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerSingleton<SharedPreferences>(sharedPreferences);
+
+  // Environment Service
+  getIt.registerSingleton<EnvironmentService>(
+    EnvironmentService(sharedPreferences),
+  );
+
+  // Dio Service
+  getIt.registerLazySingleton<DioService>(
+    () => DioService(getIt<EnvironmentService>()),
+  );
+
+  // Auth Dio Service
+  getIt.registerLazySingleton<AuthDioSettings>(
+    () => AuthDioSettings(getIt<EnvironmentService>()),
+  );
 }
 
 class Initializer {

@@ -1,22 +1,32 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// lib/core/service/dio_service.dart
 import "dart:async";
 
 import "package:dent_app_mobile/core/constants/app_constants.dart";
 import "package:dent_app_mobile/core/data/app_data_service.dart";
+import "package:dent_app_mobile/core/service/environment_service.dart";
 import "package:dent_app_mobile/core/service/token_interceptor.dart";
 import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
 
-final String baseUrl =
-    kDebugMode
-        ? AppConstants.instance.baseUrlTest
-        : AppConstants.instance.baseUrlProd;
-
 class DioService {
-  DioService() {
-    dio.interceptors.add(TokenInterceptor(tokenDio: dio));
+  final EnvironmentService _environmentService;
+  late final Dio dio;
 
-    dio.interceptors.add(DioLoggingInterceptor());
+  DioService(this._environmentService) {
+    final baseUrl = _environmentService.getBaseUrl(
+      AppConstants.instance.baseUrlProd,
+      AppConstants.instance.baseUrlTest,
+    );
+
+    dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        contentType: "application/json",
+        headers: {"Accept": "application/json"},
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 20),
+      ),
+    );
 
     final tokenDio = Dio(
       BaseOptions(
@@ -27,23 +37,32 @@ class DioService {
         receiveTimeout: const Duration(seconds: 20),
       ),
     );
-    // add token interceptor
+
     dio.interceptors.add(TokenInterceptor(tokenDio: tokenDio));
+    dio.interceptors.add(DioLoggingInterceptor());
 
     if (kDebugMode) {
-      print('🔧 DioSettings initialized with TokenInterceptor');
+      print('🔧 DioService initialized');
+      print('🌐 Base URL: $baseUrl');
+      print(
+        '🧪 Test Mode: ${_environmentService.getBaseUrl(AppConstants.instance.baseUrlProd, AppConstants.instance.baseUrlTest) == AppConstants.instance.baseUrlTest}',
+      );
     }
   }
 
-  Dio dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      contentType: "application/json",
-      headers: {"Accept": "application/json"},
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-    ),
-  );
+  // Base URL'i runtime'da değiştirmek için
+  void updateBaseUrl() {
+    final newBaseUrl = _environmentService.getBaseUrl(
+      AppConstants.instance.baseUrlProd,
+      AppConstants.instance.baseUrlTest,
+    );
+
+    dio.options.baseUrl = newBaseUrl;
+
+    if (kDebugMode) {
+      print('🔄 Base URL updated to: $newBaseUrl');
+    }
+  }
 
   Future<Options> _buildOptions() async {
     final String? token = await AppDataService.instance.getToken();
@@ -54,18 +73,18 @@ class DioService {
     }
     return token != null && token.isNotEmpty
         ? Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept-Language': currentLanguage,
-            'Content-Type': 'application/json',
-          },
-        )
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Accept-Language': currentLanguage,
+              'Content-Type': 'application/json',
+            },
+          )
         : Options(
-          headers: {
-            'Accept-Language': currentLanguage,
-            'Content-Type': 'application/json',
-          },
-        );
+            headers: {
+              'Accept-Language': currentLanguage,
+              'Content-Type': 'application/json',
+            },
+          );
   }
 
   Future<Options> _buildFormOptions() async {
@@ -73,22 +92,20 @@ class DioService {
     final currentLanguage = await getCurrentLanguage();
     if (kDebugMode) {
       print("====Language ---====");
-      //  print(currentLanguage);
     }
     return token != null && token.isNotEmpty
         ? Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept-Language': currentLanguage,
-            'Content-Type': 'multipart/form-data',
-          },
-        )
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Accept-Language': currentLanguage,
+              'Content-Type': 'multipart/form-data',
+            },
+          )
         : Options(headers: {'Accept-Language': currentLanguage});
   }
 
   Future<Options> _defBuildOptions() async {
     String? currentLanguage = await getCurrentLanguage();
-
     return Options(headers: {'Accept-Language': currentLanguage});
   }
 
@@ -103,8 +120,9 @@ class DioService {
     bool? isFormData = false,
     Map<String, dynamic>? queryParameters,
   }) async {
-    final Options options =
-        isFormData == true ? await _buildFormOptions() : await _buildOptions();
+    final Options options = isFormData == true
+        ? await _buildFormOptions()
+        : await _buildOptions();
     return dio.post(
       url,
       data: data,
@@ -118,8 +136,9 @@ class DioService {
     Map<String, dynamic>? queryParameters,
     bool? withToken = true,
   }) async {
-    final Options options =
-        withToken == true ? await _buildOptions() : await _defBuildOptions();
+    final Options options = withToken == true
+        ? await _buildOptions()
+        : await _defBuildOptions();
 
     final Response response = await dio.get(
       url,
@@ -174,18 +193,27 @@ class DioService {
 }
 
 class AuthDioSettings {
-  AuthDioSettings() {
+  final EnvironmentService _environmentService;
+  late final Dio dio;
+
+  AuthDioSettings(this._environmentService) {
+    final baseUrl = _environmentService.getBaseUrl(
+      AppConstants.instance.baseUrlProd,
+      AppConstants.instance.baseUrlTest,
+    );
+
+    dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        contentType: "application/json",
+        headers: {"Accept": "application/json"},
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 20),
+      ),
+    );
+
     dio.interceptors.add(DioLoggingInterceptor());
   }
-  Dio dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      contentType: "application/json",
-      headers: {"Accept": "application/json"},
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-    ),
-  );
 }
 
 class DioLoggingInterceptor extends Interceptor {

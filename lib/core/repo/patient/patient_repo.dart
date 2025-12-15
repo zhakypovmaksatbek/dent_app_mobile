@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/core/service/dio_settings.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';
@@ -14,7 +14,6 @@ abstract class IPatientRepo {
 }
 
 class PatientRepo extends IPatientRepo {
-  final dio = DioService();
   @override
   Future<PatientDataModel> getPatients(int page, int size) async {
     final response = await dio.get(

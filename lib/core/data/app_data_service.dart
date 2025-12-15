@@ -47,6 +47,16 @@ class AppDataService {
     return clinicId;
   }
 
+  Future<bool> isTestMode() async {
+    final prefs = await preferences();
+    return prefs.getBool(AppConstants.instance.testModeKey) ?? false;
+  }
+
+  Future<void> setTestMode(bool isTestMode) async {
+    final prefs = await preferences();
+    await prefs.setBool(AppConstants.instance.testModeKey, isTestMode);
+  }
+
   Future<void> clearTokens() async {
     final prefs = await preferences();
     await prefs.remove(AppConstants.instance.accessToken);

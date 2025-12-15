@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/core/service/dio_settings.dart';
+import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/service/save_service_model.dart';
 import 'package:dent_app_mobile/models/service/service_model.dart';
 import 'package:dent_app_mobile/models/service/service_type_model.dart';
@@ -13,10 +13,9 @@ abstract class IServiceRepo {
 }
 
 class ServiceRepo extends IServiceRepo {
-  final _dio = DioService();
   @override
   Future<List<ServiceItem>> getServiceItems({String? search}) async {
-    final response = await _dio.get(
+    final response = await dio.get(
       'api/services',
       queryParameters: {'search': search},
     );
@@ -25,7 +24,7 @@ class ServiceRepo extends IServiceRepo {
 
   @override
   Future<List<ServiceModel>> getServices({String? search}) async {
-    final response = await _dio.get(
+    final response = await dio.get(
       'api/services/all',
       queryParameters: {'search': search},
     );
@@ -36,22 +35,22 @@ class ServiceRepo extends IServiceRepo {
 
   @override
   Future<void> deleteService(int id) async {
-    await _dio.delete('api/services/$id');
+    await dio.delete('api/services/$id');
   }
 
   @override
   Future<void> saveService(SaveServiceModel saveServiceModel) async {
-    await _dio.post('api/services', data: saveServiceModel.toJson());
+    await dio.post('api/services', data: saveServiceModel.toJson());
   }
 
   @override
   Future<void> updateService(int id, SaveServiceModel saveServiceModel) async {
-    await _dio.put('api/services/$id', data: saveServiceModel.toJson());
+    await dio.put('api/services/$id', data: saveServiceModel.toJson());
   }
 
   @override
   Future<ServiceTypeModel> getServiceTypes() async {
-    final response = await _dio.get('api/services/categories');
+    final response = await dio.get('api/services/categories');
     return ServiceTypeModel.fromJson(response.data);
   }
 }
