@@ -1,5 +1,5 @@
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
-import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/models/login/login_model.dart';
 import 'package:dent_app_mobile/models/patient/visit_model.dart';
 import 'package:dent_app_mobile/models/response_model.dart';
@@ -32,7 +32,7 @@ class UserRepoImpl extends UserRepo {
   final appDataService = AppDataService.instance;
   @override
   Future<LoginResponseModel> login(LoginModel loginModel) async {
-    final response = await authDio.dio.post(
+    final response = await dioAuth.dio.post(
       'api/auth/login',
       data: loginModel.toJson(),
     );
@@ -59,7 +59,7 @@ class UserRepoImpl extends UserRepo {
     required int userId,
     required int page,
   }) async {
-    final response = await dio.dio.get(
+    final response = await dio.get(
       'api/appointments/staff/$userId',
 
       queryParameters: {'page': page},
@@ -72,7 +72,7 @@ class UserRepoImpl extends UserRepo {
     required int userId,
     required List<int> specialtyIds,
   }) async {
-    await dio.dio.post(
+    await dio.post(
       'api/users/$userId/specialities',
       queryParameters: {'specialityIds': specialtyIds.join(',')},
     );
@@ -83,12 +83,12 @@ class UserRepoImpl extends UserRepo {
     required int userId,
     required int specialtyId,
   }) async {
-    await dio.dio.delete('api/users/$userId/specialities/$specialtyId');
+    await dio.delete('api/users/$userId/specialities/$specialtyId');
   }
 
   @override
   Future<List<SpecialtyModel>> getSpecialties(int userId) async {
-    final response = await dio.dio.get('api/users/$userId/specialities/select');
+    final response = await dio.get('api/users/$userId/specialities/select');
 
     if (response.data is List) {
       return (response.data as List)
@@ -101,7 +101,7 @@ class UserRepoImpl extends UserRepo {
 
   @override
   Future<List<SpecialtyModel>> getUserSpecialties({required int userId}) async {
-    final response = await dio.dio.get('api/users/$userId/specialities');
+    final response = await dio.get('api/users/$userId/specialities');
 
     if (response.data is List) {
       return (response.data as List)
@@ -120,7 +120,7 @@ class UserRepoImpl extends UserRepo {
     // format startWeek to YYYY-MM-DD
     final startWeekFormatted = startWeek.toIso8601String().split('T')[0];
 
-    final response = await dio.dio.get(
+    final response = await dio.get(
       'api/schedules/$userId',
       queryParameters: {'startWeek': startWeekFormatted},
     );
@@ -132,7 +132,7 @@ class UserRepoImpl extends UserRepo {
     int userId,
     CreateScheduleModel schedule,
   ) async {
-    final response = await dio.dio.post(
+    final response = await dio.post(
       'api/schedules/$userId',
       data: schedule.toJson(),
     );

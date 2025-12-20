@@ -14,7 +14,6 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/personal/core/util/text_extension.dart';
 import 'package:dent_app_mobile/presentation/widgets/image/cashed_images.dart';
 import 'package:dent_app_mobile/presentation/widgets/input/custom_phone_input.dart';
-import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,10 +105,9 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
     }
 
     if (user.percentOrFixed != null) {
-      _selectedSalaryType =
-          user.percentOrFixed == 'PERCENT'
-              ? SalaryType.percent
-              : SalaryType.fixed;
+      _selectedSalaryType = user.percentOrFixed == 'PERCENT'
+          ? SalaryType.percent
+          : SalaryType.fixed;
     }
 
     if (user.isVisibilityPhoneNumber != null) {
@@ -351,16 +349,16 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
       patronymic: _patronymicController.text.trim(),
       email: _emailController.text.trim(),
       phoneNumber: _phoneController.text.trim(),
-      phoneNumber2:
-          _phone2Controller.text.isEmpty ? null : _phone2Controller.text.trim(),
+      phoneNumber2: _phone2Controller.text.isEmpty
+          ? null
+          : _phone2Controller.text.trim(),
       gender: _selectedGender.name.toUpperCase(),
       role: _selectedRole.name.toUpperCase(),
       isVisibilityPhoneNumber: _isPhoneVisible,
       payrollCalculationsRequest: PayrollCalculationsRequest(
-        salary:
-            _salaryController.text.isEmpty
-                ? null
-                : double.parse(_salaryController.text),
+        salary: _salaryController.text.isEmpty
+            ? null
+            : double.parse(_salaryController.text),
         percentOrFixed: _selectedSalaryType,
       ),
     );
@@ -415,11 +413,11 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
           validator ??
           (isRequired
               ? (value) {
-                if (value == null || value.isEmpty) {
-                  return '$label ${LocaleKeys.forms_is_required.tr()}';
+                  if (value == null || value.isEmpty) {
+                    return '$label ${LocaleKeys.forms_is_required.tr()}';
+                  }
+                  return null;
                 }
-                return null;
-              }
               : null),
     );
   }
@@ -458,7 +456,6 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
     );
   }
 
-  final router = getIt<AppRouter>();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -572,15 +569,14 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
                             _buildDropdown<Gender>(
                               value: _selectedGender,
                               label: LocaleKeys.general_gender.tr(),
-                              items:
-                                  Gender.values
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.displayName.tr()),
-                                        ),
-                                      )
-                                      .toList(),
+                              items: Gender.values
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e.displayName.tr()),
+                                    ),
+                                  )
+                                  .toList(),
                               onChanged: (value) {
                                 if (value != null) {
                                   setState(() {
@@ -681,15 +677,14 @@ class _CreatePersonalViewState extends State<CreatePersonalView> {
                             _buildDropdown<Role>(
                               value: _selectedRole,
                               label: LocaleKeys.forms_role.tr(),
-                              items:
-                                  Role.values
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.displayName.tr()),
-                                        ),
-                                      )
-                                      .toList(),
+                              items: Role.values
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e.displayName.tr()),
+                                    ),
+                                  )
+                                  .toList(),
 
                               onChanged: (value) {
                                 if (value != null) {

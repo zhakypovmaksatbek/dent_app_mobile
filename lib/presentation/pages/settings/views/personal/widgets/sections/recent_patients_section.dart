@@ -16,8 +16,6 @@ class RecentPatientsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppRouter router = getIt<AppRouter>();
-
     return BlocBuilder<PersonalPatientCubit, PersonalPatientState>(
       builder: (context, state) {
         if (state is PersonalPatientLoaded) {
@@ -112,16 +110,15 @@ class RecentPatientsSection extends StatelessWidget {
               )
             else
               Column(
-                children:
-                    visits
-                        .take(5)
-                        .map(
-                          (patient) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: PersonalPatientItem(patient: patient),
-                          ),
-                        )
-                        .toList(),
+                children: visits
+                    .take(5)
+                    .map(
+                      (patient) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: PersonalPatientItem(patient: patient),
+                      ),
+                    )
+                    .toList(),
               ),
           ],
         ),

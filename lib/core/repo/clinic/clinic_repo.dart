@@ -1,6 +1,6 @@
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/core/repo/clinic/clinic_i_repo.dart';
-import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/clinic/clinic_model.dart';
 
 final class ClinicRepo extends ClinicIRepo {

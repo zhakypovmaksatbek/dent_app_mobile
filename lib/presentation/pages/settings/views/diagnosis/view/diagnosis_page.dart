@@ -8,7 +8,6 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/diagnosis/widg
 import 'package:dent_app_mobile/presentation/theme/extension/card_style_extension.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/app_loader.dart'; // Import loader
 import 'package:dent_app_mobile/presentation/widgets/snack_bars/app_snack_bar.dart'; // Import snackbar
-import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -142,7 +141,6 @@ class _DiagnosisViewState extends State<_DiagnosisView> {
     );
   }
 
-  final router = getIt<AppRouter>();
   void _confirmDeleteDiagnosis(DiagnosisModel diagnosis) {
     if (diagnosis.id == null) return; // Cannot delete without ID
 

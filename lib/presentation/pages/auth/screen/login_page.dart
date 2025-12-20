@@ -42,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  final router = getIt<AppRouter>();
   void _handleLogin(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       loginCubit.login(_emailController.text, _passwordController.text);

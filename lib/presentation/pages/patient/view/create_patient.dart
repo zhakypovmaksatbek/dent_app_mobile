@@ -11,7 +11,6 @@ import 'package:dent_app_mobile/presentation/widgets/input/custom_phone_input.da
 import 'package:dent_app_mobile/presentation/widgets/input/form_text_field.dart';
 import 'package:dent_app_mobile/presentation/widgets/loading/loading_widget.dart';
 import 'package:dent_app_mobile/presentation/widgets/text/app_text.dart';
-import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,7 +102,6 @@ class _CreatePatientPageState extends State<CreatePatientPage> {
   final FocusNode _secondaryPhoneFocusNode = FocusNode();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final router = getIt<AppRouter>();
 
   Widget _buildRequiredFields() {
     return Column(

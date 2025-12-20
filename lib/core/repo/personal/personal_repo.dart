@@ -1,5 +1,5 @@
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
-import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/models/users/personal_model.dart';
 import 'package:dent_app_mobile/models/users/user_detail_model.dart';
 import 'package:dent_app_mobile/models/users/user_model.dart';

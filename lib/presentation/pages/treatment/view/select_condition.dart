@@ -67,8 +67,8 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: AppText(
-                        title:
-                            LocaleKeys.diagnosis_how_to_select_condition.tr(),
+                        title: LocaleKeys.diagnosis_how_to_select_condition
+                            .tr(),
                         textType: TextType.header,
                         fontWeight: FontWeight.w600,
                       ),
@@ -258,50 +258,49 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
           final conditionModels = state.conditions;
 
           return Consumer<ConditionService>(
-            builder:
-                (context, conditionService, child) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            builder: (context, conditionService, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Step Info with Tooltip
+                Row(
                   children: [
-                    // Step Info with Tooltip
-                    Row(
-                      children: [
-                        AppText(
-                          title: LocaleKeys.diagnosis_select_condition.tr(),
-                          textType: TextType.header,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () => _showInstructions(context),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.help_outline,
-                              size: 16,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ],
+                    AppText(
+                      title: LocaleKeys.diagnosis_select_condition.tr(),
+                      textType: TextType.header,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 16),
-
-                    // Search Field
-                    _buildSearchField(),
-                    const SizedBox(height: 16),
-
-                    // Grid View
-                    Expanded(
-                      child: _buildGridView(conditionModels, conditionService),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _showInstructions(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.help_outline,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 16),
+
+                // Search Field
+                _buildSearchField(),
+                const SizedBox(height: 16),
+
+                // Grid View
+                Expanded(
+                  child: _buildGridView(conditionModels, conditionService),
+                ),
+              ],
+            ),
           );
         }
 
@@ -317,10 +316,9 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color:
-              _isSearchActive
-                  ? theme.primaryColor
-                  : theme.dividerColor.withValues(alpha: 0.3),
+          color: _isSearchActive
+              ? theme.primaryColor
+              : theme.dividerColor.withValues(alpha: 0.3),
         ),
       ),
       child: TextField(
@@ -344,20 +342,19 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
             Icons.search,
             color: _isSearchActive ? theme.primaryColor : theme.hintColor,
           ),
-          suffixIcon:
-              _isSearchActive
-                  ? IconButton(
-                    icon: Icon(Icons.clear, color: theme.hintColor),
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() {
-                        _searchQuery = '';
-                        _isSearchActive = false;
-                        FocusScope.of(context).unfocus();
-                      });
-                    },
-                  )
-                  : null,
+          suffixIcon: _isSearchActive
+              ? IconButton(
+                  icon: Icon(Icons.clear, color: theme.hintColor),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      _searchQuery = '';
+                      _isSearchActive = false;
+                      FocusScope.of(context).unfocus();
+                    });
+                  },
+                )
+              : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
@@ -390,21 +387,18 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
           childAspectRatio: 2,
           mainAxisExtent: 100,
         ),
-        itemBuilder:
-            (context, index) => ConditionCard(
-              category: _createConditionModelFromCondition(
-                filteredConditions[index],
-              ),
-              selectedDiagnosis: conditionService.condition,
-              onTap:
-                  (category) => _handleIndividualConditionSelection(
-                    filteredConditions[index],
-                    conditionService,
-                  ),
-              isSelected:
-                  conditionService.condition?.id ==
-                  filteredConditions[index].id,
-            ),
+        itemBuilder: (context, index) => ConditionCard(
+          category: _createConditionModelFromCondition(
+            filteredConditions[index],
+          ),
+          selectedDiagnosis: conditionService.condition,
+          onTap: (category) => _handleIndividualConditionSelection(
+            filteredConditions[index],
+            conditionService,
+          ),
+          isSelected:
+              conditionService.condition?.id == filteredConditions[index].id,
+        ),
         itemCount: filteredConditions.length,
       );
     } else {
@@ -418,24 +412,23 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
           childAspectRatio: 2,
           mainAxisExtent: 100,
         ),
-        itemBuilder:
-            (context, index) => ConditionCard(
-              category: conditionModels[index],
-              selectedDiagnosis: conditionService.condition,
-              onTap:
-                  (category) => _handleDiagnosisSelection(
-                    context,
-                    conditionModels[index],
-                    (diagnosis) {
-                      conditionService.setCondition(diagnosis);
-                    },
-                    conditionService,
-                  ),
-              isSelected: isValidConditionCode(
-                conditionModels[index].code ?? '',
-                conditionService.condition?.code ?? '',
-              ),
+        itemBuilder: (context, index) {
+          final conditionModel = conditionModels[index];
+          print(conditionModel.code);
+          print(conditionModel.codeName);
+          return ConditionCard(
+            category: conditionModel,
+            selectedDiagnosis: conditionService.condition,
+            onTap: (category) =>
+                _handleDiagnosisSelection(context, conditionModel, (diagnosis) {
+                  conditionService.setCondition(diagnosis);
+                }, conditionService),
+            isSelected: isValidConditionCode(
+              conditionModel.code ?? '',
+              conditionService.condition?.code ?? '',
             ),
+          );
+        },
         itemCount: conditionModels.length,
       );
     }
@@ -544,15 +537,14 @@ class _SelectConditionStepState extends State<SelectConditionStep> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       clipBehavior: Clip.antiAlias,
-      builder:
-          (_) => DiagnosisDetailsModal(
-            conditions: conditions,
-            selectedCondition: conditionService.condition,
-            onSelect: (condition) {
-              onSelect(condition);
-              router.maybePop();
-            },
-          ),
+      builder: (_) => DiagnosisDetailsModal(
+        conditions: conditions,
+        selectedCondition: conditionService.condition,
+        onSelect: (condition) {
+          onSelect(condition);
+          router.maybePop();
+        },
+      ),
     );
   }
 }

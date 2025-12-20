@@ -1,14 +1,13 @@
 import 'package:dent_app_mobile/core/bloc/settings_cubit/settings_cubit.dart';
 import 'package:dent_app_mobile/core/bloc/upload/upload_image_cubit.dart';
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
+import 'package:dent_app_mobile/core/manager/test_mode_manager.dart';
 import 'package:dent_app_mobile/core/repo/appointment/appointment_repo.dart';
 import 'package:dent_app_mobile/core/repo/patient/patient_repo.dart';
-import 'package:dent_app_mobile/core/service/dio_settings.dart';
-import 'package:dent_app_mobile/core/service/environment_service.dart';
 import 'package:dent_app_mobile/presentation/localization/app_localization.dart';
 import 'package:dent_app_mobile/presentation/pages/auth/core/bloc/login_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_action/appointment_action_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/calendar/bloc/calendar_appointments/calendar_appointments_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/detail_receipt/detail_receipt_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/doctor/doctor_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/calendar/bloc/free_time/free_time_cubit.dart';
@@ -46,9 +45,7 @@ import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/
 import 'package:dent_app_mobile/presentation/pages/settings/views/services/core/bloc/service_type/service_type_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/document/document_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/settings/views/warehouse/core/bloc/product/product_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/appointment_works/appointment_works_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/condition/condition_cubit.dart';
-import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/manage_work/manage_work_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/pattern/pattern_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/save_jobs/save_jobs_cubit.dart';
 import 'package:dent_app_mobile/presentation/pages/treatment/core/bloc/upload_x_ray/upload_x_ray_cubit.dart';
@@ -58,17 +55,14 @@ import 'package:dent_app_mobile/router/app_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   setupLocator();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await setupDependencies();
-
+  getIt<TestModeManager>().initialize();
   await EasyLocalization.ensureInitialized();
   runApp(AppLocalization(child: await Initializer.initialize(MyApp())));
 }
@@ -91,40 +85,6 @@ class MyApp extends StatelessWidget {
 }
 
 final router = getIt<AppRouter>();
-final dio = getIt<DioService>();
-final authDio = getIt<AuthDioSettings>();
-final getIt = GetIt.instance;
-void setupLocator() {
-  getIt.registerSingleton<AppRouter>(AppRouter());
-  getIt.registerFactory<AppointmentWorksCubit>(
-    () => AppointmentWorksCubit(AppointmentRepo()),
-  );
-  getIt.registerFactory<ManageWorkCubit>(
-    () => ManageWorkCubit(AppointmentRepo()),
-  );
-  getIt.registerLazySingleton(() => CalendarAppointmentsCubit());
-}
-
-Future<void> setupDependencies() async {
-  // SharedPreferences
-  final sharedPreferences = await SharedPreferences.getInstance();
-  getIt.registerSingleton<SharedPreferences>(sharedPreferences);
-
-  // Environment Service
-  getIt.registerSingleton<EnvironmentService>(
-    EnvironmentService(sharedPreferences),
-  );
-
-  // Dio Service
-  getIt.registerLazySingleton<DioService>(
-    () => DioService(getIt<EnvironmentService>()),
-  );
-
-  // Auth Dio Service
-  getIt.registerLazySingleton<AuthDioSettings>(
-    () => AuthDioSettings(getIt<EnvironmentService>()),
-  );
-}
 
 class Initializer {
   static Future<Widget> initialize(Widget child) async {

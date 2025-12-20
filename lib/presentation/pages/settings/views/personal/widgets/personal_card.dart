@@ -31,7 +31,6 @@ class PersonalCard extends StatelessWidget {
   static const double _interItemSpacing = 4.0; // Consistent spacing
   static const double _popupMenuLeftPadding = 8.0;
   static const double _secondaryTextAlpha = 0.7;
-  static final router = getIt<AppRouter>();
   @override
   Widget build(BuildContext context) {
     // Helper to build the secondary info lines consistently
@@ -68,10 +67,9 @@ class PersonalCard extends StatelessWidget {
                   // User's Full Name
                   AppText(
                     // Provide a fallback, maybe from locale keys if appropriate
-                    title:
-                        user.fullName?.isNotEmpty ?? false
-                            ? user.fullName!
-                            : "-", // Example fallback
+                    title: user.fullName?.isNotEmpty ?? false
+                        ? user.fullName!
+                        : "-", // Example fallback
                     textType: TextType.body,
                     fontWeight: FontWeight.w600,
                   ),
@@ -113,11 +111,10 @@ class PersonalCard extends StatelessWidget {
 
   // Helper method to build the salary information line
   Widget _buildSalaryInfo(BuildContext context) {
-    final String salaryType =
-        user.percentOrFixed == 'PERCENT'
-            ? '%'
-            : LocaleKeys.forms_fixed
-                .tr(); // Assuming a key like 'general_fixed' exists
+    final String salaryType = user.percentOrFixed == 'PERCENT'
+        ? '%'
+        : LocaleKeys.forms_fixed
+              .tr(); // Assuming a key like 'general_fixed' exists
 
     return AppText(
       title:
@@ -148,26 +145,25 @@ class PersonalCard extends StatelessWidget {
             break;
         }
       },
-      itemBuilder:
-          (BuildContext context) => <PopupMenuEntry<String>>[
-            // Edit Action
-            if (onEditPressed != null)
-              PopupMenuItem<String>(
-                value: 'edit',
-                child: Text(LocaleKeys.buttons_edit.tr()), // Localized text
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        // Edit Action
+        if (onEditPressed != null)
+          PopupMenuItem<String>(
+            value: 'edit',
+            child: Text(LocaleKeys.buttons_edit.tr()), // Localized text
+          ),
+        // Delete Action
+        if (onDeletePressed != null)
+          PopupMenuItem<String>(
+            value: 'delete',
+            child: Text(
+              LocaleKeys.buttons_delete.tr(), // Localized text
+              style: TextStyle(
+                color: theme.colorScheme.error, // Use theme's error color
               ),
-            // Delete Action
-            if (onDeletePressed != null)
-              PopupMenuItem<String>(
-                value: 'delete',
-                child: Text(
-                  LocaleKeys.buttons_delete.tr(), // Localized text
-                  style: TextStyle(
-                    color: theme.colorScheme.error, // Use theme's error color
-                  ),
-                ),
-              ),
-          ],
+            ),
+          ),
+      ],
       // Use constants for styling
       padding: EdgeInsets.zero,
       splashRadius: _popupMenuSplashRadius,

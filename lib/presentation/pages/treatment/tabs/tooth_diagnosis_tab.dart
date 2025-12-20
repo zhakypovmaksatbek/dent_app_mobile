@@ -1,3 +1,4 @@
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/diagnosis/tooth_model.dart';

@@ -44,36 +44,35 @@ class PatientCard extends StatelessWidget {
 
     showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: AppText(
-              title: LocaleKeys.buttons_delete.tr(),
-              textType: TextType.title,
-            ),
-            content: AppText(
-              title: LocaleKeys.notifications_delete_confirmation_patient.tr(
-                namedArgs: {'name': patient.fullName ?? '-'},
-              ),
+      builder: (context) => AlertDialog(
+        title: AppText(
+          title: LocaleKeys.buttons_delete.tr(),
+          textType: TextType.title,
+        ),
+        content: AppText(
+          title: LocaleKeys.notifications_delete_confirmation_patient.tr(
+            namedArgs: {'name': patient.fullName ?? '-'},
+          ),
+          textType: TextType.body,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: AppText(
+              title: LocaleKeys.buttons_cancel.tr(),
               textType: TextType.body,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: AppText(
-                  title: LocaleKeys.buttons_cancel.tr(),
-                  textType: TextType.body,
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: AppText(
-                  title: LocaleKeys.buttons_delete.tr(),
-                  textType: TextType.body,
-                  color: Colors.red,
-                ),
-              ),
-            ],
           ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: AppText(
+              title: LocaleKeys.buttons_delete.tr(),
+              textType: TextType.body,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
     ).then((result) {
       if (result == true && context.mounted) {
         context.read<PatientBloc>().add(DeletePatient(patient.id!));
@@ -86,7 +85,6 @@ class PatientCard extends StatelessWidget {
     return DateFormat('dd.MM.yyyy').format(dateTime);
   }
 
-  static final AppRouter router = getIt<AppRouter>();
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -128,36 +126,35 @@ class PatientCard extends StatelessWidget {
                     break;
                 }
               },
-              itemBuilder:
-                  (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          const Icon(Icons.edit, size: 20),
-                          const SizedBox(width: 8),
-                          AppText(
-                            title: LocaleKeys.buttons_edit.tr(),
-                            textType: TextType.body,
-                          ),
-                        ],
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.edit, size: 20),
+                      const SizedBox(width: 8),
+                      AppText(
+                        title: LocaleKeys.buttons_edit.tr(),
+                        textType: TextType.body,
                       ),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          const Icon(Icons.delete, size: 20, color: Colors.red),
-                          const SizedBox(width: 8),
-                          AppText(
-                            title: LocaleKeys.buttons_delete.tr(),
-                            textType: TextType.body,
-                            color: Colors.red,
-                          ),
-                        ],
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.delete, size: 20, color: Colors.red),
+                      const SizedBox(width: 8),
+                      AppText(
+                        title: LocaleKeys.buttons_delete.tr(),
+                        textType: TextType.body,
+                        color: Colors.red,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+              ],
             ),
             children: [
               Padding(
@@ -193,10 +190,8 @@ class PatientCard extends StatelessWidget {
                     // Detail button
                     DefElevatedButton(
                       title: "Подробная информация",
-                      onPressed:
-                          () => router.push(
-                            PatientDetailRoute(id: patient.id ?? 0),
-                          ),
+                      onPressed: () =>
+                          router.push(PatientDetailRoute(id: patient.id ?? 0)),
                     ),
                   ],
                 ),

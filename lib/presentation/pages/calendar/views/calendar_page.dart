@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dent_app_mobile/core/constants/app_constants.dart';
 import 'package:dent_app_mobile/core/data/app_data_service.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/generated/locale_keys.g.dart';
 import 'package:dent_app_mobile/main.dart';
 import 'package:dent_app_mobile/models/appointment/calendar_appointment_model.dart';

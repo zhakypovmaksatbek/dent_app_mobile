@@ -1,76 +1,82 @@
 // lib/core/service/dio_service.dart
 import "dart:async";
 
-import "package:dent_app_mobile/core/constants/app_constants.dart";
+import "package:dent_app_mobile/core/config/environment_config.dart";
 import "package:dent_app_mobile/core/data/app_data_service.dart";
-import "package:dent_app_mobile/core/service/environment_service.dart";
 import "package:dent_app_mobile/core/service/token_interceptor.dart";
 import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
 
 class DioService {
-  final EnvironmentService _environmentService;
   late final Dio dio;
+  late final Dio tokenDio;
 
-  DioService(this._environmentService) {
-    final baseUrl = _environmentService.getBaseUrl(
-      AppConstants.instance.baseUrlProd,
-      AppConstants.instance.baseUrlTest,
-    );
-
-    dio = Dio(
-      BaseOptions(
-        baseUrl: baseUrl,
-        contentType: "application/json",
-        headers: {"Accept": "application/json"},
-        connectTimeout: const Duration(seconds: 20),
-        receiveTimeout: const Duration(seconds: 20),
-      ),
-    );
-
-    final tokenDio = Dio(
-      BaseOptions(
-        baseUrl: baseUrl,
-        contentType: "application/json",
-        headers: {"Accept": "application/json"},
-        connectTimeout: const Duration(seconds: 20),
-        receiveTimeout: const Duration(seconds: 20),
-      ),
-    );
-
-    dio.interceptors.add(TokenInterceptor(tokenDio: tokenDio));
-    dio.interceptors.add(DioLoggingInterceptor());
-
+  DioService() {
+    _initializeDio();
+    EnvironmentConfig().addListener(_onEnvironmentChanged);
     if (kDebugMode) {
       print('🔧 DioService initialized');
-      print('🌐 Base URL: $baseUrl');
-      print(
-        '🧪 Test Mode: ${_environmentService.getBaseUrl(AppConstants.instance.baseUrlProd, AppConstants.instance.baseUrlTest) == AppConstants.instance.baseUrlTest}',
-      );
+      print('🌐 Base URL: ${EnvironmentConfig.baseUrl}');
     }
   }
 
-  // Base URL'i runtime'da değiştirmek için
-  void updateBaseUrl() {
-    final newBaseUrl = _environmentService.getBaseUrl(
-      AppConstants.instance.baseUrlProd,
-      AppConstants.instance.baseUrlTest,
+  void _initializeDio() {
+    dio = Dio(
+      BaseOptions(
+        baseUrl: EnvironmentConfig.baseUrl,
+        contentType: "application/json",
+        headers: {"Accept": "application/json"},
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 20),
+      ),
     );
 
+    tokenDio = Dio(
+      BaseOptions(
+        baseUrl: EnvironmentConfig.baseUrl,
+        contentType: "application/json",
+        headers: {"Accept": "application/json"},
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 20),
+      ),
+    );
+
+    dio.interceptors.clear();
+    dio.interceptors.add(TokenInterceptor(tokenDio: tokenDio));
+    dio.interceptors.add(DioLoggingInterceptor());
+  }
+
+  // ✅ Handle environment changes
+  void _onEnvironmentChanged() {
+    updateBaseUrl();
+  }
+
+  // ✅ Update base URL when environment changes
+  void updateBaseUrl() {
+    final newBaseUrl = EnvironmentConfig.baseUrl;
+
     dio.options.baseUrl = newBaseUrl;
+    tokenDio.options.baseUrl = newBaseUrl;
 
     if (kDebugMode) {
       print('🔄 Base URL updated to: $newBaseUrl');
+      print('🔄 Environment: ${EnvironmentConfig.environmentName}');
     }
   }
+
+  // ✅ Dispose
+  void dispose() {
+    EnvironmentConfig().removeListener(_onEnvironmentChanged);
+    dio.close();
+    tokenDio.close();
+  }
+
+  // ... rest of your methods (get, post, put, etc.)
 
   Future<Options> _buildOptions() async {
     final String? token = await AppDataService.instance.getToken();
     final currentLanguage = await getCurrentLanguage();
-    if (kDebugMode) {
-      print("====Language ---====");
-      print(currentLanguage);
-    }
+
     return token != null && token.isNotEmpty
         ? Options(
             headers: {
@@ -90,9 +96,7 @@ class DioService {
   Future<Options> _buildFormOptions() async {
     final String? token = await AppDataService.instance.getToken();
     final currentLanguage = await getCurrentLanguage();
-    if (kDebugMode) {
-      print("====Language ---====");
-    }
+
     return token != null && token.isNotEmpty
         ? Options(
             headers: {
@@ -193,18 +197,12 @@ class DioService {
 }
 
 class AuthDioSettings {
-  final EnvironmentService _environmentService;
   late final Dio dio;
 
-  AuthDioSettings(this._environmentService) {
-    final baseUrl = _environmentService.getBaseUrl(
-      AppConstants.instance.baseUrlProd,
-      AppConstants.instance.baseUrlTest,
-    );
-
+  AuthDioSettings() {
     dio = Dio(
       BaseOptions(
-        baseUrl: baseUrl,
+        baseUrl: EnvironmentConfig.baseUrl,
         contentType: "application/json",
         headers: {"Accept": "application/json"},
         connectTimeout: const Duration(seconds: 20),

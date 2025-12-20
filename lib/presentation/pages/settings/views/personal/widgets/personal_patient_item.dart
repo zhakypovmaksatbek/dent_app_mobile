@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 class PersonalPatientItem extends StatelessWidget {
   const PersonalPatientItem({super.key, required this.patient});
   final VisitModel patient;
-  static final AppRouter router = getIt<AppRouter>();
   @override
   Widget build(BuildContext context) {
     final namePart = patient.appointment?.split(',').elementAtOrNull(1)?.trim();
     final firstLetter = namePart?.isNotEmpty == true ? namePart![0] : '';
-    final recordType =
-        RecordType.fromString(patient.recordType ?? '').displayName.tr();
+    final recordType = RecordType.fromString(
+      patient.recordType ?? '',
+    ).displayName.tr();
     final services =
         patient.appointmentServiceToPatientResponses
             ?.map((e) => e.name)

@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/models/patient/patient_create_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_data_model.dart';
 import 'package:dent_app_mobile/models/patient/patient_detail_model.dart';

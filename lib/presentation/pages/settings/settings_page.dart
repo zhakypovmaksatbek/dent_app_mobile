@@ -23,8 +23,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> with SettingsMixin {
-  final router = getIt<AppRouter>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,9 +74,9 @@ class _SettingsPageState extends State<SettingsPage> with SettingsMixin {
                           context,
                           ConfirmationBottomSheet(
                             title: LocaleKeys.notifications_logout_info.tr(),
-                            description:
-                                LocaleKeys.notifications_logout_info_description
-                                    .tr(),
+                            description: LocaleKeys
+                                .notifications_logout_info_description
+                                .tr(),
                             confirmButtonText: LocaleKeys.buttons_logout.tr(),
                             cancelButtonText: LocaleKeys.buttons_cancel.tr(),
                             onConfirm: () async {

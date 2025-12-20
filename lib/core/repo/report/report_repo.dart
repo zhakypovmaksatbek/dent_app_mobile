@@ -1,4 +1,4 @@
-import 'package:dent_app_mobile/main.dart';
+import 'package:dent_app_mobile/core/locator/locator.dart';
 import 'package:dent_app_mobile/models/report/debtor_model.dart';
 import 'package:dent_app_mobile/models/report/payment_report_model.dart';
 import 'package:dent_app_mobile/models/report/report_model.dart';

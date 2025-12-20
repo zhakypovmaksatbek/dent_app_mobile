@@ -86,7 +86,6 @@ class _PersonalPageState extends State<PersonalPage> {
     router.push(CreatePersonalRoute(user: user));
   }
 
-  final router = getIt<AppRouter>();
   void _navigateToCreatePersonal() {
     router.push(CreatePersonalRoute());
   }
