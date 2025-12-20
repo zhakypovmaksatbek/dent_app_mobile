@@ -73,7 +73,28 @@ class AppDataService {
 
   Future<bool> getIsLogin() async {
     final prefs = await preferences();
-    return prefs.getBool(AppConstants.instance.isLogin) ?? false;
+    final isLogin = prefs.getBool(AppConstants.instance.isLogin) ?? false;
+    if (!isLogin) {
+      return false;
+    }
+    final tokenExpired = await isTokenExpired();
+    if (tokenExpired) {
+      if (kDebugMode) {
+        print('🚫 Token expired - Auto logout');
+      }
+
+      await setIsLogin(false);
+      await clearTokens();
+
+      return false;
+    }
+
+    // Token is valid
+    if (kDebugMode) {
+      print('✅ User is logged in with valid token');
+    }
+
+    return true;
   }
 
   Future<bool> isTokenExpired() async {
